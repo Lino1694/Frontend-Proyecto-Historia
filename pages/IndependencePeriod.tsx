@@ -1,0 +1,13 @@
+import { useClassProgress } from '../contexts/ClassProgressContext';
+
+// ...existing code...
+
+const handleSendMessage = async (userMessage: string) => {
+  // ...existing code...
+  
+  addQueryToClass('Período de Independencia');
+  
+  // ...existing code...
+};
+
+// ...existing code...

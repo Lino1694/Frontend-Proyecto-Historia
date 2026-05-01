@@ -1,0 +1,13 @@
+import { useClassProgress } from '../contexts/ClassProgressContext';
+
+// ...existing code...
+
+const handleSendMessage = async (userMessage: string) => {
+  // ...existing code...
+  
+  addQueryToClass('Batalla de Angamos');
+  
+  // ...existing code...
+};
+
+// ...existing code...

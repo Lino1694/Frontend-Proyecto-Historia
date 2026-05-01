@@ -1,0 +1,351 @@
+import React, { useState } from 'react';
+import { Card } from '../shared/Card';
+import { ProgressBar } from '../shared/ProgressBar';
+import AvatarEditor from '../shared/AvatarEditor';
+import { PaletteIcon } from '../icons/PaletteIcon';
+import { PencilIcon } from '../icons/PencilIcon';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useClassProgress } from '../../contexts/ClassProgressContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { useXP } from '../../hooks/useXP';
+import apiService from '../../services/api';
+
+type Theme = 'light' | 'dark' | 'current';
+
+
+interface StudentProfilePageProps {
+    userName: string;
+}
+
+const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => {
+    const [showAvatarEditor, setShowAvatarEditor] = useState(false);
+    const [showDataEditor, setShowDataEditor] = useState(false);
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [editedName, setEditedName] = useState(userName);
+    const [selectedAvatar, setSelectedAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
+    const [selectedTitle, setSelectedTitle] = useState('explorador');
+    const [isSaving, setIsSaving] = useState(false);
+    const { theme, setTheme, themeClasses } = useTheme();
+    const { progress } = useClassProgress();
+    const { user, updateUser } = useAuth();
+    const { perfilXP } = useXP(user?.id || null);
+
+    const titles = [
+        'explorador', 'maestro', 'inca', 'inti', 'almirante', 'capitan', 'soldado', 'historiador'
+    ];
+
+    const avatars = [
+        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=256&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=256&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=256&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&auto=format&fit=crop'
+    ];
+
+    const classes = [
+        { id: 'caral-ciudad', label: 'Caral - La Primera Ciudad' },
+        { id: 'pre-inca', label: 'Culturas Pre-Incaicas' },
+        { id: 'cultura-inca', label: 'La Cultura Inca' },
+        { id: 'virreinato', label: 'El Virreinato del Perú' },
+        { id: 'independencia', label: 'La Independencia' },
+        { id: 'batalla-angamos', label: 'La Batalla de Angamos' },
+    ];
+
+    const generalProgress = Math.round(
+        classes.reduce((sum, c) => sum + (progress[c.id] ?? 0), 0) / classes.length
+    );
+
+    const handleSaveName = async () => {
+        if (!user || !editedName.trim()) return;
+
+        setIsSaving(true);
+        try {
+            await apiService.updateProfile(user.id, { nombre: editedName.trim() });
+            updateUser({ ...user, nombre: editedName.trim() });
+            setIsEditingName(false);
+        } catch (error) {
+            console.error('Error updating name:', error);
+            alert('Error al actualizar el nombre');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditedName(userName);
+        setIsEditingName(false);
+    };
+
+    const handleSaveData = async () => {
+        if (!user || !editedName.trim()) return;
+
+        setIsSaving(true);
+        try {
+            await apiService.updateProfile(user.id, {
+                nombre: editedName.trim(),
+                avatar_url: selectedAvatar,
+                titulo: selectedTitle
+            });
+            updateUser({
+                ...user,
+                nombre: editedName.trim(),
+                avatar_url: selectedAvatar,
+                titulo: selectedTitle
+            });
+            setShowDataEditor(false);
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('Error al actualizar los datos');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const SettingItem: React.FC<{label: string, value: string, hasArrow?: boolean}> = ({label, value, hasArrow = true}) => (
+        <button className="w-full flex justify-between items-center py-3 text-left">
+            <span className={`font-semibold ${themeClasses.cardText}`}>{label}</span>
+            <div className="flex items-center space-x-2">
+                <span className={themeClasses.secondaryText}>{value}</span>
+                {hasArrow && <span className="text-slate-400">&gt;</span>}
+            </div>
+        </button>
+    );
+
+    return (
+        <div className={`${themeClasses.bg} min-h-full`}>
+             <header className={`p-4 ${themeClasses.headerBg} shadow-sm flex items-center justify-between`}>
+                <h1 className={`text-xl font-bold ${themeClasses.headerText}`}>Perfil del Estudiante</h1>
+             </header>
+
+            <div className="p-4 space-y-6">
+                <Card className={`text-center ${themeClasses.cardBg} ${themeClasses.border}`}>
+                    <div className="relative inline-block">
+                        <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className={`w-24 h-24 rounded-full mx-auto border-4 border-brand-yellow mb-2 ${themeClasses.bg} object-cover`}/>
+                        <button
+                            type="button"
+                            onClick={() => setShowAvatarEditor(true)}
+                            className="absolute bottom-0 right-0 bg-brand-orange text-white rounded-full p-1.5 shadow-md hover:scale-110 transition-transform"
+                            aria-label="Editar avatar">
+                            <PaletteIcon className="w-5 h-5" />
+                        </button>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 mt-2">
+                        {isEditingName ? (
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    value={editedName}
+                                    onChange={(e) => setEditedName(e.target.value)}
+                                    className="text-xl font-bold text-center bg-transparent border-b-2 border-brand-orange focus:outline-none"
+                                    autoFocus
+                                />
+                                <button
+                                    onClick={handleSaveName}
+                                    disabled={isSaving || !editedName.trim()}
+                                    className="text-green-600 hover:text-green-800 disabled:opacity-50"
+                                >
+                                    ✓
+                                </button>
+                                <button
+                                    onClick={handleCancelEdit}
+                                    className="text-red-600 hover:text-red-800"
+                                >
+                                    ✗
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <h2 className={`text-xl font-bold ${themeClasses.cardText}`}>{userName}</h2>
+                                <button
+                                    onClick={() => setIsEditingName(true)}
+                                    className="text-brand-orange hover:text-brand-red-orange"
+                                >
+                                    <PencilIcon className="w-4 h-4" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    <div className="space-y-1">
+                        {user?.titulo && (
+                            <p className={`text-sm font-semibold text-brand-orange capitalize`}>
+                                {user.titulo}
+                            </p>
+                        )}
+                        <p className={`text-sm ${themeClasses.secondaryText}`}>
+                            Nivel {perfilXP?.nivel?.actual || 1} • {perfilXP?.xp?.total || 0} XP
+                        </p>
+                    </div>
+                    <div className="flex justify-center space-x-6 mt-3 text-sm">
+                        <div>
+                            <p className={`font-bold text-lg ${themeClasses.cardText}`}>🔥 12</p>
+                            <p className={themeClasses.secondaryText}>Racha</p>
+                        </div>
+                        <div>
+                             <p className={`font-bold text-lg ${themeClasses.cardText}`}>🏆 3º</p>
+                            <p className={themeClasses.secondaryText}>Posición</p>
+                        </div>
+                    </div>
+                </Card>
+
+                <Card className={`${themeClasses.cardBg} ${themeClasses.border}`}>
+                    <h3 className={`text-lg font-bold mb-2 ${themeClasses.cardText}`}>Progreso General</h3>
+                    <div className="space-y-4">
+                        <div>
+                            <div className="flex justify-between text-sm mb-1">
+                                <span className={`font-semibold ${themeClasses.cardText}`}>Progreso total</span>
+                                <span className={themeClasses.secondaryText}>{generalProgress}%</span>
+                            </div>
+                            <ProgressBar progress={generalProgress} />
+                        </div>
+
+                        <div>
+                            <h4 className={`text-sm font-semibold ${themeClasses.cardText} mb-2`}>Progreso por clase</h4>
+                            <div className="space-y-3">
+                                {classes.map(c => (
+                                    <div key={c.id}>
+                                        <div className="flex justify-between text-sm mb-1">
+                                            <span className={`font-semibold ${themeClasses.cardText}`}>{c.label}</span>
+                                            <span className={themeClasses.secondaryText}>{progress[c.id] ?? 0}%</span>
+                                        </div>
+                                        <ProgressBar progress={progress[c.id] ?? 0} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+
+                <Card className={`${themeClasses.cardBg} ${themeClasses.border}`}>
+                    <h3 className={`text-lg font-bold mb-1 ${themeClasses.cardText}`}>Personalización</h3>
+                     <div className={`divide-y ${theme === 'dark' ? 'divide-gray-700' : 'divide-brand-cream'}`}>
+                        <div className="py-3">
+                            <span className={`font-semibold ${themeClasses.cardText}`}>Temas de color</span>
+                            <div className="flex space-x-2 mt-2">
+                                <button
+                                    onClick={() => setTheme('light')}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                                        theme === 'light' ? 'bg-blue-500 text-white' : (theme === 'dark' ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-gray-200 text-gray-700 hover:bg-gray-300')
+                                    }`}
+                                >
+                                    Claro
+                                </button>
+                                <button
+                                    onClick={() => setTheme('dark')}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                                        theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                    }`}
+                                >
+                                    Oscuro
+                                </button>
+                                <button
+                                    onClick={() => setTheme('current')}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                                        theme === 'current' ? 'bg-yellow-500 text-white' : (theme === 'dark' ? 'bg-gray-600 text-gray-200 hover:bg-gray-500' : 'bg-gray-200 text-gray-700 hover:bg-gray-300')
+                                    }`}
+                                >
+                                    Actual
+                                </button>
+                            </div>
+                        </div>
+                        <div className="py-3">
+                            <button
+                                onClick={() => setShowDataEditor(true)}
+                                className={`w-full text-left font-semibold ${themeClasses.cardText} hover:text-brand-orange transition-colors`}
+                            >
+                                Editar datos
+                            </button>
+                        </div>
+                     </div>
+                </Card>
+
+                <div className="text-center">
+                    <button className="text-red-500 font-semibold px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200 transition-colors">
+                        Eliminar cuenta
+                    </button>
+                </div>
+            </div>
+            {showAvatarEditor && (
+                <AvatarEditor
+                    onClose={() => setShowAvatarEditor(false)}
+                    onSave={async (config) => {
+                        // For now, we'll use a placeholder since the editor returns empty config
+                        // In a real implementation, this would save the avatar configuration
+                        console.log('Avatar configuration saved:', config);
+                        setShowAvatarEditor(false);
+                        // TODO: Implement proper avatar saving when backend supports it
+                    }}
+                />
+            )}
+
+            {showDataEditor && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4 z-30 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-md animate-scale-in flex flex-col" style={{maxHeight: '90vh'}}>
+                        <h2 className="text-xl font-bold text-slate-800 mb-4">Editar Datos del Perfil</h2>
+                        <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-4">
+                            <div>
+                                <label className="block text-sm font-bold text-slate-600 mb-2">Nombre</label>
+                                <input
+                                    type="text"
+                                    value={editedName}
+                                    onChange={(e) => setEditedName(e.target.value)}
+                                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 focus:border-blue-500 focus:outline-none"
+                                    placeholder="Ingresa tu nombre"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-slate-600 mb-2">Avatar</label>
+                                <div className="grid grid-cols-3 gap-2">
+                                    {avatars.map((avatar, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setSelectedAvatar(avatar)}
+                                            className={`w-full aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                                                selectedAvatar === avatar ? 'border-blue-500' : 'border-slate-200 hover:border-slate-300'
+                                            }`}
+                                        >
+                                            <img src={avatar} alt={`Avatar ${index + 1}`} className="w-full h-full object-cover" />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-slate-600 mb-2">Título</label>
+                                <select
+                                    value={selectedTitle}
+                                    onChange={(e) => setSelectedTitle(e.target.value)}
+                                    className="w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 focus:border-blue-500 focus:outline-none"
+                                >
+                                    {titles.map((title) => (
+                                        <option key={title} value={title}>
+                                            {title.charAt(0).toUpperCase() + title.slice(1)}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="mt-6 flex gap-3">
+                            <button
+                                onClick={() => setShowDataEditor(false)}
+                                className="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-300 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleSaveData}
+                                disabled={isSaving || !editedName.trim()}
+                                className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                {isSaving ? 'Guardando...' : 'Guardar'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default StudentProfilePage;

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historia Lima - Aprendizaje Gamificado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-orange': '#F57411',
+                        'brand-yellow-orange': '#F5C3B8',
+                        'brand-light-orange': '#F4AB3A',
+                        'brand-red-orange': '#F54F16',
+                        'brand-yellow': '#F7D107',
+                        'brand-cream': '#F5E7D3',
+                        'brand-offwhite': '#FFFBF5',
+                    },
+                    keyframes: {
+                        'scale-in': {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    },
+                    animation: {
+                        'scale-in': 'scale-in 0.2s ease-out forwards',
+                    }
+                }
+            }
+        }
+    </script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^18.2.0",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^18.2.0/client",
+    "react/": "https://aistudiocdn.com/react@^18.2.0/",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^18.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-slate-200">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
