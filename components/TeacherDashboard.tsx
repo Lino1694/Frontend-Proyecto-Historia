@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import TeacherHomePage from './teacher/TeacherHomePage';
-import GamificationCenter from './teacher/GamificationCenter';
 import CreateActivityPage from './teacher/CreateActivityPage';
 import RewardsCenter from './teacher/RewardsCenter';
 import ReportsPage from './teacher/ReportsPage';
@@ -26,7 +25,7 @@ interface TeacherDashboardProps {
     onLogout: () => void;
 }
 
-type TeacherView = 'home' | 'gamification' | 'create_activity' | 'rewards_center' | 'reports' | 'class_management' | 'content_management' | 'challenges' | 'profile' | 'create_lesson' | 'dynamic_generation';
+type TeacherView = 'home' | 'create_activity' | 'rewards_center' | 'reports' | 'class_management' | 'content_management' | 'challenges' | 'profile' | 'create_lesson' | 'dynamic_generation';
 
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
@@ -50,8 +49,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
 
     const renderContent = () => {
         switch (view) {
-            case 'gamification':
-                return <GamificationCenter onBack={() => navigateTo('home')} />;
             case 'create_activity':
                 return <CreateActivityPage onBack={() => navigateTo('home')} activityToEdit={activityToEdit} />;
             case 'rewards_center':
@@ -76,7 +73,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
                     <TeacherHomePage
                         userName={user?.nombre || 'Usuario'}
                         onLogout={onLogout}
-                        navigateToGamification={() => navigateTo('gamification')}
                         navigateToRewardsCenter={() => navigateTo('rewards_center')}
                         navigateToReports={() => navigateTo('reports')}
                         navigateToClassManagement={() => navigateTo('class_management')}
@@ -116,7 +112,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
                     <SidebarButton Icon={UsersIcon} label="Clase" onClick={() => navigateTo('class_management')} isActive={view === 'class_management'} />
                     <SidebarButton Icon={TrophyIcon} label="Retos" onClick={() => navigateTo('challenges')} isActive={view === 'challenges'} />
                     <SidebarButton Icon={SparklesIcon} label="Generación IA" onClick={() => navigateTo('dynamic_generation')} isActive={view === 'dynamic_generation'} />
-                    <SidebarButton Icon={SparklesIcon} label="Gamificación" onClick={() => navigateTo('gamification')} isActive={view === 'gamification'} />
                     <SidebarButton Icon={SparklesIcon} label="Insignias" onClick={() => navigateTo('rewards_center')} isActive={view === 'rewards_center'} />
                     <SidebarButton Icon={UserCircleIcon} label="Perfil" onClick={() => navigateTo('profile')} isActive={view === 'profile'} />
                 </nav>
@@ -156,10 +151,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
                             <button onClick={() => { navigateTo('dynamic_generation'); setMobileMenuOpen(false); }} className="flex items-center gap-3 w-full p-2 rounded-lg text-slate-700 hover:bg-brand-orange/10">
                                 <SparklesIcon className="h-5 w-5" />
                                 <span>Generación IA</span>
-                            </button>
-                            <button onClick={() => { navigateTo('gamification'); setMobileMenuOpen(false); }} className="flex items-center gap-3 w-full p-2 rounded-lg text-slate-700 hover:bg-brand-orange/10">
-                                <SparklesIcon className="h-5 w-5" />
-                                <span>Gamificación</span>
                             </button>
                             <button onClick={() => { navigateTo('rewards_center'); setMobileMenuOpen(false); }} className="flex items-center gap-3 w-full p-2 rounded-lg text-slate-700 hover:bg-brand-orange/10">
                                 <SparklesIcon className="h-5 w-5" />

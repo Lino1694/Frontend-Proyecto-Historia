@@ -393,7 +393,7 @@ class ApiService {
       tasa_error: number;
     }>;
   }>> {
-    return this.request('/reportes/lecciones', {
+    return this.request('/teacher/reportes/lecciones', {
       method: 'GET',
     });
   }
