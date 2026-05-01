@@ -10,7 +10,6 @@ export interface RegisterData {
 export interface LoginData {
   correo: string;
   contrasena: string;
-  loginRole?: 'student' | 'teacher';
 }
 
 export interface AuthResponse {

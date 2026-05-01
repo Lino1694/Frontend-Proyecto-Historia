@@ -17,7 +17,7 @@ interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (correo: string, contrasena: string, role: Role) => Promise<void>;
+  login: (correo: string, contrasena: string) => Promise<void>;
   register: (nombre: string, correo: string, contrasena: string, role: Role) => Promise<void>;
   logout: () => void;
   updateUser: (updatedUser: Partial<User>) => void;
@@ -58,25 +58,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (correo: string, contrasena: string, role: Role) => {
+  const login = async (correo: string, contrasena: string) => {
     try {
       setError(null);
       setIsLoading(true);
 
       const response = await apiService.login({ correo, contrasena });
 
-      // Verificar que el rol seleccionado coincida con el rol del usuario
-      // Moderadores pueden acceder como estudiante o docente
-      if (response.user.role !== 'moderator' && response.user.role !== role) {
-        throw new Error(`No tienes permisos para acceder como ${role === 'student' ? 'estudiante' : 'docente'}`);
-      }
-
       // Guardar token y usuario
       apiService.saveAuth(response.token, response.user);
-      localStorage.setItem('userRole', role);
+      localStorage.setItem('userRole', response.user.role);
 
       setToken(response.token);
-      setUser({ ...response.user, role });
+      setUser(response.user);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión';
       setError(errorMessage);
