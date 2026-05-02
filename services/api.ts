@@ -315,6 +315,35 @@ class ApiService {
     });
   }
 
+  // Obtener retos organizados por categorías
+  async obtenerRetosPorCategoria(): Promise<{
+    "Avanzando en la Historia": {
+      "Cultura Inca": Array<{
+        id: number;
+        titulo: string;
+        descripcion: string;
+        tipo: 'individual' | 'competition';
+        categoria: string;
+        xp_recompensa: number;
+        participantes: number;
+        estado: 'active' | 'completed';
+        fecha_fin: string;
+        creador_id: number;
+        created_at: string;
+      }>;
+      "Caral - La primera Ciudad": Array<any>;
+      "El Virreinato en el Perú": Array<any>;
+      "La Independencia": Array<any>;
+      "La Conquista de Perú": Array<any>;
+      "Retos Personalizados": Array<any>;
+    };
+    "Otros": Array<any>;
+  }> {
+    return this.request('/retos/categorias', {
+      method: 'GET',
+    });
+  }
+
   // Unirse a un reto
   async unirseReto(reto_id: number): Promise<{ message: string }> {
     return this.request('/retos/unirse', {

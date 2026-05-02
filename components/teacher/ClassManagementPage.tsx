@@ -119,9 +119,11 @@ type FilterStatus = 'all' | 'needs_support' | 'outstanding';
 
 const HistoricalTimeline: React.FC<{ progress: number; avatarUrl: string }> = ({ progress, avatarUrl }) => {
     const periods = [
-        { name: 'Prehispánico', color: 'bg-green-500', width: '33.3%' },
-        { name: 'Virreinato', color: 'bg-yellow-500', width: '33.3%' },
-        { name: 'Independencia', color: 'bg-blue-500', width: '33.4%' },
+        { name: 'Caral', color: 'bg-green-500', width: '20%' },
+        { name: 'Inca', color: 'bg-yellow-500', width: '20%' },
+        { name: 'Conquista', color: 'bg-red-500', width: '20%' },
+        { name: 'Virreinato', color: 'bg-purple-500', width: '20%' },
+        { name: 'Independencia', color: 'bg-blue-500', width: '20%' },
     ];
 
     const markerPosition = `${Math.max(2, Math.min(98, progress))}%`;
