@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from '../shared/Card';
 import { ProgressBar } from '../shared/ProgressBar';
-import AvatarEditor from '../shared/AvatarEditor';
-import { PaletteIcon } from '../icons/PaletteIcon';
-import { PencilIcon } from '../icons/PencilIcon';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useClassProgress } from '../../contexts/ClassProgressContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -17,10 +14,43 @@ interface StudentProfilePageProps {
     userName: string;
 }
 
+const HistoricalTimeline: React.FC<{ progress: number; avatarUrl: string }> = ({ progress, avatarUrl }) => {
+       const periods = [
+        { name: 'Caral', color: 'bg-green-500', width: '20%' },
+        { name: 'Inca', color: 'bg-yellow-500', width: '20%' },
+        { name: 'Conquista', color: 'bg-red-500', width: '20%' },
+        { name: 'Virreinato', color: 'bg-purple-500', width: '20%' },
+        { name: 'Independencia', color: 'bg-blue-500', width: '20%' },
+    ];
+
+    const markerPosition = `${Math.max(2, Math.min(98, progress))}%`;
+
+    return (
+        <div className="mt-4">
+            <p className="text-xs font-bold text-slate-600 mb-2">Línea de Tiempo del Curso</p>
+            <div className="relative pt-3">
+                <div
+                    className="absolute z-10 transition-all duration-500"
+                    style={{ left: `calc(${markerPosition} - 14px)`, top: '-4px' }}
+                    title={`Progreso: ${progress}%`}
+                >
+                   <img src={avatarUrl} alt="avatar" className="w-7 h-7 rounded-full border-2 border-white shadow-lg object-cover" />
+                </div>
+                <div className="flex h-2.5 rounded-full overflow-hidden bg-brand-cream shadow-inner">
+                    {periods.map(p => (
+                        <div key={p.name} className={`${p.color}`} style={{ width: p.width }} />
+                    ))}
+                </div>
+                <div className="flex justify-between mt-1 text-[10px] font-semibold text-slate-500 px-1">
+                    {periods.map(p => <span key={p.name}>{p.name}</span>)}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => {
-    const [showAvatarEditor, setShowAvatarEditor] = useState(false);
     const [showDataEditor, setShowDataEditor] = useState(false);
-    const [isEditingName, setIsEditingName] = useState(false);
     const [editedName, setEditedName] = useState(userName);
     const [selectedAvatar, setSelectedAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
     const [selectedTitle, setSelectedTitle] = useState('explorador');
@@ -52,30 +82,9 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
         { id: 'batalla-angamos', label: 'La Batalla de Angamos' },
     ];
 
-    const generalProgress = Math.round(
-        classes.reduce((sum, c) => sum + (progress[c.id] ?? 0), 0) / classes.length
-    );
+    const generalProgress = Math.min(100, Math.round((perfilXP?.xp?.total || 0) * 0.2));
 
-    const handleSaveName = async () => {
-        if (!user || !editedName.trim()) return;
 
-        setIsSaving(true);
-        try {
-            await apiService.updateProfile(user.id, { nombre: editedName.trim() });
-            updateUser({ ...user, nombre: editedName.trim() });
-            setIsEditingName(false);
-        } catch (error) {
-            console.error('Error updating name:', error);
-            alert('Error al actualizar el nombre');
-        } finally {
-            setIsSaving(false);
-        }
-    };
-
-    const handleCancelEdit = () => {
-        setEditedName(userName);
-        setIsEditingName(false);
-    };
 
     const handleSaveData = async () => {
         if (!user || !editedName.trim()) return;
@@ -120,52 +129,8 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
 
             <div className="p-4 space-y-6">
                 <Card className={`text-center ${themeClasses.cardBg} ${themeClasses.border}`}>
-                    <div className="relative inline-block">
-                        <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className={`w-24 h-24 rounded-full mx-auto border-4 border-brand-yellow mb-2 ${themeClasses.bg} object-cover`}/>
-                        <button
-                            type="button"
-                            onClick={() => setShowAvatarEditor(true)}
-                            className="absolute bottom-0 right-0 bg-brand-orange text-white rounded-full p-1.5 shadow-md hover:scale-110 transition-transform"
-                            aria-label="Editar avatar">
-                            <PaletteIcon className="w-5 h-5" />
-                        </button>
-                    </div>
-                    <div className="flex items-center justify-center gap-2 mt-2">
-                        {isEditingName ? (
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="text"
-                                    value={editedName}
-                                    onChange={(e) => setEditedName(e.target.value)}
-                                    className="text-xl font-bold text-center bg-transparent border-b-2 border-brand-orange focus:outline-none"
-                                    autoFocus
-                                />
-                                <button
-                                    onClick={handleSaveName}
-                                    disabled={isSaving || !editedName.trim()}
-                                    className="text-green-600 hover:text-green-800 disabled:opacity-50"
-                                >
-                                    ✓
-                                </button>
-                                <button
-                                    onClick={handleCancelEdit}
-                                    className="text-red-600 hover:text-red-800"
-                                >
-                                    ✗
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <h2 className={`text-xl font-bold ${themeClasses.cardText}`}>{userName}</h2>
-                                <button
-                                    onClick={() => setIsEditingName(true)}
-                                    className="text-brand-orange hover:text-brand-red-orange"
-                                >
-                                    <PencilIcon className="w-4 h-4" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                    <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className={`w-24 h-24 rounded-full mx-auto border-4 border-brand-yellow mb-2 ${themeClasses.bg} object-cover`}/>
+                    <h2 className={`text-xl font-bold mt-2 ${themeClasses.cardText}`}>{userName}</h2>
                     <div className="space-y-1">
                         {user?.titulo && (
                             <p className={`text-sm font-semibold text-brand-orange capitalize`}>
@@ -189,15 +154,9 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
                 </Card>
 
                 <Card className={`${themeClasses.cardBg} ${themeClasses.border}`}>
-                    <h3 className={`text-lg font-bold mb-2 ${themeClasses.cardText}`}>Progreso General</h3>
+                    <h3 className={`text-lg font-bold mb-3 ${themeClasses.cardText}`}>Progreso General</h3>
                     <div className="space-y-4">
-                        <div>
-                            <div className="flex justify-between text-sm mb-1">
-                                <span className={`font-semibold ${themeClasses.cardText}`}>Progreso total</span>
-                                <span className={themeClasses.secondaryText}>{generalProgress}%</span>
-                            </div>
-                            <ProgressBar progress={generalProgress} />
-                        </div>
+                        <HistoricalTimeline progress={generalProgress} avatarUrl={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} />
 
                         <div>
                             <h4 className={`text-sm font-semibold ${themeClasses.cardText} mb-2`}>Progreso por clase</h4>
@@ -265,19 +224,6 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
                     </button>
                 </div>
             </div>
-            {showAvatarEditor && (
-                <AvatarEditor
-                    onClose={() => setShowAvatarEditor(false)}
-                    onSave={async (config) => {
-                        // For now, we'll use a placeholder since the editor returns empty config
-                        // In a real implementation, this would save the avatar configuration
-                        console.log('Avatar configuration saved:', config);
-                        setShowAvatarEditor(false);
-                        // TODO: Implement proper avatar saving when backend supports it
-                    }}
-                />
-            )}
-
             {showDataEditor && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4 z-30 backdrop-blur-sm">
                     <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-md animate-scale-in flex flex-col" style={{maxHeight: '90vh'}}>

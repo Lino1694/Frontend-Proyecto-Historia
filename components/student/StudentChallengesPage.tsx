@@ -22,12 +22,7 @@ interface Reto {
 
 interface RetosPorCategoria {
     "Avanzando en la Historia": {
-        "Caral - La primera Ciudad": Reto[];
-        "Cultura Inca": Reto[];
-        "La Conquista de Perú": Reto[];
-        "El Virreinato en el Perú": Reto[];
-        "Independencia del Perú": Reto[];
-        "Retos Personalizados": Reto[];
+        [key: string]: Reto[];
     };
     "Otros": Reto[];
 }
@@ -46,6 +41,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
     const [retosPorCategoria, setRetosPorCategoria] = useState<RetosPorCategoria | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentRetoId, setCurrentRetoId] = useState<number | null>(null);
+    const [attemptsLeft, setAttemptsLeft] = useState<{[key: number]: number}>({});
 
     const [missions, setMissions] = useState<Lesson[]>(mockMissions);
 
@@ -66,6 +62,26 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
             console.log('=== FETCHING RETOS POR CATEGORÍA ===');
             const data = await apiService.obtenerRetosPorCategoria();
             console.log('Retos por categoría received:', data);
+
+            // Fetch attempts for all retos
+            const allRetos = [
+                ...Object.values(data["Avanzando en la Historia"]).flat(),
+                ...data["Otros"]
+            ];
+            const attemptsPromises = allRetos.map((reto: Reto) =>
+                apiService.obtenerIntentosRestantes(reto.id).catch(() => ({ intentos_restantes: 2 })) // default to 2 if error
+            );
+            const attemptsResults = await Promise.all(attemptsPromises);
+            const newAttempts: {[key: number]: number} = {};
+            allRetos.forEach((reto: Reto, index: number) => {
+                newAttempts[reto.id] = attemptsResults[index].intentos_restantes;
+            });
+            // Merge with localStorage to persist exceeded attempts
+            const saved = localStorage.getItem('retoAttemptsLeft');
+            const localAttempts = saved ? JSON.parse(saved) : {};
+            const mergedAttempts = { ...newAttempts, ...localAttempts };
+            setAttemptsLeft(prev => ({ ...prev, ...mergedAttempts }));
+
             setRetosPorCategoria(data);
         } catch (error) {
             console.error('Error fetching retos:', error);
@@ -87,11 +103,24 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
     const handleUnirseReto = async (retoId: number) => {
         try {
             await apiService.unirseReto(retoId);
+            // Decrement attempts on successful join
+            setAttemptsLeft(prev => {
+                const newAttempts = { ...prev, [retoId]: Math.max(0, (prev[retoId] || 2) - 1) };
+                localStorage.setItem('retoAttemptsLeft', JSON.stringify(newAttempts));
+                return newAttempts;
+            });
             setCurrentRetoId(retoId);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error uniendo al reto:', error);
             if (error.message && error.message.includes('Ya estás unido')) {
                 setCurrentRetoId(retoId);
+            } else if (error.message && error.message.includes('excedido el número máximo')) {
+                setAttemptsLeft(prev => {
+                    const newAttempts = { ...prev, [retoId]: 0 };
+                    localStorage.setItem('retoAttemptsLeft', JSON.stringify(newAttempts));
+                    return newAttempts;
+                });
+                alert('Has excedido el número máximo de intentos permitidos para este reto.');
             } else {
                 alert('Error al iniciar el reto.');
             }
@@ -206,18 +235,20 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                                                     </span>
                                                                     <h5 className={`text-lg font-bold mt-2 ${themeClasses.cardText}`}>{reto.titulo}</h5>
                                                                     <p className={`${themeClasses.secondaryText} text-sm`}>{reto.descripcion}</p>
-                                                                    <p className={`${themeClasses.secondaryText} text-sm`}>
-                                                                        Participantes: {reto.participantes} |
-                                                                        Gana hasta <span className="font-bold text-brand-light-orange">{reto.xp_recompensa} XP</span>
-                                                                    </p>
+                                                                     <p className={`${themeClasses.secondaryText} text-sm`}>
+                                                                         Participantes: {reto.participantes} |
+                                                                         Intentos: {attemptsLeft[reto.id] ?? 2} |
+                                                                         Gana hasta <span className="font-bold text-brand-light-orange">{reto.xp_recompensa} XP</span>
+                                                                     </p>
                                                                 </div>
                                                                 <div className="flex flex-col items-end gap-2">
-                                                                    <button
-                                                                        onClick={() => handleUnirseReto(reto.id)}
-                                                                        className="bg-brand-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-red-orange transition-transform transform hover:scale-105 text-sm"
-                                                                    >
-                                                                        Comenzar
-                                                                    </button>
+                                                                     <button
+                                                                         onClick={() => handleUnirseReto(reto.id)}
+                                                                         disabled={(attemptsLeft[reto.id] ?? 2) <= 0}
+                                                                         className="bg-brand-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-red-orange transition-transform transform hover:scale-105 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                     >
+                                                                         {(attemptsLeft[reto.id] ?? 2) <= 0 ? 'Sin intentos' : 'Comenzar'}
+                                                                     </button>
                                                                 </div>
                                                             </div>
                                                         </Card>

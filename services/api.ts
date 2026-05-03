@@ -360,6 +360,13 @@ class ApiService {
     });
   }
 
+  // Obtener intentos restantes para un reto
+  async obtenerIntentosRestantes(reto_id: number): Promise<{ intentos_restantes: number }> {
+    return this.request(`/retos/${reto_id}/intentos`, {
+      method: 'GET',
+    });
+  }
+
   // ==================== RETOS ====================
 
   // Obtener preguntas de un reto

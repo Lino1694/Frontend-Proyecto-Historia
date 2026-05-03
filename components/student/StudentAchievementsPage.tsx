@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '../shared/Card';
 import { ProgressBar } from '../shared/ProgressBar';
 import { TrophyIcon } from '../icons/TrophyIcon';
@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useXP } from '../../hooks/useXP';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useClassProgress } from '../../contexts/ClassProgressContext';
+import { apiService } from '../../services/api';
 
 const allInsignias = [
     { name: 'Explorador', icon: '🗺️', requiredLevel: 2 },
@@ -23,11 +24,19 @@ const mockRanking = [
     { rank: 4, name: 'Carlos V.', xp: 750, isUser: false },
 ];
 
+interface RetosPorCategoria {
+    "Avanzando en la Historia": {
+        [key: string]: any[];
+    };
+    "Otros": any[];
+}
+
 const StudentAchievementsPage: React.FC = () => {
     const { user } = useAuth();
     const { perfilXP } = useXP(user?.id || null);
     const { themeClasses } = useTheme();
     const { progress } = useClassProgress();
+    const [retosCompletadosHistoria, setRetosCompletadosHistoria] = useState(0);
 
     const currentLevel = perfilXP?.nivel?.actual || 1;
     const unlockedInsignias = allInsignias.filter(insignia => currentLevel >= insignia.requiredLevel);
@@ -45,9 +54,23 @@ const StudentAchievementsPage: React.FC = () => {
     const completedLessons = classes.filter(c => progress[c.id] >= 100).length;
     const totalLessons = classes.length;
 
-    // For now, we'll use a placeholder for completed challenges with good scores
-    // This would ideally come from backend data tracking challenge completions
-    const completedChallengesWithGoodScore = Math.floor(currentLevel / 2); // Placeholder calculation
+    // Fetch completed retos in "Avanzando en la Historia"
+    useEffect(() => {
+        const fetchRetos = async () => {
+            try {
+                const data: RetosPorCategoria = await apiService.obtenerRetosPorCategoria();
+                const retosHistoria = Object.values(data["Avanzando en la Historia"]).flat();
+                const completados = retosHistoria.filter((r: any) => r.estado === 'completed').length;
+                setRetosCompletadosHistoria(completados);
+            } catch (error) {
+                console.error('Error fetching retos:', error);
+                setRetosCompletadosHistoria(0);
+            }
+        };
+        fetchRetos();
+    }, []);
+
+    const completedChallengesWithGoodScore = retosCompletadosHistoria;
     const weeklyGoal = 5; // Weekly target for challenges
     const currentWeekProgress = Math.min(completedChallengesWithGoodScore, weeklyGoal);
 
@@ -110,16 +133,16 @@ const StudentAchievementsPage: React.FC = () => {
                 
                 <Card className={themeClasses.cardBg}>
                     <h3 className={`text-lg font-bold mb-3 ${themeClasses.cardText}`}>Rachas y Metas</h3>
-                     <div className="flex justify-around">
+                      <div className="flex justify-around">
                         <div className="text-center">
                             <p className="text-2xl font-bold text-brand-orange">📚</p>
                             <p className={`font-semibold ${themeClasses.cardText}`}>Lecciones completadas</p>
-                            <p className={`text-sm ${themeClasses.secondaryText}`}>{completedLessons}/{totalLessons}</p>
+                            <p className={`text-sm ${themeClasses.secondaryText}`}>{Math.round((completedLessons / totalLessons) * 100)}%</p>
                         </div>
                         <div className="text-center">
                             <p className="text-2xl font-bold text-brand-orange">🎯</p>
-                             <p className={`font-semibold ${themeClasses.cardText}`}>Retos con ≥75% aciertos</p>
-                            <p className={`text-sm ${themeClasses.secondaryText}`}>{completedChallengesWithGoodScore}</p>
+                             <p className={`font-semibold ${themeClasses.cardText}`}>Retos completados</p>
+                             <p className={`text-sm ${themeClasses.secondaryText}`}>{Math.round((currentWeekProgress / weeklyGoal) * 100)}%</p>
                         </div>
                     </div>
                 </Card>
