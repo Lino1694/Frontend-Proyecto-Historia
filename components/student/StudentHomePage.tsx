@@ -246,7 +246,13 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
                     <Card className={themeClasses.cardBg}>
                         <h3 className={`text-lg font-bold mb-3 flex items-center ${themeClasses.cardText}`}><TrophyIcon className="h-5 w-5 mr-2 text-brand-light-orange" /> Tu Avatar</h3>
                         <div className="flex items-center">
-                            <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className="w-14 h-14 rounded-full border-4 border-brand-yellow bg-brand-cream object-cover" />
+                            {user?.avatar_url && !user.avatar_url.startsWith('http') ? (
+                                <div className="w-14 h-14 rounded-full border-4 border-brand-yellow bg-brand-cream flex items-center justify-center text-2xl">
+                                    {user.avatar_url}
+                                </div>
+                            ) : (
+                                <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className="w-14 h-14 rounded-full border-4 border-brand-yellow bg-brand-cream object-cover" />
+                            )}
                             <div className="ml-4">
                                 <p className={`font-bold ${themeClasses.cardText}`}>{userName}</p>
                                 {perfilXP ? (

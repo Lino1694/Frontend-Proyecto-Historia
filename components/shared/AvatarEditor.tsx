@@ -31,8 +31,7 @@ const AvatarEditor: React.FC<AvatarEditorProps> = ({ onClose, onSave }) => {
     });
 
     const handleSave = () => {
-        // In a real implementation, we'd pass back the detailed config object
-        onSave({} as any);
+        onSave({ ...config, preview: config.preview } as any);
     }
     
     return (

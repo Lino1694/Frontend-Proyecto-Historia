@@ -2,6 +2,10 @@ import React from 'react';
 import { Card } from '../shared/Card';
 import { useTheme } from '../../contexts/ThemeContext';
 
+const isEmojiAvatar = (avatar: string) => {
+    return !avatar || !avatar.startsWith('http');
+};
+
 interface TimelineItem {
     id: string;
     title: string;

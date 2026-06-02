@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '../shared/Card';
 import { ProgressBar } from '../shared/ProgressBar';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useClassProgress } from '../../contexts/ClassProgressContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useXP } from '../../hooks/useXP';
+import AvatarEditor from '../shared/AvatarEditor';
 import apiService from '../../services/api';
 
 type Theme = 'light' | 'dark' | 'current';
@@ -34,7 +35,13 @@ const HistoricalTimeline: React.FC<{ progress: number; avatarUrl: string }> = ({
                     style={{ left: `calc(${markerPosition} - 14px)`, top: '-4px' }}
                     title={`Progreso: ${progress}%`}
                 >
-                   <img src={avatarUrl} alt="avatar" className="w-7 h-7 rounded-full border-2 border-white shadow-lg object-cover" />
+                   {!avatarUrl || !avatarUrl.startsWith('http') ? (
+                       <div className="w-7 h-7 rounded-full border-2 border-white shadow-lg flex items-center justify-center bg-brand-yellow-orange text-xs">
+                           {avatarUrl}
+                       </div>
+                   ) : (
+                       <img src={avatarUrl} alt="avatar" className="w-7 h-7 rounded-full border-2 border-white shadow-lg object-cover" />
+                   )}
                 </div>
                 <div className="flex h-2.5 rounded-full overflow-hidden bg-brand-cream shadow-inner">
                     {periods.map(p => (
@@ -49,9 +56,15 @@ const HistoricalTimeline: React.FC<{ progress: number; avatarUrl: string }> = ({
     );
 };
 
-const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => {
+const isEmojiAvatar = (avatar: string) => {
+        return !avatar || !avatar.startsWith('http');
+    };
+    
+    const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => {
     const [showDataEditor, setShowDataEditor] = useState(false);
+    const [showAvatarEditor, setShowAvatarEditor] = useState(false);
     const [editedName, setEditedName] = useState(userName);
+    const [userAvatar, setUserAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
     const [selectedAvatar, setSelectedAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
     const [selectedTitle, setSelectedTitle] = useState('explorador');
     const [isSaving, setIsSaving] = useState(false);
@@ -59,6 +72,13 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
     const { progress } = useClassProgress();
     const { user, updateUser } = useAuth();
     const { perfilXP } = useXP(user?.id || null);
+
+    useEffect(() => {
+        if (user?.avatar_url) {
+            setUserAvatar(user.avatar_url);
+            setSelectedAvatar(user.avatar_url);
+        }
+    }, [user?.avatar_url]);
 
     const titles = [
         'explorador', 'maestro', 'inca', 'inti', 'almirante', 'capitan', 'soldado', 'historiador'
@@ -111,6 +131,12 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
         }
     };
 
+    const handleSaveAvatar = (config: any) => {
+        setUserAvatar(config.preview || selectedAvatar);
+        setSelectedAvatar(config.preview || selectedAvatar);
+        setShowAvatarEditor(false);
+    };
+
     const SettingItem: React.FC<{label: string, value: string, hasArrow?: boolean}> = ({label, value, hasArrow = true}) => (
         <button className="w-full flex justify-between items-center py-3 text-left">
             <span className={`font-semibold ${themeClasses.cardText}`}>{label}</span>
@@ -129,7 +155,13 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
 
             <div className="p-4 space-y-6">
                 <Card className={`text-center ${themeClasses.cardBg} ${themeClasses.border}`}>
-                    <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className={`w-24 h-24 rounded-full mx-auto border-4 border-brand-yellow mb-2 ${themeClasses.bg} object-cover`}/>
+                    {isEmojiAvatar(userAvatar) && userAvatar ? (
+                        <div className={`w-24 h-24 rounded-full mx-auto border-4 border-brand-yellow mb-2 ${themeClasses.bg} flex items-center justify-center text-4xl`}>
+                            {userAvatar}
+                        </div>
+                    ) : (
+                        <img src={userAvatar || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className={`w-24 h-24 rounded-full mx-auto border-4 border-brand-yellow mb-2 ${themeClasses.bg} object-cover`}/>
+                    )}
                     <h2 className={`text-xl font-bold mt-2 ${themeClasses.cardText}`}>{userName}</h2>
                     <div className="space-y-1">
                         {user?.titulo && (
@@ -156,7 +188,7 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
                 <Card className={`${themeClasses.cardBg} ${themeClasses.border}`}>
                     <h3 className={`text-lg font-bold mb-3 ${themeClasses.cardText}`}>Progreso General</h3>
                     <div className="space-y-4">
-                        <HistoricalTimeline progress={generalProgress} avatarUrl={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} />
+                        <HistoricalTimeline progress={generalProgress} avatarUrl={userAvatar} />
 
                         <div>
                             <h4 className={`text-sm font-semibold ${themeClasses.cardText} mb-2`}>Progreso por clase</h4>
@@ -242,11 +274,20 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
 
                             <div>
                                 <label className="block text-sm font-bold text-slate-600 mb-2">Avatar</label>
+                                <button
+                                    onClick={() => setShowAvatarEditor(true)}
+                                    className="w-full py-2 mb-2 bg-brand-orange text-white font-bold rounded-lg hover:bg-brand-red-orange transition-colors"
+                                >
+                                    Crear avatar personalizado
+                                </button>
                                 <div className="grid grid-cols-3 gap-2">
                                     {avatars.map((avatar, index) => (
                                         <button
                                             key={index}
-                                            onClick={() => setSelectedAvatar(avatar)}
+                                            onClick={() => {
+                                                setSelectedAvatar(avatar);
+                                                setUserAvatar(avatar);
+                                            }}
                                             className={`w-full aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                                                 selectedAvatar === avatar ? 'border-blue-500' : 'border-slate-200 hover:border-slate-300'
                                             }`}
@@ -289,6 +330,12 @@ const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => 
                         </div>
                     </div>
                 </div>
+            )}
+            {showAvatarEditor && (
+                <AvatarEditor
+                    onClose={() => setShowAvatarEditor(false)}
+                    onSave={handleSaveAvatar}
+                />
             )}
         </div>
     );

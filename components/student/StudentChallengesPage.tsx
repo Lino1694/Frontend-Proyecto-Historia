@@ -50,8 +50,8 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
 
     // Obtener todos los retos para estadísticas
     const allRetos = retosPorCategoria ? [
-        ...Object.values(retosPorCategoria["Avanzando en la Historia"]).flat(),
-        ...retosPorCategoria["Otros"]
+        ...Object.values(retosPorCategoria["Avanzando en la Historia"] || {}).flat(),
+        ...(retosPorCategoria["Otros"] || [])
     ] : [];
 
     const activeRetos = allRetos.filter(r => r.estado === 'active');
@@ -63,10 +63,11 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
             const data = await apiService.obtenerRetosPorCategoria();
             console.log('Retos por categoría received:', data);
 
+            const otrosRetos = data["Otros"] || [];
             // Fetch attempts for all retos
             const allRetos = [
                 ...Object.values(data["Avanzando en la Historia"]).flat(),
-                ...data["Otros"]
+                ...otrosRetos
             ];
             const attemptsPromises = allRetos.map((reto: Reto) =>
                 apiService.obtenerIntentosRestantes(reto.id).catch(() => ({ intentos_restantes: 2 })) // default to 2 if error
@@ -209,13 +210,14 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                 <Card className={themeClasses.cardBg}>
                                     <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>🏛️ Avanzando en la Historia</h3>
                                     {/* Orden cronológico de las categorías históricas */}
-                                    {[
-                                        'Caral - La primera Ciudad',
-                                        'Cultura Inca',
-                                        'La Conquista de Perú',
-                                        'El Virreinato en el Perú',
-                                        'Independencia del Perú'
-                                    ].map((subcategoria) => {
+{[
+                                         'Caral - La primera Ciudad',
+                                         'Cultura Inca',
+                                         'La Conquista de Perú',
+                                         'El Virreinato en el Perú',
+                                         'Independencia del Perú',
+                                         'La Batalla de Angamos'
+                                     ].map((subcategoria) => {
                                         const retos = retosPorCategoria["Avanzando en la Historia"][subcategoria];
                                         if (!retos) return null;
 
@@ -260,11 +262,11 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                 </Card>
 
                                 {/* Sección Otros retos */}
-                                {retosPorCategoria["Otros"].filter(r => r.estado === 'active').length > 0 && (
-                                    <Card className={themeClasses.cardBg}>
-                                        <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>Otros Retos</h3>
-                                        <div className="space-y-3">
-                                            {retosPorCategoria["Otros"].filter(r => r.estado === 'active').map((reto) => (
+{(retosPorCategoria?.["Otros"] || []).filter(r => r.estado === 'active').length > 0 && (
+                                        <Card className={themeClasses.cardBg}>
+                                            <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>Otros Retos</h3>
+                                            <div className="space-y-3">
+                                                {(retosPorCategoria?.["Otros"] || []).filter(r => r.estado === 'active').map((reto) => (
                                                 <Card key={`reto-${reto.id}`} className={`hover:shadow-lg transition-shadow ${themeClasses.cardBg}`}>
                                                     <div className="flex justify-between items-start">
                                                         <div>
