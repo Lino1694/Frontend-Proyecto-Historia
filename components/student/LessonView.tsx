@@ -6,29 +6,35 @@ import XPNotification from '../shared/XPNotification';
 import apiService from '../../services/api';
 
 interface LessonViewProps {
-  lesson: {
-    id: number;
-    titulo: string;
-    descripcion: string;
-    contenido: string;
-    imagen_url?: string;
-    multimedia?: Array<{
-      id: string;
-      tipo: 'video' | 'audio' | 'imagen';
-      url: string;
-      titulo?: string;
-      descripcion?: string;
-    }>;
-    preguntas?: Array<{
-      pregunta: string;
-      opciones: string[];
-      respuesta_correcta: number;
-      tipo?: string;
-      elementos_arrastrables?: Array<{ id: string; texto: string }>;
-      zonas_destino?: Array<{ id: string; etiqueta: string; elemento_correcto_id: string }>;
-    }>;
-  };
-  onBack: () => void;
+    lesson: {
+        id: number;
+        titulo: string;
+        descripcion: string;
+        contenido: string;
+        imagen_url?: string;
+        multimedia?: Array<{
+            id: string;
+            tipo: 'video' | 'audio' | 'imagen' | 'documento' | 'enlace';
+            url: string;
+            titulo?: string;
+            descripcion?: string;
+        }>;
+        preguntas?: Array<{
+            pregunta: string;
+            opciones: string[];
+            respuesta_correcta: number;
+            tipo?: string;
+            elementos_arrastrables?: Array<{ id: string; texto: string }>;
+            zonas_destino?: Array<{ id: string; etiqueta: string; elemento_correcto_id: string }>;
+        }>;
+        recursos?: Array<{
+            tipo: 'pdf' | 'enlace' | 'bibliografia';
+            titulo: string;
+            url?: string;
+            descripcion?: string;
+        }>;
+    };
+    onBack: () => void;
 }
 
 const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
@@ -130,7 +136,7 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
           </div>
 
           {lesson.multimedia && lesson.multimedia.length > 0 && (
-            <div className="mt-8">
+            <div className="mt-8 border-t pt-6">
               <h3 className="text-xl font-bold text-slate-800 mb-4">Contenido Multimedia</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {lesson.multimedia.map((media) => (
@@ -166,6 +172,32 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                         />
                       </div>
                     )}
+                    {media.tipo === 'documento' && (
+                      <div>
+                        <a
+                          href={media.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
+                        >
+                          <span className="text-xl">📄</span>
+                          <span>Ver documento: {media.titulo || 'PDF'}</span>
+                        </a>
+                      </div>
+                    )}
+                    {media.tipo === 'enlace' && (
+                      <div>
+                        <a
+                          href={media.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
+                        >
+                          <span className="text-xl">🔗</span>
+                          <span>{media.titulo || 'Enlace externo'}</span>
+                        </a>
+                      </div>
+                    )}
                     {media.titulo && (
                       <h4 className="font-semibold text-slate-800 mt-2">{media.titulo}</h4>
                     )}
@@ -175,6 +207,61 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {lesson.recursos && lesson.recursos.length > 0 && (
+            <div className="mt-8 border-t pt-6">
+              <h3 className="text-xl font-bold text-slate-800 mb-4">📚 Recursos Adicionales</h3>
+              <div className="space-y-3">
+                {lesson.recursos.map((recurso, index) => (
+                  <div key={index} className="bg-slate-50 p-4 rounded-lg">
+                    {recurso.tipo === 'pdf' && (
+                      <a
+                        href={recurso.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 text-blue-600 hover:text-blue-800"
+                      >
+                        <span className="text-2xl">📄</span>
+                        <div>
+                          <p className="font-semibold">{recurso.titulo}</p>
+                          {recurso.descripcion && (
+                            <p className="text-sm text-slate-600">{recurso.descripcion}</p>
+                          )}
+                        </div>
+                      </a>
+                    )}
+                    {recurso.tipo === 'enlace' && (
+                      <a
+                        href={recurso.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 text-blue-600 hover:text-blue-800"
+                      >
+                        <span className="text-2xl">🔗</span>
+                        <div>
+                          <p className="font-semibold">{recurso.titulo}</p>
+                          {recurso.descripcion && (
+                            <p className="text-sm text-slate-600">{recurso.descripcion}</p>
+                          )}
+                        </div>
+                      </a>
+                    )}
+                    {recurso.tipo === 'bibliografia' && (
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">📚</span>
+                        <div>
+                          <p className="font-semibold text-slate-800">{recurso.titulo}</p>
+                          {recurso.descripcion && (
+                            <p className="text-sm text-slate-600 mt-1">{recurso.descripcion}</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+</div>
             </div>
           )}
 

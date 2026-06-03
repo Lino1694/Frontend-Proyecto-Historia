@@ -9,12 +9,12 @@ import { useClassProgress } from '../../contexts/ClassProgressContext';
 import { apiService } from '../../services/api';
 
 const allInsignias = [
-    { name: 'Explorador', icon: '🗺️', requiredLevel: 2 },
-    { name: 'Exacto', icon: '🎯', requiredLevel: 4 },
-    { name: 'Cartógrafo', icon: '📜', requiredLevel: 6 },
-    { name: 'Cronista', icon: '✒️', requiredLevel: 8 },
-    { name: 'Guardián', icon: '🛡️', requiredLevel: 10 },
-    { name: 'Viajero', icon: '🧭', requiredLevel: 12 },
+    { name: 'Explorador', icon: '🗺️', requiredLevel: 2, description: 'Completa 5 lecciones para desbloquear' },
+    { name: 'Exacto', icon: '🎯', requiredLevel: 4, description: 'Obtén 90% o más en 3 retos' },
+    { name: 'Cartógrafo', icon: '📜', requiredLevel: 6, description: 'Domina todos los contenidos históricos' },
+    { name: 'Cronista', icon: '✒️', requiredLevel: 8, description: 'Comparte 5 entradas en tu diario' },
+    { name: 'Guardián', icon: '🛡️', requiredLevel: 10, description: 'Mantén una racha de 7 días consecutivos' },
+    { name: 'Viajero', icon: '🧭', requiredLevel: 12, description: 'Completa el reto final de la Batalla de Angamos' },
 ];
 
 const mockRanking = [
@@ -110,11 +110,11 @@ const StudentAchievementsPage: React.FC = () => {
                                     }`}>
                                         {insignia.name}
                                     </span>
-                                    {!isUnlocked && (
-                                        <span className="text-xs text-slate-400 mt-1">
-                                            Nivel {insignia.requiredLevel}
-                                        </span>
-                                    )}
+                                    <span className={`text-xs mt-1 px-1 ${
+                                        isUnlocked ? themeClasses.secondaryText : 'text-slate-400'
+                                    }`}>
+                                        {isUnlocked ? insignia.description : `Nivel ${insignia.requiredLevel}`}
+                                    </span>
                                 </div>
                             );
                         })}

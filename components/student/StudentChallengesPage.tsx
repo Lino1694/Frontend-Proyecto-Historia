@@ -18,6 +18,7 @@ interface Reto {
     fecha_fin: string;
     creador_id: number;
     created_at?: string;
+    dificultad?: 'Fácil' | 'Intermedio' | 'Difícil';
 }
 
 interface RetosPorCategoria {
@@ -43,10 +44,16 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
     const [currentRetoId, setCurrentRetoId] = useState<number | null>(null);
     const [attemptsLeft, setAttemptsLeft] = useState<{[key: number]: number}>({});
 
+    const [selectedDificultad, setSelectedDificultad] = useState<string | null>(null);
+    const [selectedTema, setSelectedTema] = useState<string | null>(null);
+
     const [missions, setMissions] = useState<Lesson[]>(mockMissions);
 
     const activeMissions = missions.filter(m => !m.completed);
     const completedMissions = missions.filter(m => m.completed);
+    const filteredActiveMissions = selectedDificultad
+        ? activeMissions.filter(m => m.difficulty === selectedDificultad)
+        : activeMissions;
 
     // Obtener todos los retos para estadísticas
     const allRetos = retosPorCategoria ? [
@@ -54,7 +61,18 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
         ...(retosPorCategoria["Otros"] || [])
     ] : [];
 
-    const activeRetos = allRetos.filter(r => r.estado === 'active');
+    const activeRetos = allRetos.filter(r => {
+        if (r.estado !== 'active') return false;
+        if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
+        if (selectedTema) {
+            const found = Object.entries(retosPorCategoria?.["Avanzando en la Historia"] || {}).find(
+                ([tema]) => tema.toLowerCase().includes(selectedTema.toLowerCase())
+            );
+            return found ? retosPorCategoria!["Avanzando en la Historia"][found[0]]?.some((reto: Reto) => reto.id === r.id) : false;
+        }
+        return true;
+    });
+
     const completedRetos = allRetos.filter(r => r.estado === 'completed');
 
     const fetchRetos = async () => {
@@ -155,9 +173,88 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
 
     return (
         <div className={`${themeClasses.bg} min-h-full`}>
-              <header className={`p-4 ${themeClasses.headerBg} shadow-sm flex justify-center items-center sticky top-0 z-10`}>
-                  <h1 className={`text-xl font-bold text-center ${themeClasses.headerText}`}>Retos</h1>
-              </header>
+            <header className={`p-4 ${themeClasses.headerBg} shadow-sm flex justify-center items-center sticky top-0 z-10`}>
+                <h1 className={`text-xl font-bold text-center ${themeClasses.headerText}`}>Retos</h1>
+            </header>
+
+            {/* Filtros por dificultad y tema */}
+            <div className="px-4 pt-4 space-y-3">
+                <div>
+                    <p className={`text-xs font-semibold ${themeClasses.secondaryText} mb-2`}>Filtrar por dificultad</p>
+                    <div className="flex gap-2 flex-wrap">
+                        <button
+                            onClick={() => setSelectedDificultad(null)}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                selectedDificultad === null
+                                    ? 'bg-brand-orange text-white'
+                                    : 'bg-slate-200 text-slate-700'
+                            }`}
+                        >
+                            Todas
+                        </button>
+                        <button
+                            onClick={() => setSelectedDificultad('Fácil')}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                selectedDificultad === 'Fácil'
+                                    ? 'bg-green-500 text-white'
+                                    : 'bg-green-100 text-green-800'
+                            }`}
+                        >
+                            Fácil
+                        </button>
+                        <button
+                            onClick={() => setSelectedDificultad('Intermedio')}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                selectedDificultad === 'Intermedio'
+                                    ? 'bg-yellow-500 text-white'
+                                    : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                        >
+                            Intermedio
+                        </button>
+                        <button
+                            onClick={() => setSelectedDificultad('Difícil')}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                selectedDificultad === 'Difícil'
+                                    ? 'bg-red-500 text-white'
+                                    : 'bg-red-100 text-red-800'
+                            }`}
+                        >
+                            Difícil
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <p className={`text-xs font-semibold ${themeClasses.secondaryText} mb-2`}>Filtrar por tema</p>
+                    <div className="flex gap-2 flex-wrap">
+                        <button
+                            onClick={() => setSelectedTema(null)}
+                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                selectedTema === null
+                                    ? 'bg-brand-orange text-white'
+                                    : 'bg-slate-200 text-slate-700'
+                            }`}
+                        >
+                            Todos
+                        </button>
+                        {['Caral', 'Inca', 'Virreinato', 'Independencia', 'Angamos'].map(tema => (
+                            <button
+                                key={tema}
+                                onClick={() => setSelectedTema(tema)}
+                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                    selectedTema === tema
+                                        ? 'bg-brand-yellow-orange text-white'
+                                        : 'bg-slate-100 text-slate-600'
+                                }`}
+                            >
+                                {tema}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
             <div className="p-4 space-y-4">
                 {loading ? (
                     <Card className={themeClasses.cardBg}>
@@ -177,7 +274,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                 </div>
                             </div>
                         </Card>
-                        {activeMissions.map((mission) => (
+                        {filteredActiveMissions.map((mission) => (
                             <Card key={mission.id} className={`hover:shadow-lg transition-shadow ${themeClasses.cardBg}`}>
                                 <div className="flex justify-between items-start">
                                     <div>
@@ -221,7 +318,11 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                         const retos = retosPorCategoria["Avanzando en la Historia"][subcategoria];
                                         if (!retos) return null;
 
-                                        const retosActivos = retos.filter(r => r.estado === 'active');
+                                        const retosActivos = retos.filter(r => {
+    if (r.estado !== 'active') return false;
+    if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
+    return true;
+});
                                         if (retosActivos.length === 0) return null;
 
                                         return (
@@ -232,9 +333,14 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                                         <Card key={`reto-${reto.id}`} className={`hover:shadow-lg transition-shadow ${themeClasses.cardBg} border-l-4 border-brand-orange`}>
                                                             <div className="flex justify-between items-start">
                                                                 <div>
-                                                                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${reto.tipo === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
+                                                                    <span className={`text-xs font-bold px-2 py-1 rounded-full mr-2 ${reto.tipo === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
                                                                         {reto.tipo === 'individual' ? 'Individual' : 'Competencia'}
                                                                     </span>
+                                                                    {reto.dificultad && (
+                                                                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${reto.dificultad === 'Fácil' ? 'bg-green-100 text-green-800' : reto.dificultad === 'Intermedio' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                                                                            {reto.dificultad}
+                                                                        </span>
+                                                                    )}
                                                                     <h5 className={`text-lg font-bold mt-2 ${themeClasses.cardText}`}>{reto.titulo}</h5>
                                                                     <p className={`${themeClasses.secondaryText} text-sm`}>{reto.descripcion}</p>
                                                                      <p className={`${themeClasses.secondaryText} text-sm`}>
@@ -262,17 +368,30 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                 </Card>
 
                                 {/* Sección Otros retos */}
-{(retosPorCategoria?.["Otros"] || []).filter(r => r.estado === 'active').length > 0 && (
-                                        <Card className={themeClasses.cardBg}>
-                                            <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>Otros Retos</h3>
-                                            <div className="space-y-3">
-                                                {(retosPorCategoria?.["Otros"] || []).filter(r => r.estado === 'active').map((reto) => (
+{(retosPorCategoria?.["Otros"] || []).filter(r => {
+    if (r.estado !== 'active') return false;
+    if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
+    return true;
+}).length > 0 && (
+    <Card className={themeClasses.cardBg}>
+        <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>Otros Retos</h3>
+        <div className="space-y-3">
+            {(retosPorCategoria?.["Otros"] || []).filter(r => {
+                if (r.estado !== 'active') return false;
+                if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
+                return true;
+            }).map((reto) => (
                                                 <Card key={`reto-${reto.id}`} className={`hover:shadow-lg transition-shadow ${themeClasses.cardBg}`}>
                                                     <div className="flex justify-between items-start">
                                                         <div>
-                                                            <span className={`text-xs font-bold px-2 py-1 rounded-full ${reto.tipo === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
-                                                                {reto.tipo === 'individual' ? 'Individual' : 'Competencia'}
-                                                            </span>
+<span className={`text-xs font-bold px-2 py-1 rounded-full mr-2 ${reto.tipo === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
+                                                                        {reto.tipo === 'individual' ? 'Individual' : 'Competencia'}
+                                                                    </span>
+                                                                    {reto.dificultad && (
+                                                                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${reto.dificultad === 'Fácil' ? 'bg-green-100 text-green-800' : reto.dificultad === 'Intermedio' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                                                                            {reto.dificultad}
+                                                                        </span>
+                                                                    )}
                                                             <h5 className={`text-lg font-bold mt-2 ${themeClasses.cardText}`}>{reto.titulo}</h5>
                                                             <p className={`${themeClasses.secondaryText} text-sm`}>{reto.descripcion}</p>
                                                             <p className={`${themeClasses.secondaryText} text-sm`}>

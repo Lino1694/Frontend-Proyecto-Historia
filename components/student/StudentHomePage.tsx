@@ -8,15 +8,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useXP } from '../../hooks/useXP';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useClassProgress } from '../../contexts/ClassProgressContext';
-import  PreIncaCultures  from './PreIncaCultures';
-import ViceroyaltyPeriod from './ViceroyaltyPeriod';
-import IndependencePeriod from './IndependencePeriod';
-import BatallaAngamos from './BatallaAngamos';
-import IncaCulture from './IncaCulture';
-import CaralCity from './CaralCity';
-import ProgressTimeline from './ProgressTimeline';
 import LessonView from './LessonView';
-import apiService from '../../services/api';
+import LessonsListPage from './LessonsListPage';
+import ProgressTimeline from './ProgressTimeline';
+import { apiService } from '../../services/api';
 
 interface StudentHomePageProps {
     userName: string;
@@ -85,14 +80,14 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
     const { user } = useAuth();
     const { perfilXP } = useXP(user?.id || null);
     const { themeClasses } = useTheme();
-    const { progress, resetAll } = useClassProgress(); // <-- usamos resetAll
+    const { progress, resetAll } = useClassProgress();
     const [currentView, setCurrentView] = useState<string>('main');
     const [selectedClass, setSelectedClass] = useState<string | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<any | null>(null);
     const [lessons, setLessons] = useState<any[]>([]);
     const [loadingLessons, setLoadingLessons] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
 
-    // Evitar ejecutar más de una vez
     const initializedRef = useRef(false);
 
     useEffect(() => {
@@ -125,7 +120,7 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
 
     const handleClassClick = (classId: string) => {
         setSelectedClass(classId);
-        setCurrentView('class');
+        setCurrentView('lessons-list');
     };
 
     const handleBackToMain = () => {
@@ -139,33 +134,24 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
         setCurrentView('lesson');
     };
 
+    const handleBackToLessonsList = () => {
+        setCurrentView('lessons-list');
+        setSelectedLesson(null);
+    };
+
     if (currentView === 'lesson' && selectedLesson) {
-        return <LessonView lesson={selectedLesson} onBack={handleBackToMain} />;
+        return <LessonView lesson={selectedLesson} onBack={handleBackToLessonsList} />;
     }
 
-    if (currentView === 'class' && selectedClass) {
+    if (currentView === 'lessons-list' && selectedClass) {
+        const temaTitle = mockClasses.find(c => c.id === selectedClass)?.title || 'Lecciones';
         return (
-            <div className={`${themeClasses.bg} min-h-screen`}>
-                <header className={`${themeClasses.headerBg} backdrop-blur-lg p-4 flex justify-between items-center shadow-sm sticky top-0 z-10`}>
-                    <button
-                        onClick={handleBackToMain}
-                        className="text-brand-red-orange hover:text-brand-red-orange/80 transition-colors"
-                    >
-                        ← Volver
-                    </button>
-                    <h1 className={`text-xl font-bold ${themeClasses.headerText}`}>
-                        {mockClasses.find(c => c.id === selectedClass)?.title}
-                    </h1>
-                </header>
-                <div className="p-4">
-                    {selectedClass === 'pre-inca' && <PreIncaCultures />}
-                    {selectedClass === 'virreinato' && <ViceroyaltyPeriod />}
-                    {selectedClass === 'independencia' && <IndependencePeriod />}
-                    {selectedClass === 'batalla-angamos' && <BatallaAngamos />}
-                    {selectedClass === 'cultura-inca' && <IncaCulture />}
-                    {selectedClass === 'caral-ciudad' && <CaralCity />}
-                </div>
-            </div>
+            <LessonsListPage
+                temaId={selectedClass}
+                temaTitle={temaTitle}
+                onBack={handleBackToMain}
+                onLessonSelect={handleLessonClick}
+            />
         );
     }
 
@@ -217,28 +203,75 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
                     {lessons.length > 0 && (
                         <>
                             <h2 className={`text-xl font-bold ${themeClasses.cardText} mb-3 mt-8`}>Lecciones Personalizadas</h2>
-                            <div className="space-y-4">
-                                {lessons.map((lesson) => (
-                                    <div key={lesson.id} className="cursor-pointer" onClick={() => handleLessonClick(lesson)}>
-                                        <Card className={`hover:shadow-lg transition-shadow hover:-translate-y-1 ${themeClasses.cardBg}`}>
-                                            <div className="flex items-center gap-4">
-                                                {lesson.imagen_url ? (
-                                                    <img src={lesson.imagen_url} alt={lesson.titulo} className="w-14 h-14 rounded-lg object-cover" />
-                                                ) : (
-                                                    <div className="w-14 h-14 rounded-lg bg-brand-orange flex items-center justify-center text-2xl">
-                                                        📚
-                                                    </div>
-                                                )}
-                                                <div className="flex-1">
-                                                    <h3 className={`text-lg font-bold ${themeClasses.cardText}`}>{lesson.titulo}</h3>
-                                                    <p className={`${themeClasses.secondaryText} text-sm`}>{lesson.descripcion}</p>
+                    
+                    <div className="mb-4">
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Buscar lecciones..."
+                            className="w-full px-4 py-2 rounded-lg bg-white border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                        />
+                    </div>
+
+                    <div className="space-y-4">
+                        {lessons
+                            .filter(lesson => 
+                                lesson.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                lesson.descripcion?.toLowerCase().includes(searchTerm.toLowerCase())
+                            )
+                            .map((lesson) => (
+                                <div key={lesson.id} className="cursor-pointer" onClick={() => handleLessonClick(lesson)}>
+                                    <Card className={`hover:shadow-lg transition-shadow hover:-translate-y-1 ${themeClasses.cardBg}`}>
+                                        <div className="flex items-center gap-4">
+                                            {lesson.imagen_url ? (
+                                                <img src={lesson.imagen_url} alt={lesson.titulo} className="w-14 h-14 rounded-lg object-cover" />
+                                            ) : (
+                                                <div className="w-14 h-14 rounded-lg bg-brand-orange flex items-center justify-center text-2xl">
+                                                    📚
                                                 </div>
+                                            )}
+                                            <div className="flex-1">
+                                                <h3 className={`text-lg font-bold ${themeClasses.cardText}`}>{lesson.titulo}</h3>
+                                                <p className={`${themeClasses.secondaryText} text-sm`}>{lesson.descripcion}</p>
                                             </div>
-                                        </Card>
-                                    </div>
-                                ))}
+                                        </div>
+                                    </Card>
+                                </div>
+                            ))}
                             </div>
                         </>
+                    )}
+
+                    {/* Sección de Recomendaciones basadas en progreso */}
+                    {mockClasses.some(c => (progress[c.id] ?? 0) < 100) && (
+                        <div className="mt-8">
+                            <h2 className={`text-xl font-bold text-brand-red-orange mb-3`}>🔔 Recomendado para ti</h2>
+                            <div className="space-y-3">
+                                {mockClasses
+                                    .filter(c => (progress[c.id] ?? 0) < 100)
+                                    .sort((a, b) => (progress[a.id] ?? 0) - (progress[b.id] ?? 0))
+                                    .map((clase) => (
+                                        <div key={`rec-${clase.id}`} className="cursor-pointer" onClick={() => handleClassClick(clase.id)}>
+                                            <Card className={`hover:shadow-lg transition-shadow border-l-4 border-brand-red-orange ${themeClasses.cardBg}`}>
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl ${clase.color}`}>
+                                                        {clase.icon}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h4 className={`font-bold ${themeClasses.cardText}`}>{clase.title}</h4>
+                                                        <p className={`text-xs ${themeClasses.secondaryText}`}>{clase.description}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <span className="text-sm font-bold text-brand-red-orange">{(progress[clase.id] ?? 0)}%</span>
+                                                        <p className={`text-xs ${themeClasses.secondaryText}`}>Continuar</p>
+                                                    </div>
+                                                </div>
+                                            </Card>
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
                     )}
                 </div>
 

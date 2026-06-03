@@ -15,7 +15,7 @@ interface Pregunta {
   pregunta: string;
   opciones?: string[];
   tipo?: string;
-  tipo_pregunta?: string; // In case backend returns this
+  tipo_pregunta?: string;
   respuesta_correcta?: number;
   elementos_arrastrables?: Array<{ id: string; texto: string; text?: string }>;
   zonas_destino?: Array<{ id: string; etiqueta: string; label?: string; elemento_correcto_id: string }>;
@@ -60,7 +60,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
     const fetchPreguntas = async () => {
       try {
         const data = await apiService.obtenerPreguntasReto(retoId);
-        console.log('Preguntas recibidas:', data); // Debug
+        console.log('Preguntas recibidas:', data);
         setPreguntas(data);
       } catch (error) {
         console.error('Error fetching preguntas:', error);
@@ -82,14 +82,12 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
 
   const handleNext = () => {
     if (currentQuestion.tipo === 'drag_drop' || currentQuestion.tipo_pregunta === 'drag_drop') {
-      // For drag_drop, just proceed to next question without verification
       if (isLastQuestion) {
         handleCompleteReto();
       } else {
         setCurrentQuestionIndex(prev => prev + 1);
       }
     } else {
-      // For other question types, verify immediately
       handleVerify();
     }
   };
@@ -98,7 +96,6 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
     const answer = answers[currentQuestion.id];
     let answerToSend: any = answer;
 
-    // For other types, send as string
     if (!answer || (typeof answer === 'string' && !answer.trim())) {
       alert('Selecciona o ingresa una respuesta.');
       return;
@@ -110,9 +107,6 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
       setFeedback(res);
       setShowFeedback(true);
 
-      // XP for individual questions in retos is handled by backend
-
-      // Wait 2 seconds then proceed
       setTimeout(() => {
         setShowFeedback(false);
         setFeedback(null);
@@ -129,7 +123,6 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
   };
 
   const handleCompleteReto = async () => {
-    // Submit all answers for verification
     const respuestas = preguntas.map(p => ({
       pregunta_id: p.id,
       respuesta: answers[p.id] || (p.tipo === 'drag_drop' || p.tipo_pregunta === 'drag_drop' ? {} : '')
@@ -137,7 +130,6 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
 
     try {
       const res = await apiService.enviarRespuestasReto(retoId, respuestas);
-      // Store the result to decide what UI to show
       setRetoResult({ correctas: res.correctas, total: res.total, xp_ganado: res.xp_ganado });
       setActivityCompleted(true);
     } catch (error) {
@@ -197,9 +189,8 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
                       }, {} as any) || {};
                       isCorrect = JSON.stringify(userAnswer || {}) === JSON.stringify(correctMapping);
                     } else if (pregunta.opciones && pregunta.respuesta_correcta !== undefined) {
-                      isCorrect = userAnswer === pregunta.respuesta_correcta;
+                      isCorrect = userAnswer == pregunta.respuesta_correcta;
                     } else if (pregunta.opciones && pregunta.opciones.length === 1) {
-                      // Fill blank
                       isCorrect = (userAnswer as string)?.toLowerCase().trim() === pregunta.opciones[0].toLowerCase().trim();
                     }
 
@@ -251,6 +242,54 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
                     );
                   })}
                 </div>
+
+                <div className="bg-brand-yellow-orange/20 rounded-lg p-4 border-l-4 border-brand-orange">
+                  <h3 className="text-lg font-bold text-slate-700 mb-3 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m2 2h.01M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
+                    </svg>
+                    Recomendaciones de Mejora
+                  </h3>
+                  <ul className="space-y-2 text-sm text-slate-600">
+                    {retoResult && retoResult.correctas < retoResult.total ? (
+                      <>
+                        <li className="flex items-start gap-2">
+                          <span className="text-brand-orange font-bold">•</span>
+                          <span>Revisa los temas de historia donde tuviste errores y consulta fuentes adicionales.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-brand-orange font-bold">•</span>
+                          <span>Practica con más preguntas de opción múltiple para mejorar tu comprensión.</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-brand-orange font-bold">•</span>
+                          <span>Considera unirte a estudiantes destacados para intercambiar conocimientos.</span>
+                        </li>
+                        {preguntas.filter((p) => {
+                          const userAnswer = answers[p.id];
+                          if (p.tipo === 'drag_drop' || p.tipo_pregunta === 'drag_drop') {
+                            const correctMapping = p.zonas_destino?.reduce((acc, zona) => {
+                              acc[zona.id] = zona.elemento_correcto_id;
+                              return acc;
+                            }, {} as any) || {};
+                            return JSON.stringify(userAnswer || {}) !== JSON.stringify(correctMapping);
+                          }
+                          return userAnswer != p.respuesta_correcta;
+                        }).map((p, idx) => (
+                          <li key={`rec-${idx}`} className="flex items-start gap-2 ml-4">
+                            <span className="text-slate-500">→</span>
+                            <span>En "<em>{p.pregunta.substring(0, 50)}...</em>": Presta atención a los detalles clave y practica más ejemplos.</span>
+                          </li>
+                        ))}
+                      </>
+                    ) : (
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-600 font-bold">✓</span>
+                        <span>¡Excelente! Sigue así. Considera ayudar a otros estudiantes.</span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
               </>
             )}
 
@@ -267,11 +306,11 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
 
         {mostrarNotificacion && ultimoXPGanado && (
           <XPNotification
-            xpGanado={ultimoXPGanado!.xp_ganado}
-            subioNivel={ultimoXPGanado!.subio_nivel}
-            nivelNuevo={ultimoXPGanado!.nivel_nuevo}
-            tituloNivel={ultimoXPGanado!.titulo_nivel}
-            iconoNivel={ultimoXPGanado!.icono_nivel}
+            xpGanado={ultimoXPGanado.xp_ganado}
+            subioNivel={ultimoXPGanado.subio_nivel}
+            nivelNuevo={ultimoXPGanado.nivel_nuevo}
+            tituloNivel={ultimoXPGanado.titulo_nivel}
+            iconoNivel={ultimoXPGanado.icono_nivel}
             onClose={cerrarNotificacion}
           />
         )}

@@ -278,25 +278,26 @@ class ApiService {
 
   // ==================== RETOS Y COMPETENCIAS ====================
 
-  // Crear un reto
-  async crearReto(data: {
-    titulo: string;
-    descripcion: string;
-    tipo: 'individual' | 'competition';
-    xp_recompensa: number;
-    fecha_fin: string;
-    max_intentos: number;
-    preguntas?: Array<{
-      pregunta: string;
-      opciones: string[];
-      respuesta_correcta: number | string;
-    }>;
-  }): Promise<{ id: number; message: string }> {
-    return this.request('/retos/crear', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
+// Crear un reto
+    async crearReto(data: {
+        titulo: string;
+        descripcion: string;
+        tipo: 'individual' | 'competition';
+        categoria: string;
+        xp_recompensa: number;
+        fecha_fin: string;
+        max_intentos: number;
+        preguntas?: Array<{
+        pregunta: string;
+        opciones: string[];
+        respuesta_correcta: number | string;
+        }>;
+    }): Promise<{ id: number; message: string }> {
+        return this.request('/retos/crear', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        });
+    }
 
   // Obtener retos activos
   async obtenerRetosActivos(): Promise<Array<{
@@ -401,13 +402,47 @@ class ApiService {
 
   // ==================== LECCIONES ====================
 
-  // Completar una lección
-  async completarLeccion(leccion_id: number, puntuacion: number, total_preguntas: number): Promise<{ message: string; xp_ganado: number }> {
-    return this.request('/lecciones/completar', {
-      method: 'POST',
-      body: JSON.stringify({ leccion_id, puntuacion, total_preguntas }),
-    });
-  }
+// Completar una lección
+   async completarLeccion(leccion_id: number, puntuacion: number, total_preguntas: number): Promise<{ message: string; xp_ganado: number }> {
+     return this.request('/lecciones/completar', {
+       method: 'POST',
+       body: JSON.stringify({ leccion_id, puntuacion, total_preguntas }),
+     });
+   }
+
+   // Asignar lección a estudiantes o grupo
+   async asignarLeccion(data: {
+     leccion_id: number;
+     tipo_asignacion: 'estudiantes' | 'grupo';
+     estudiantes_ids?: number[];
+     grupo_id?: number;
+     titulo_personalizado?: string;
+     fecha_vencimiento?: string;
+   }): Promise<{ message: string; tipo_asignacion: string; cantidad: number | string }> {
+     return this.request('/lecciones/asignar', {
+       method: 'POST',
+       body: JSON.stringify(data),
+     });
+   }
+
+   // Obtener lecciones asignadas al estudiante/profesor
+   async obtenerLeccionesAsignadas(): Promise<Array<{
+     asignacion_id: number;
+     id: number;
+     titulo: string;
+     descripcion: string;
+     imagen_url?: string;
+     tipo_asignacion: 'estudiantes' | 'grupo';
+     fecha_asignacion: string;
+     fecha_vencimiento?: string;
+     activa: boolean;
+     profesor_nombre?: string;
+     titulo_personalizado?: string;
+   }>> {
+     return this.request('/lecciones/asignadas', {
+       method: 'GET',
+     });
+   }
 
   // ==================== REPORTES ====================
 
@@ -434,50 +469,119 @@ class ApiService {
     });
   }
 
-  // Obtener detalles de rendimiento de una lección específica
-  async obtenerDetalleLeccion(leccion_id: number): Promise<{
-    leccion: {
-      id: number;
-      titulo: string;
-      descripcion: string;
-    };
-    estadisticas: {
-      promedio_general: number;
-      tasa_completitud: number;
-      tiempo_promedio: number;
-      distribucion_puntuaciones: {
-        excelente: number; // 80-100
-        bueno: number;     // 60-79
-        regular: number;   // 40-59
-        deficiente: number; // 0-39
-      };
-    };
-    estudiantes: Array<{
-      id: number;
-      nombre: string;
-      avatar_url: string;
-      puntuacion: number;
-      tiempo_completado: number;
-      fecha_completado: string;
-      respuestas: Array<{
-        pregunta_id: number;
-        correcta: boolean;
-        tiempo_respuesta: number;
-      }>;
-    }>;
-    analisis_preguntas: Array<{
-      pregunta_id: number;
-      pregunta_texto: string;
-      dificultad: 'facil' | 'medio' | 'dificil';
-      tasa_aciertos: number;
-      tiempo_promedio: number;
-      estudiantes_errores: number[];
-    }>;
-  }> {
-    return this.request(`/reportes/lecciones/${leccion_id}`, {
-      method: 'GET',
-    });
-  }
+// Obtener detalles de rendimiento de una lección específica
+   async obtenerDetalleLeccion(leccion_id: number): Promise<{
+     leccion: {
+       id: number;
+       titulo: string;
+       descripcion: string;
+     };
+     estadisticas: {
+       promedio_general: number;
+       tasa_completitud: number;
+       tiempo_promedio: number;
+       distribucion_puntuaciones: {
+         excelente: number; // 80-100
+         bueno: number;     // 60-79
+         regular: number;   // 40-59
+         deficiente: number; // 0-39
+       };
+     };
+     estudiantes: Array<{
+       id: number;
+       nombre: string;
+       avatar_url: string;
+       puntuacion: number;
+       tiempo_completado: number;
+       fecha_completado: string;
+       respuestas: Array<{
+         pregunta_id: number;
+         correcta: boolean;
+         tiempo_respuesta: number;
+       }>;
+     }>;
+     analisis_preguntas: Array<{
+       pregunta_id: number;
+       pregunta_texto: string;
+       dificultad: 'facil' | 'medio' | 'dificil';
+       tasa_aciertos: number;
+       tiempo_promedio: number;
+       estudiantes_errores: number[];
+     }>;
+   }> {
+     return this.request(`/reportes/lecciones/${leccion_id}`, {
+       method: 'GET',
+     });
+   }
+
+   // Obtener reportes de rendimiento por reto
+   async obtenerReportesRetos(): Promise<Array<{
+     id: number;
+     titulo: string;
+     promedio_puntuacion: number;
+     tasa_completitud: number;
+     total_estudiantes: number;
+     estudiantes: Array<{
+       nombre: string;
+       avatar_url: string;
+       puntuacion: number;
+       estado: 'completado' | 'en_progreso' | 'no_iniciado';
+     }>;
+     preguntas_dificiles: Array<{
+       pregunta: string;
+       tasa_error: number;
+     }>;
+   }>> {
+     return this.request('/teacher/reportes/retos', {
+       method: 'GET',
+     });
+   }
+
+   // Obtener detalles de rendimiento de un reto específico
+   async obtenerDetalleReto(reto_id: number): Promise<{
+     reto: {
+       id: number;
+       titulo: string;
+       descripcion: string;
+       xp_recompensa: number;
+     };
+     estadisticas: {
+       promedio_general: number;
+       tasa_completitud: number;
+       tiempo_promedio: number;
+       distribucion_puntuaciones: {
+         excelente: number; // 80-100 XP
+         bueno: number;     // 40-79 XP
+         regular: number;   // 10-39 XP
+         deficiente: number; // 0-9 XP
+       };
+     };
+     estudiantes: Array<{
+       id: number;
+       nombre: string;
+       avatar_url: string;
+       puntuacion: number;
+       tiempo_completado: number;
+       fecha_completado: string;
+       respuestas: Array<{
+         pregunta_id: number;
+         correcta: boolean;
+         tiempo_respuesta: number;
+       }>;
+     }>;
+     analisis_preguntas: Array<{
+       pregunta_id: number;
+       pregunta_texto: string;
+       dificultad: 'facil' | 'medio' | 'dificil';
+       tasa_aciertos: number;
+       tiempo_promedio: number;
+       estudiantes_errores: number[];
+     }>;
+   }> {
+     return this.request(`/teacher/reportes/retos/${reto_id}`, {
+       method: 'GET',
+     });
+   }
 
   // ==================== GESTIÓN DE CLASE ====================
 
