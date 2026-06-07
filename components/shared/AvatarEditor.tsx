@@ -56,7 +56,7 @@ const AvatarEditor: React.FC<AvatarEditorProps> = ({ onClose, onSave }) => {
                     <button onClick={onClose} className="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-300 transition-colors">
                         Cancelar
                     </button>
-                    <button onClick={handleSave} className="flex-1 bg-brand-red-orange text-white font-bold py-3 rounded-lg hover:bg-brand-orange transition-colors">
+                    <button onClick={handleSave} className="flex-1 bg-brand-dark-green text-white font-bold py-3 rounded-lg hover:bg-brand-green transition-colors">
                         Guardar
                     </button>
                 </div>
@@ -73,7 +73,7 @@ const AvatarOptionCategory: React.FC<{title: string, options: string[], onSelect
                 <button 
                     key={option} 
                     onClick={() => onSelect(option)}
-                    className="w-12 h-12 text-2xl bg-brand-cream rounded-lg flex items-center justify-center hover:bg-brand-yellow-orange transition-colors focus:ring-2 focus:ring-brand-orange focus:outline-none">
+                    className="w-12 h-12 text-2xl bg-brand-cream rounded-lg flex items-center justify-center hover:bg-brand-yellow-orange transition-colors focus:ring-2 focus:ring-brand-green focus:outline-none">
                     {option}
                 </button>
             ))}
@@ -82,3 +82,4 @@ const AvatarOptionCategory: React.FC<{title: string, options: string[], onSelect
 );
 
 export default AvatarEditor;
+

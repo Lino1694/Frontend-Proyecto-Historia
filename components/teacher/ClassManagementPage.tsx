@@ -215,7 +215,7 @@ const ClassManagementPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                         <button
                             onClick={fetchStudentsProgress}
                             disabled={loading}
-                            className="flex items-center gap-2 px-3 py-2 bg-brand-orange text-white rounded-lg hover:bg-brand-red-orange disabled:opacity-50 text-sm"
+                            className="flex items-center gap-2 px-3 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-dark-green disabled:opacity-50 text-sm"
                         >
                             {loading ? 'Actualizando...' : '🔄 Actualizar'}
                         </button>
@@ -266,7 +266,7 @@ const ClassManagementPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className="font-bold text-lg text-brand-orange">{student.progreso_general}%</p>
+                                <p className="font-bold text-lg text-brand-green">{student.progreso_general}%</p>
                                 <p className="text-xs text-slate-500">General</p>
                             </div>
                         </div>

@@ -203,7 +203,7 @@ const ChallengesCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
           <h2 className="text-lg font-bold text-slate-700">Retos Activos</h2>
           <button
             onClick={() => setShowCreateForm(true)}
-            className="bg-brand-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-red-orange transition-colors"
+            className="bg-brand-green text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark-green transition-colors"
           >
             + Nuevo Reto
           </button>
@@ -326,7 +326,7 @@ const ChallengesCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
                         ))}
                         <button
                             onClick={addPregunta}
-                            className="text-brand-orange text-sm font-semibold hover:underline"
+                            className="text-brand-green text-sm font-semibold hover:underline"
                         >
                             + Agregar Pregunta
                         </button>
@@ -336,7 +336,7 @@ const ChallengesCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
                         <button
                             onClick={handleCreateChallenge}
                             disabled={loading}
-                            className="bg-brand-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-red-orange transition-colors disabled:opacity-50"
+                            className="bg-brand-green text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark-green transition-colors disabled:opacity-50"
                         >
                             {loading ? 'Creando...' : 'Crear Reto'}
                         </button>
@@ -458,22 +458,22 @@ const ChallengesCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
                   <h3 className="font-bold text-slate-700 mb-2">Estadísticas del Reto</h3>
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
-                      <p className="font-bold text-2xl text-brand-orange">{Math.round(challengeReport.promedio_puntuacion)}</p>
+                      <p className="font-bold text-2xl text-brand-green">{Math.round(challengeReport.promedio_puntuacion)}</p>
                       <p className="text-xs text-slate-500">Promedio XP</p>
                     </div>
                     <div>
-                      <p className="font-bold text-2xl text-brand-orange">{Math.round(challengeReport.tasa_completitud)}%</p>
+                      <p className="font-bold text-2xl text-brand-green">{Math.round(challengeReport.tasa_completitud)}%</p>
                       <p className="text-xs text-slate-500">Completado</p>
                     </div>
                   </div>
-                  <ProgressBar progress={challengeReport.tasa_completitud} color="bg-brand-orange" />
+                  <ProgressBar progress={challengeReport.tasa_completitud} color="bg-brand-green" />
                 </Card>
               </div>
 
               <div className="p-4 bg-brand-offwhite/80 backdrop-blur-lg border-t border-brand-yellow-orange">
                 <button
                   onClick={() => { setSelectedChallenge(null); setChallengeReport(null); }}
-                  className="w-full bg-brand-orange text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-red-orange transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-brand-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-dark-green transition-colors flex items-center justify-center gap-2"
                 >
                   <span>Volver a Retos</span>
                 </button>

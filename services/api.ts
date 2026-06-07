@@ -255,28 +255,73 @@ class ApiService {
     });
   }
 
-  // Actualizar racha diaria
-  async actualizarRacha(usuario_id: number): Promise<{ message: string; racha_actual: number; xp_ganado: number }> {
-    return this.request('/xp/racha', {
-      method: 'POST',
-      body: JSON.stringify({ usuario_id }),
-    });
-  }
+// Actualizar racha diaria
+   async actualizarRacha(usuario_id: number): Promise<{ message: string; racha_actual: number; xp_ganado: number }> {
+     return this.request('/xp/racha', {
+       method: 'POST',
+       body: JSON.stringify({ usuario_id }),
+     });
+   }
 
-  // Obtener todos los niveles
-  async obtenerNiveles(): Promise<Array<{
-    nivel: number;
-    xp_minimo: number;
-    xp_maximo: number;
-    titulo: string;
-    icono: string;
-  }>> {
-    return this.request('/xp/niveles', {
-      method: 'GET',
-    });
-  }
+   // Obtener todos los niveles
+   async obtenerNiveles(): Promise<Array<{
+     nivel: number;
+     xp_minimo: number;
+     xp_maximo: number;
+     titulo: string;
+     icono: string;
+   }>> {
+     return this.request('/xp/niveles', {
+       method: 'GET',
+     });
+   }
 
-  // ==================== RETOS Y COMPETENCIAS ====================
+   // Obtener todas las insignias disponibles
+   async obtenerInsignias(): Promise<Array<{
+     id: number;
+     nombre: string;
+     descripcion: string;
+     icono: string;
+     color: string;
+     xp_requerido: number;
+   }>> {
+     return this.request('/xp/insignias', {
+       method: 'GET',
+     });
+   }
+
+// Otorgar insignia a un estudiante
+    async otorgarInsignia(usuario_id: number, insignia_id: number, descripcion?: string): Promise<{
+      message: string;
+      estudiante: string;
+      insignia: string;
+      xp_ganado: number;
+    }> {
+      return this.request('/xp/insignias/otorgar', {
+        method: 'POST',
+        body: JSON.stringify({ usuario_id, insignia_id, descripcion }),
+      });
+    }
+
+    // Configurar criterios para insignias automáticas
+    async configurarCriteriosInsignia(insignia_id: number, criterio: {
+      tipo: 'xp_minimo' | 'nivel_minimo' | 'respuestas_correctas' | 'actividades_completadas';
+      valor: number;
+    }): Promise<{ message: string; insignia_id: number; criterio: any }> {
+      return this.request('/xp/insignias/configurar-criterios', {
+        method: 'POST',
+        body: JSON.stringify({ insignia_id, criterio }),
+      });
+    }
+
+    // Evaluar y otorgar insignias automáticamente
+    async evaluarInsigniasAutomaticas(): Promise<{ message: string; resultados: any[] }> {
+      return this.request('/xp/insignias/evaluar-automatica', {
+        method: 'POST',
+      });
+    }
+
+   // ==================== RETOS Y COMPETENCIAS ====================
 
 // Crear un reto
     async crearReto(data: {
@@ -605,7 +650,7 @@ class ApiService {
     });
   }
 
-  // Obtener detalles de progreso de un estudiante específico
+// Obtener detalles de progreso de un estudiante específico
   async obtenerProgresoEstudianteDetalle(estudiante_id: number): Promise<{
     estudiante: {
       id: number;
@@ -627,6 +672,21 @@ class ApiService {
     tiempo_estudiado: number; // en minutos
   }> {
     return this.request(`/teacher/students/${estudiante_id}/progress`, {
+      method: 'GET',
+    });
+  }
+
+  // Obtener estudiantes con bajo rendimiento
+  async obtenerEstudiantesBajoRendimiento(threshold: number = 60): Promise<Array<{
+    id: number;
+    nombre: string;
+    avatar_url: string;
+    nivel: number;
+    xp_total: number;
+    promedio_puntuacion: number;
+    lecciones_completadas: number;
+  }>> {
+    return this.request(`/teacher/students/low-performance?threshold=${threshold}`, {
       method: 'GET',
     });
   }

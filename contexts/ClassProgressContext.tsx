@@ -69,3 +69,4 @@ export const useClassProgress = () => {
   if (!ctx) throw new Error('useClassProgress must be used within ClassProgressProvider');
   return ctx;
 };
+

@@ -135,12 +135,12 @@ const StudentAchievementsPage: React.FC = () => {
                     <h3 className={`text-lg font-bold mb-3 ${themeClasses.cardText}`}>Rachas y Metas</h3>
                       <div className="flex justify-around">
                         <div className="text-center">
-                            <p className="text-2xl font-bold text-brand-orange">📚</p>
+                            <p className="text-2xl font-bold text-brand-green">📚</p>
                             <p className={`font-semibold ${themeClasses.cardText}`}>Lecciones completadas</p>
                             <p className={`text-sm ${themeClasses.secondaryText}`}>{Math.round((completedLessons / totalLessons) * 100)}%</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-2xl font-bold text-brand-orange">🎯</p>
+                            <p className="text-2xl font-bold text-brand-green">🎯</p>
                              <p className={`font-semibold ${themeClasses.cardText}`}>Retos completados</p>
                              <p className={`text-sm ${themeClasses.secondaryText}`}>{Math.round((currentWeekProgress / weeklyGoal) * 100)}%</p>
                         </div>
@@ -180,3 +180,4 @@ const StudentAchievementsPage: React.FC = () => {
 };
 
 export default StudentAchievementsPage;
+

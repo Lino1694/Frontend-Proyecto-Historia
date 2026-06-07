@@ -318,7 +318,7 @@ const QuestionEditorModal: React.FC<{
                 </div>
                 <div className="mt-6 flex gap-3">
                     <button onClick={onClose} className="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg">Cancelar</button>
-                    <button onClick={handleSave} className="flex-1 bg-brand-red-orange text-white font-bold py-3 rounded-lg">Guardar</button>
+                    <button onClick={handleSave} className="flex-1 bg-brand-dark-green text-white font-bold py-3 rounded-lg">Guardar</button>
                 </div>
             </div>
         </div>
@@ -508,12 +508,12 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
                                     <p className="text-xs text-slate-500 uppercase font-semibold">{q.type.replace('_', ' ')}</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button onClick={() => handleEditQuestion(q)} className="p-2 text-slate-600 hover:text-brand-orange"><PencilIcon className="h-4 w-4"/></button>
+                                    <button onClick={() => handleEditQuestion(q)} className="p-2 text-slate-600 hover:text-brand-green"><PencilIcon className="h-4 w-4"/></button>
                                     <button onClick={() => handleDeleteQuestion(q.id)} className="p-2 text-slate-600 hover:text-red-500"><TrashIcon className="h-4 w-4"/></button>
                                 </div>
                             </div>
                         ))}
-                         <button onClick={handleAddNewQuestion} className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-400 text-slate-600 font-semibold rounded-lg hover:bg-brand-yellow-orange hover:border-brand-orange transition-colors">
+                         <button onClick={handleAddNewQuestion} className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-400 text-slate-600 font-semibold rounded-lg hover:bg-brand-yellow-orange hover:border-brand-green transition-colors">
                             <PlusCircleIcon className="h-5 w-5" />
                             <span>Agregar Pregunta</span>
                         </button>
@@ -524,7 +524,7 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
                     <button
                         onClick={handleSaveActivity}
                         disabled={isSaving}
-                        className="w-full bg-brand-red-orange text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-orange transform hover:-translate-y-1 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-brand-dark-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-green transform hover:-translate-y-1 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                        {isSaving ? 'Guardando...' : (activityToEdit ? 'Guardar Cambios' : 'Asignar Reto a la Clase')}
                     </button>
@@ -536,3 +536,4 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
 };
 
 export default CreateActivityPage;
+

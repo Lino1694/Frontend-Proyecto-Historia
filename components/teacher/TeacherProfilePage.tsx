@@ -120,7 +120,7 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <Card>
           <div className="text-center mb-6">
-            <div className="w-24 h-24 bg-brand-orange rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">
+            <div className="w-24 h-24 bg-brand-green rounded-full mx-auto mb-4 flex items-center justify-center text-3xl font-bold text-white">
               {user.avatar_url ? (
                 <img src={user.avatar_url} alt="Avatar" className="w-full h-full rounded-full object-cover" />
               ) : (
@@ -178,7 +178,7 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
                         reader.readAsDataURL(file);
                       }
                     }}
-                    className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-orange file:text-white hover:file:bg-brand-red-orange"
+                    className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
                   />
                   {formData.avatar_url && (
                     <div className="flex items-center space-x-3">
@@ -192,7 +192,7 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
                   {user.avatar_url ? (
                     <img src={user.avatar_url} alt="Avatar" className="w-12 h-12 rounded-full object-cover" />
                   ) : (
-                    <div className="w-12 h-12 bg-brand-orange rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-12 h-12 bg-brand-green rounded-full flex items-center justify-center text-white font-bold">
                       {user.nombre.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -265,7 +265,7 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
               <button
                 onClick={handleSave}
                 disabled={loading}
-                className="flex-1 bg-brand-red-orange text-white font-bold py-3 rounded-lg hover:bg-brand-orange disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-brand-dark-green text-white font-bold py-3 rounded-lg hover:bg-brand-green disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Guardando...' : 'Guardar Cambios'}
               </button>

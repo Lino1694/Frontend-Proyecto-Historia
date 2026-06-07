@@ -34,7 +34,7 @@ const GamificationCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
                  <Card>
                     <div className="flex justify-between items-center mb-3">
                          <h2 className="text-lg font-bold text-slate-700">Reglas de Puntos</h2>
-                         <button className="text-sm font-semibold bg-brand-orange/20 text-brand-orange px-3 py-1 rounded-md hover:bg-brand-orange/30">+ Nueva</button>
+                         <button className="text-sm font-semibold bg-brand-green/20 text-brand-green px-3 py-1 rounded-md hover:bg-brand-green/30">+ Nueva</button>
                     </div>
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between p-2 bg-brand-cream rounded-lg">
@@ -63,11 +63,11 @@ const GamificationCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
                              <p className="font-bold text-lg">II</p>
                             <p className="text-xs">200 - 399 pts</p>
                         </div>
-                        <div className="p-3 bg-brand-orange rounded-lg text-white">
+                        <div className="p-3 bg-brand-green rounded-lg text-white">
                              <p className="font-bold text-lg">III</p>
                             <p className="text-xs">400 - 699 pts</p>
                         </div>
-                        <div className="p-3 bg-brand-red-orange rounded-lg text-white">
+                        <div className="p-3 bg-brand-dark-green rounded-lg text-white">
                             <p className="font-bold text-lg">IV</p>
                             <p className="text-xs">700 - 999 pts</p>
                         </div>
@@ -80,7 +80,7 @@ const GamificationCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
                         <label htmlFor="gamification-toggle" className="font-semibold text-slate-700">Activar gamificación</label>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input type="checkbox" value="" id="gamification-toggle" className="sr-only peer" defaultChecked/>
-                          <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-orange"></div>
+                          <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-green"></div>
                         </label>
                      </div>
                 </Card>
@@ -90,3 +90,4 @@ const GamificationCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
 };
 
 export default GamificationCenter;
+

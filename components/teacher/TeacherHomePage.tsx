@@ -27,8 +27,8 @@ const mockActivities: PendingActivity[] = [
 ];
 
 const ToolButton: React.FC<{Icon: React.ElementType, label: string, onClick: () => void, className?: string}> = ({ Icon, label, onClick, className = '' }) => (
-    <button onClick={onClick} className={`flex flex-col items-center justify-center p-3 bg-brand-orange/20 rounded-lg hover:bg-brand-orange/30 transition-colors space-y-1 ${className}`}>
-        <Icon className="h-6 w-6 text-brand-orange" />
+    <button onClick={onClick} className={`flex flex-col items-center justify-center p-3 bg-brand-green/20 rounded-lg hover:bg-brand-green/30 transition-colors space-y-1 ${className}`}>
+        <Icon className="h-6 w-6 text-brand-green" />
         <span>{label}</span>
     </button>
 );
@@ -71,7 +71,7 @@ const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, n
                     <h1 className="text-xl font-bold text-slate-800">¡Hola, {userName}!</h1>
                     <p className="text-slate-600 text-sm">Panel del docente - 5to "A"</p>
                 </div>
-                 <button onClick={onLogout} className="bg-brand-red-orange/20 text-brand-red-orange font-semibold px-3 py-1.5 rounded-lg hover:bg-brand-red-orange/30 text-sm transition-colors">
+                 <button onClick={onLogout} className="bg-brand-dark-green/20 text-brand-dark-green font-semibold px-3 py-1.5 rounded-lg hover:bg-brand-dark-green/30 text-sm transition-colors">
                     Salir
                 </button>
             </header>
@@ -86,7 +86,7 @@ const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, n
                                     <h3 className="font-bold text-sm">{activity.type}: {activity.title}</h3>
                                     <p className="text-xs text-slate-600">{activity.submissions} entregas • <span className={activity.priority ? 'text-red-500 font-semibold' : ''}>{activity.dueDate}</span></p>
                                 </div>
-                                <button className={`font-semibold py-1.5 px-3 rounded-lg transition-colors text-sm ${activity.priority ? 'bg-brand-red-orange text-white hover:bg-brand-orange' : 'bg-brand-yellow-orange text-slate-800 hover:bg-brand-light-orange'}`}>
+                                <button className={`font-semibold py-1.5 px-3 rounded-lg transition-colors text-sm ${activity.priority ? 'bg-brand-dark-green text-white hover:bg-brand-green' : 'bg-brand-yellow-orange text-slate-800 hover:bg-brand-light-orange'}`}>
                                     Revisar
                                 </button>
                             </div>
@@ -98,7 +98,7 @@ const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, n
                       <h2 className="text-lg font-bold text-slate-700 mb-3">Progreso de Estudiantes</h2>
                     {loading ? (
                         <div className="flex items-center justify-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-orange"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green"></div>
                             <span className="ml-2 text-slate-600">Cargando estudiantes...</span>
                         </div>
                     ) : (
@@ -137,3 +137,4 @@ const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, n
 };
 
 export default TeacherHomePage;
+

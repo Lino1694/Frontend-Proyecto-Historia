@@ -122,16 +122,16 @@ const ChatbotView: React.FC<ChatbotViewProps> = ({ topicId, onBack }) => {
                 {messages.map((msg, index) => (
                     <div key={index} className={`flex items-end gap-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {msg.sender === 'bot' && (
-                            <div className="w-8 h-8 rounded-full bg-brand-orange text-white flex items-center justify-center flex-shrink-0">{topic.character.avatar}</div>
+                            <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center flex-shrink-0">{topic.character.avatar}</div>
                         )}
-                        <div className={`max-w-[80%] p-3 rounded-2xl ${msg.sender === 'user' ? 'bg-brand-orange text-white rounded-br-none' : 'bg-brand-offwhite text-slate-800 rounded-bl-none shadow-sm'}`}>
+                        <div className={`max-w-[80%] p-3 rounded-2xl ${msg.sender === 'user' ? 'bg-brand-green text-white rounded-br-none' : 'bg-brand-offwhite text-slate-800 rounded-bl-none shadow-sm'}`}>
                             <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
                         </div>
                     </div>
                 ))}
                 {isLoading && (
                      <div className="flex items-end gap-2 justify-start">
-                        <div className="w-8 h-8 rounded-full bg-brand-orange text-white flex items-center justify-center flex-shrink-0">{topic.character.avatar}</div>
+                        <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center flex-shrink-0">{topic.character.avatar}</div>
                         <div className="max-w-[80%] p-3 rounded-2xl bg-brand-offwhite text-slate-800 rounded-bl-none shadow-sm">
                             <div className="flex gap-1.5 items-center">
                                 <span className="h-2 w-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
@@ -154,7 +154,7 @@ const ChatbotView: React.FC<ChatbotViewProps> = ({ topicId, onBack }) => {
                         className="flex-1 bg-brand-cream px-4 py-3 rounded-full border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
                         disabled={isLoading}
                     />
-                    <button type="submit" className="bg-brand-red-orange text-white p-3 rounded-full hover:bg-brand-orange transition-colors disabled:bg-slate-400" disabled={isLoading || !input.trim()}>
+                    <button type="submit" className="bg-brand-dark-green text-white p-3 rounded-full hover:bg-brand-green transition-colors disabled:bg-slate-400" disabled={isLoading || !input.trim()}>
                         <PaperAirplaneIcon className="h-6 w-6" />
                     </button>
                 </form>

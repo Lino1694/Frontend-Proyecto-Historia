@@ -47,17 +47,17 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
     const displayError = error || localError;
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-brand-cream p-4">
-            <div className="w-full max-w-md">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-brand-green to-brand-cream p-4">
+            <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl">
                 <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center bg-brand-orange text-white p-3 rounded-full mb-3 shadow-md">
-                       <BookOpenIcon className="h-8 w-8" />
+                    <div className="inline-flex items-center justify-center bg-white text-white p-3 rounded-full mb-3 shadow-md">
+                       <BookOpenIcon className="h-8 w-8 text-brand-green" />
                     </div>
-                    <h1 className="text-4xl font-bold text-slate-800">Historia Lima</h1>
-                    <p className="text-slate-600 mt-1">Tu aventura por la historia del Perú comienza aquí.</p>
+                    <h1 className="text-4xl font-bold text-white drop-shadow-md">Historia Lima</h1>
+                    <p className="text-white/90 mt-1 drop-shadow-md">Tu aventura por la historia del Perú comienza aquí.</p>
                 </div>
 
-                <div className="bg-brand-offwhite p-8 rounded-2xl shadow-lg">
+                <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-xl">
                     {displayError && (
                         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
                             {displayError}
@@ -76,7 +76,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="tu.correo@ejemplo.com"
                                 required
-                                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none transition-colors"
+                                className="w-full px-4 py-3 rounded-lg bg-white border-2 border-transparent focus:border-brand-green focus:outline-none transition-colors"
                             />
                         </div>
                         <div className="mb-6">
@@ -90,13 +90,13 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
                                 required
-                                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none transition-colors"
+                                className="w-full px-4 py-3 rounded-lg bg-white border-2 border-transparent focus:border-brand-green focus:outline-none transition-colors"
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className={`w-full bg-brand-red-orange text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-orange transform hover:-translate-y-1 transition-all duration-300 shadow-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`w-full bg-brand-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-dark-green transform hover:-translate-y-1 transition-all duration-300 shadow-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {isLoading ? 'Procesando...' : 'Iniciar Sesión'}
                         </button>

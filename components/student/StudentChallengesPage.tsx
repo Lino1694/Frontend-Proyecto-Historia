@@ -186,7 +186,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                             onClick={() => setSelectedDificultad(null)}
                             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                                 selectedDificultad === null
-                                    ? 'bg-brand-orange text-white'
+                                    ? 'bg-brand-green text-white'
                                     : 'bg-slate-200 text-slate-700'
                             }`}
                         >
@@ -232,7 +232,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                             onClick={() => setSelectedTema(null)}
                             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                                 selectedTema === null
-                                    ? 'bg-brand-orange text-white'
+                                    ? 'bg-brand-green text-white'
                                     : 'bg-slate-200 text-slate-700'
                             }`}
                         >
@@ -269,7 +269,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                     <p className={`text-sm ${themeClasses.secondaryText}`}>Completa misiones y gana XP extra</p>
                                 </div>
                                 <div className="text-right">
-                                     <p className="font-bold text-lg text-brand-orange">+{activeMissions.reduce((sum, m) => sum + m.xp, 0) + activeRetos.reduce((sum, r) => sum + r.xp_recompensa, 0)}</p>
+                                     <p className="font-bold text-lg text-brand-green">+{activeMissions.reduce((sum, m) => sum + m.xp, 0) + activeRetos.reduce((sum, r) => sum + r.xp_recompensa, 0)}</p>
                                      <p className={`text-xs ${themeClasses.secondaryText}`}>XP Posible</p>
                                 </div>
                             </div>
@@ -283,7 +283,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                         <p className={`${themeClasses.secondaryText} text-sm`}>Gana hasta <span className="font-bold text-brand-light-orange">{mission.xp} XP</span></p>
                                     </div>
                                     <div className="flex flex-col items-end gap-2">
-                                        <button onClick={()=>navigateToActivity(mission.id, mission.current_question_id || 0)} className="bg-brand-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-red-orange transition-transform transform hover:scale-105 text-sm">
+                                        <button onClick={()=>navigateToActivity(mission.id, mission.current_question_id || 0)} className="bg-brand-green text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark-green transition-transform transform hover:scale-105 text-sm">
                                             {mission.progress > 0 ? 'Continuar' : 'Comenzar'}
                                         </button>
 
@@ -330,7 +330,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                                 <h4 className={`text-md font-semibold ${themeClasses.cardText} mb-3`}>{subcategoria}</h4>
                                                 <div className="space-y-3">
                                                     {retosActivos.map((reto) => (
-                                                        <Card key={`reto-${reto.id}`} className={`hover:shadow-lg transition-shadow ${themeClasses.cardBg} border-l-4 border-brand-orange`}>
+                                                        <Card key={`reto-${reto.id}`} className={`hover:shadow-lg transition-shadow ${themeClasses.cardBg} border-l-4 border-brand-green`}>
                                                             <div className="flex justify-between items-start">
                                                                 <div>
                                                                     <span className={`text-xs font-bold px-2 py-1 rounded-full mr-2 ${reto.tipo === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
@@ -353,7 +353,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                                                      <button
                                                                          onClick={() => handleUnirseReto(reto.id)}
                                                                          disabled={(attemptsLeft[reto.id] ?? 2) <= 0}
-                                                                         className="bg-brand-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-red-orange transition-transform transform hover:scale-105 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                         className="bg-brand-green text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark-green transition-transform transform hover:scale-105 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                                                      >
                                                                          {(attemptsLeft[reto.id] ?? 2) <= 0 ? 'Sin intentos' : 'Comenzar'}
                                                                      </button>
@@ -402,7 +402,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                                         <div className="flex flex-col items-end gap-2">
                                                             <button
                                                                 onClick={() => handleUnirseReto(reto.id)}
-                                                                className="bg-brand-orange text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-red-orange transition-transform transform hover:scale-105 text-sm"
+                                                                className="bg-brand-green text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark-green transition-transform transform hover:scale-105 text-sm"
                                                             >
                                                                 Comenzar
                                                             </button>
@@ -444,4 +444,5 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
 };
 
 export default StudentChallengesPage;
+
 

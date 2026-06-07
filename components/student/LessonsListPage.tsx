@@ -55,7 +55,7 @@ const LessonsListPage: React.FC<LessonsListPageProps> = ({ temaId, temaTitle, on
     return (
         <div className={`${themeClasses.bg} min-h-screen`}>
             <header className={`p-4 ${themeClasses.headerBg} shadow-sm flex items-center sticky top-0 z-10`}>
-                <button onClick={onBack} className="text-brand-red-orange hover:text-brand-red-orange/80 transition-colors font-semibold">
+                <button onClick={onBack} className="text-brand-dark-green hover:text-brand-dark-green/80 transition-colors font-semibold">
                     ← Volver
                 </button>
                 <h1 className={`text-xl font-bold ${themeClasses.headerText} flex-1 text-center`}>{temaTitle}</h1>

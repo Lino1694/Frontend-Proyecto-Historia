@@ -41,7 +41,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userName, onLogout,
     }
 
     const NavItem: React.FC<{tab: StudentTab, label: string, Icon: React.ElementType}> = ({tab, label, Icon}) => (
-        <button onClick={() => setActiveTab(tab)} className={`flex flex-col items-center w-full justify-center transition-colors duration-200 lg:flex-row lg:items-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-lg lg:hover:bg-brand-cream/50 ${activeTab === tab ? 'text-brand-orange lg:bg-brand-cream/70' : 'text-slate-500 hover:text-brand-orange'}`}>
+        <button onClick={() => setActiveTab(tab)} className={`flex flex-col items-center w-full justify-center transition-colors duration-200 lg:flex-row lg:items-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-lg lg:hover:bg-brand-cream/50 ${activeTab === tab ? 'text-brand-green lg:bg-brand-cream/70' : 'text-slate-500 hover:text-brand-green'}`}>
             <Icon className="h-6 w-6 lg:mr-3" />
             <span className="text-xs font-bold lg:text-sm lg:text-left">{label}</span>
         </button>
@@ -66,3 +66,4 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userName, onLogout,
 };
 
 export default StudentDashboard;
+

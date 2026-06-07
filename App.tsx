@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ChatbotView from './components/student/ChatbotView';
 import { ClassProgressProvider } from './contexts/ClassProgressContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export type View = 
     | 'auth' 
@@ -103,9 +104,13 @@ const AppContent: React.FC = () => {
         }
     };
 
+    const containerClasses = view === 'auth' 
+      ? "w-full h-screen overflow-hidden flex flex-col"
+      : "w-full h-screen bg-brand-cream overflow-hidden flex flex-col lg:p-0 lg:m-0";
+
     return (
-        <div className="min-h-screen flex items-center justify-center p-0 sm:p-4">
-             <div className="w-full max-w-sm h-screen sm:h-auto sm:max-h-[850px] lg:max-w-7xl lg:h-screen lg:max-h-none bg-brand-cream sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col relative">
+        <div className="min-h-screen w-full">
+             <div className={containerClasses}>
                 {renderView()}
             </div>
         </div>
@@ -114,13 +119,15 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
     return (
-        <AuthProvider>
-            <ThemeProvider>
-                <ClassProgressProvider>
-                    <AppContent />
-                </ClassProgressProvider>
-            </ThemeProvider>
-        </AuthProvider>
+        <ErrorBoundary>
+            <AuthProvider>
+                <ThemeProvider>
+                    <ClassProgressProvider>
+                        <AppContent />
+                    </ClassProgressProvider>
+                </ThemeProvider>
+            </AuthProvider>
+        </ErrorBoundary>
     );
 };
 

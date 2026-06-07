@@ -3,6 +3,7 @@ import { Card } from '../shared/Card';
 import { ProgressBar } from '../shared/ProgressBar';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { EyeIcon } from '../icons/EyeIcon';
+import { DownloadIcon } from '../icons/DownloadIcon';
 import { apiService } from '../../services/api';
 
 interface ReportData {
@@ -63,12 +64,24 @@ interface DetailedReport {
     }>;
 }
 
+interface EstudianteBajoRendimiento {
+    id: number;
+    nombre: string;
+    avatar_url: string;
+    nivel: number;
+    xp_total: number;
+    promedio_puntuacion: number;
+    lecciones_completadas: number;
+}
+
 const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
     const [reports, setReports] = useState<ReportData[]>([]);
     const [selectedReport, setSelectedReport] = useState<ReportData | null>(null);
     const [detailedReport, setDetailedReport] = useState<DetailedReport | null>(null);
     const [loading, setLoading] = useState(true);
     const [loadingDetail, setLoadingDetail] = useState(false);
+    const [estudiantesBajoRendimiento, setEstudiantesBajoRendimiento] = useState<EstudianteBajoRendimiento[]>([]);
+    const [loadingBajoRendimiento, setLoadingBajoRendimiento] = useState(false);
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -77,7 +90,6 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                 setReports(data);
             } catch (error) {
                 console.error('Error fetching reports:', error);
-                // Fallback to mock data when backend is not implemented
                 console.log('Usando datos de demostración hasta que se implemente el backend de reportes');
                 setReports([
                     {
@@ -122,6 +134,21 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
         fetchReports();
     }, []);
 
+    useEffect(() => {
+        const fetchEstudiantesBajoRendimiento = async () => {
+            setLoadingBajoRendimiento(true);
+            try {
+                const data = await apiService.obtenerEstudiantesBajoRendimiento();
+                setEstudiantesBajoRendimiento(data);
+            } catch (error) {
+                console.error('Error fetching low performers:', error);
+            } finally {
+                setLoadingBajoRendimiento(false);
+            }
+        };
+        fetchEstudiantesBajoRendimiento();
+    }, []);
+
     const handleViewDetail = async (report: ReportData) => {
         setLoadingDetail(true);
         try {
@@ -150,6 +177,27 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
         }
     };
 
+    const handleExportReports = () => {
+        const csvContent = [
+            ['Lección', 'Promedio', '% Completado', 'Total Estudiantes', 'Estudiantes'],
+            ...reports.map(report => [
+                report.titulo,
+                report.promedio_puntuacion,
+                `${report.tasa_completitud}%`,
+                report.total_estudiantes,
+                report.estudiantes.map(e => e.nombre).join('; ')
+            ])
+        ].map(row => row.join(',')).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reportes-desempeno-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="flex-1 overflow-y-auto bg-brand-cream animate-scale-in">
             <header className="p-4 bg-brand-offwhite shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
@@ -158,9 +206,52 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                     <span>Volver</span>
                 </button>
                 <h1 className="text-xl font-bold text-center text-slate-800">Centro de Reportes</h1>
+                {reports.length > 0 && (
+                    <button 
+                        onClick={handleExportReports}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 font-semibold text-brand-green hover:text-brand-dark-green transition-colors text-sm"
+                    >
+                        <DownloadIcon className="h-4 w-4" />
+                        <span>Exportar</span>
+                    </button>
+                )}
             </header>
             
             <div className="p-4 space-y-4">
+                {/* Estudiantes con Bajo Rendimiento */}
+                <Card>
+                    <h2 className="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <span className="text-red-600">⚠️</span>
+                        Estudiantes que Necesitan Apoyo
+                    </h2>
+                    {loadingBajoRendimiento ? (
+                        <p className="text-center text-slate-600 text-sm">Cargando estudiantes...</p>
+                    ) : estudiantesBajoRendimiento.length > 0 ? (
+                        <ul className="space-y-3">
+                            {estudiantesBajoRendimiento.map(student => (
+                                <li key={student.id} className="flex items-center justify-between p-2 rounded-lg bg-red-50 border border-red-200">
+                                    <div className="flex items-center">
+                                        <img src={student.avatar_url} alt={student.nombre} className="w-10 h-10 rounded-full mr-3 object-cover" />
+                                        <div>
+                                            <span className="font-semibold text-slate-800">{student.nombre}</span>
+                                            <div className="text-xs text-slate-500">
+                                                Nivel {student.nivel} - {student.promedio_puntuacion}% promedio
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span className="text-xs font-bold bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                                        Apoyo
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-center text-slate-600 text-sm py-4">
+                            No hay estudiantes con bajo rendimiento en este momento.
+                        </p>
+                    )}
+                </Card>
+
                 {loading ? (
                     <Card>
                         <p className="text-center text-slate-600">Cargando reportes...</p>
@@ -171,23 +262,23 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                             <h2 className="text-lg font-bold text-slate-800">{report.titulo}</h2>
                             <div className="grid grid-cols-3 gap-4 text-center my-3">
                                 <div>
-                                    <p className="font-bold text-2xl text-brand-orange">{Math.round(report.promedio_puntuacion)}</p>
+                                    <p className="font-bold text-2xl text-brand-green">{Math.round(report.promedio_puntuacion)}</p>
                                     <p className="text-xs text-slate-500">Promedio</p>
                                 </div>
                                  <div>
-                                    <p className="font-bold text-2xl text-brand-orange">{Math.round(report.tasa_completitud)}%</p>
+                                    <p className="font-bold text-2xl text-brand-green">{Math.round(report.tasa_completitud)}%</p>
                                     <p className="text-xs text-slate-500">Completado</p>
                                 </div>
                                 <div>
-                                    <p className="font-bold text-2xl text-brand-orange">{report.total_estudiantes}</p>
+                                    <p className="font-bold text-2xl text-brand-green">{report.total_estudiantes}</p>
                                     <p className="text-xs text-slate-500">Alumnos</p>
                                 </div>
                             </div>
-                            <ProgressBar progress={report.tasa_completitud} color="bg-brand-orange" />
+                            <ProgressBar progress={report.tasa_completitud} color="bg-brand-green" />
                             <button
                                 onClick={() => handleViewDetail(report)}
                                 disabled={loadingDetail}
-                                className="w-full mt-4 bg-brand-orange/20 text-brand-orange font-bold py-2 rounded-lg hover:bg-brand-orange/30 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+                                className="w-full mt-4 bg-brand-green/20 text-brand-green font-bold py-2 rounded-lg hover:bg-brand-green/30 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
                                 <EyeIcon className="w-5 h-5"/>
                                 <span>{loadingDetail ? 'Cargando...' : 'Ver Detalle'}</span>
                             </button>
@@ -285,7 +376,7 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                                                              'bg-red-100 text-red-800'
                                                          }`}>
                                                              {pregunta.dificultad === 'facil' ? 'Fácil' :
-                                                              pregunta.dificultad === 'medio' ? 'Medio' : 'Difícil'}
+                                                                  pregunta.dificultad === 'medio' ? 'Medio' : 'Difícil'}
                                                          </span>
                                                      </div>
                                                  </div>
@@ -298,7 +389,7 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                          <div className="p-4 bg-brand-offwhite/80 backdrop-blur-lg border-t border-brand-yellow-orange">
                              <button
                                  onClick={() => { setSelectedReport(null); setDetailedReport(null); }}
-                                 className="w-full bg-brand-orange text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-red-orange transition-colors flex items-center justify-center gap-2"
+                                 className="w-full bg-brand-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-dark-green transition-colors flex items-center justify-center gap-2"
                              >
                                  <ArrowLeftIcon className="w-5 h-5" />
                                  <span>Volver a Reportes</span>

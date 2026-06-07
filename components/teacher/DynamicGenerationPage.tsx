@@ -329,7 +329,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
           </button>
           <div>
             <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-              <SparklesIcon className="h-8 w-8 text-brand-orange" />
+              <SparklesIcon className="h-8 w-8 text-brand-green" />
               Generación Dinámica
             </h1>
             <p className="text-slate-600 mt-1">Genera lecciones y retos automáticamente con IA</p>
@@ -341,7 +341,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
           <div className="space-y-6">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
               <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <BookOpenIcon className="h-6 w-6 text-brand-orange" />
+                <BookOpenIcon className="h-6 w-6 text-brand-green" />
                 Generar Lección
               </h2>
 
@@ -353,7 +353,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                   <select
                     value={selectedCharacter}
                     onChange={(e) => setSelectedCharacter(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                   >
                     <option value="">Seleccionar personaje...</option>
                     {characters.map(char => (
@@ -373,14 +373,14 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                     value={customTopic}
                     onChange={(e) => setCustomTopic(e.target.value)}
                     placeholder="Ej: La agricultura en el Imperio Inca"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                   />
                 </div>
 
                 <button
                   onClick={generateLesson}
                   disabled={isGeneratingLesson}
-                  className="w-full bg-brand-orange text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-red-orange transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-brand-green text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-dark-green transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isGeneratingLesson ? (
                     <>
@@ -399,7 +399,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
               <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <TrophyIcon className="h-6 w-6 text-brand-orange" />
+                <TrophyIcon className="h-6 w-6 text-brand-green" />
                 Generar Reto
               </h2>
 
@@ -411,7 +411,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                   <select
                     value={challengeCharacter}
                     onChange={(e) => setChallengeCharacter(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                   >
                     <option value="">Seleccionar personaje...</option>
                     {characters.map(char => (
@@ -431,7 +431,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                     value={challengeTopic}
                     onChange={(e) => setChallengeTopic(e.target.value)}
                     placeholder="Ej: La conquista española"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                   />
                 </div>
 
@@ -442,7 +442,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                   <select
                     value={numQuestions}
                     onChange={(e) => setNumQuestions(Number(e.target.value))}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                   >
                     <option value={3}>3 preguntas</option>
                     <option value={5}>5 preguntas</option>
@@ -457,7 +457,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                   <select
                     value={challengeDifficulty}
                     onChange={(e) => setChallengeDifficulty(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                   >
                     <option value="fácil">Fácil</option>
                     <option value="intermedio">Intermedio</option>
@@ -468,7 +468,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                 <button
                   onClick={generateChallenge}
                   disabled={isGeneratingChallenge}
-                  className="w-full bg-brand-orange text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-red-orange transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full bg-brand-green text-white font-semibold py-3 px-6 rounded-lg hover:bg-brand-dark-green transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isGeneratingChallenge ? (
                     <>
@@ -502,14 +502,14 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                     type="text"
                     value={lessonTitle}
                     onChange={(e) => setLessonTitle(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-transparent"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                     placeholder="Ingresa el título de la lección..."
                   />
                 </div>
                 <textarea
                   value={generatedLesson}
                   onChange={(e) => setGeneratedLesson(e.target.value)}
-                  className="w-full h-80 p-4 border border-gray-300 rounded-lg resize-vertical focus:ring-2 focus:ring-brand-orange focus:border-transparent text-sm leading-relaxed overflow-y-auto"
+                  className="w-full h-80 p-4 border border-gray-300 rounded-lg resize-vertical focus:ring-2 focus:ring-brand-green focus:border-transparent text-sm leading-relaxed overflow-y-auto"
                   placeholder="La lección generada aparecerá aquí..."
                 />
                 <div className="mt-4 flex gap-2">

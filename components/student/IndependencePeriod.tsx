@@ -83,3 +83,4 @@ const IndependencePeriod: React.FC = () => {
 };
 
 export default IndependencePeriod;
+

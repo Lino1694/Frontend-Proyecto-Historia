@@ -165,7 +165,7 @@ const isEmojiAvatar = (avatar: string) => {
                     <h2 className={`text-xl font-bold mt-2 ${themeClasses.cardText}`}>{userName}</h2>
                     <div className="space-y-1">
                         {user?.titulo && (
-                            <p className={`text-sm font-semibold text-brand-orange capitalize`}>
+                            <p className={`text-sm font-semibold text-brand-green capitalize`}>
                                 {user.titulo}
                             </p>
                         )}
@@ -242,7 +242,7 @@ const isEmojiAvatar = (avatar: string) => {
                         <div className="py-3">
                             <button
                                 onClick={() => setShowDataEditor(true)}
-                                className={`w-full text-left font-semibold ${themeClasses.cardText} hover:text-brand-orange transition-colors`}
+                                className={`w-full text-left font-semibold ${themeClasses.cardText} hover:text-brand-green transition-colors`}
                             >
                                 Editar datos
                             </button>
@@ -276,7 +276,7 @@ const isEmojiAvatar = (avatar: string) => {
                                 <label className="block text-sm font-bold text-slate-600 mb-2">Avatar</label>
                                 <button
                                     onClick={() => setShowAvatarEditor(true)}
-                                    className="w-full py-2 mb-2 bg-brand-orange text-white font-bold rounded-lg hover:bg-brand-red-orange transition-colors"
+                                    className="w-full py-2 mb-2 bg-brand-green text-white font-bold rounded-lg hover:bg-brand-dark-green transition-colors"
                                 >
                                     Crear avatar personalizado
                                 </button>

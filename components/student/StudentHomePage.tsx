@@ -162,7 +162,7 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
                     <h1 className={`text-xl font-bold ${themeClasses.headerText}`}>¡Hola, {userName}!</h1>
                     <p className={`${themeClasses.secondaryText} text-sm`}>¡Sigue con tu aventura!</p>
                 </div>
-                <button onClick={onLogout} className="bg-brand-red-orange/20 text-brand-red-orange font-semibold px-3 py-1.5 rounded-lg hover:bg-brand-red-orange/30 text-sm transition-colors">
+                <button onClick={onLogout} className="bg-brand-dark-green/20 text-brand-dark-green font-semibold px-3 py-1.5 rounded-lg hover:bg-brand-dark-green/30 text-sm transition-colors">
                     Salir
                 </button>
             </header>
@@ -227,7 +227,7 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
                                             {lesson.imagen_url ? (
                                                 <img src={lesson.imagen_url} alt={lesson.titulo} className="w-14 h-14 rounded-lg object-cover" />
                                             ) : (
-                                                <div className="w-14 h-14 rounded-lg bg-brand-orange flex items-center justify-center text-2xl">
+                                                <div className="w-14 h-14 rounded-lg bg-brand-green flex items-center justify-center text-2xl">
                                                     📚
                                                 </div>
                                             )}
@@ -246,14 +246,14 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
                     {/* Sección de Recomendaciones basadas en progreso */}
                     {mockClasses.some(c => (progress[c.id] ?? 0) < 100) && (
                         <div className="mt-8">
-                            <h2 className={`text-xl font-bold text-brand-red-orange mb-3`}>🔔 Recomendado para ti</h2>
+                            <h2 className={`text-xl font-bold text-brand-dark-green mb-3`}>🔔 Recomendado para ti</h2>
                             <div className="space-y-3">
                                 {mockClasses
                                     .filter(c => (progress[c.id] ?? 0) < 100)
                                     .sort((a, b) => (progress[a.id] ?? 0) - (progress[b.id] ?? 0))
                                     .map((clase) => (
                                         <div key={`rec-${clase.id}`} className="cursor-pointer" onClick={() => handleClassClick(clase.id)}>
-                                            <Card className={`hover:shadow-lg transition-shadow border-l-4 border-brand-red-orange ${themeClasses.cardBg}`}>
+                                            <Card className={`hover:shadow-lg transition-shadow border-l-4 border-brand-dark-green ${themeClasses.cardBg}`}>
                                                 <div className="flex items-center gap-3">
                                                     <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl ${clase.color}`}>
                                                         {clase.icon}
@@ -263,7 +263,7 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
                                                         <p className={`text-xs ${themeClasses.secondaryText}`}>{clase.description}</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <span className="text-sm font-bold text-brand-red-orange">{(progress[clase.id] ?? 0)}%</span>
+                                                        <span className="text-sm font-bold text-brand-dark-green">{(progress[clase.id] ?? 0)}%</span>
                                                         <p className={`text-xs ${themeClasses.secondaryText}`}>Continuar</p>
                                                     </div>
                                                 </div>
@@ -280,11 +280,11 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
                         <h3 className={`text-lg font-bold mb-3 flex items-center ${themeClasses.cardText}`}><TrophyIcon className="h-5 w-5 mr-2 text-brand-light-orange" /> Tu Avatar</h3>
                         <div className="flex items-center">
                             {user?.avatar_url && !user.avatar_url.startsWith('http') ? (
-                                <div className="w-14 h-14 rounded-full border-4 border-brand-yellow bg-brand-cream flex items-center justify-center text-2xl">
+                                <div className="w-14 h-14 rounded-full border-4 border-brand-green bg-brand-cream flex items-center justify-center text-2xl">
                                     {user.avatar_url}
                                 </div>
                             ) : (
-                                <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className="w-14 h-14 rounded-full border-4 border-brand-yellow bg-brand-cream object-cover" />
+                                <img src={user?.avatar_url || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"} alt="Avatar" className="w-14 h-14 rounded-full border-4 border-brand-green bg-brand-cream object-cover" />
                             )}
                             <div className="ml-4">
                                 <p className={`font-bold ${themeClasses.cardText}`}>{userName}</p>

@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#52b788" />
     <title>Historia Lima - Aprendizaje Gamificado</title>
+    <link rel="preconnect" href="https://aistudiocdn.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'brand-orange': '#F57411',
-                        'brand-yellow-orange': '#F5C3B8',
-                        'brand-light-orange': '#F4AB3A',
-                        'brand-red-orange': '#F54F16',
+                        'brand-green': '#52b788',
+                        'brand-cream': '#ede8d0',
+                        'brand-light': '#7dd8a7',
+                        'brand-dark-green': '#45a575',
                         'brand-yellow': '#F7D107',
-                        'brand-cream': '#F5E7D3',
-                        'brand-offwhite': '#FFFBF5',
                     },
                     keyframes: {
                         'scale-in': {
@@ -42,9 +42,10 @@
 }
 </script>
 <link rel="stylesheet" href="/index.css">
+<style>html{background:#ede8d0}.instant-loader-inner{width:40px;height:40px;border:3px solid #52b788;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}</style>
 </head>
 <body class="bg-slate-200">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <div id="root" class="instant-loader"><div class="instant-loader-inner"></div></div>
+    <script type="module" src="/index.tsx" async></script>
 </body>
 </html>

@@ -41,9 +41,24 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
   const { user } = useAuth();
   const { perfilXP, ultimoXPGanado, mostrarNotificacion, cerrarNotificacion } = useXP(user?.id || null);
 
-  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [answers, setAnswers] = useState<Record<number, any>>(
+    () => {
+      try {
+        const saved = localStorage.getItem(`lesson-${lesson.id}-answers`);
+        return saved ? JSON.parse(saved) : {};
+      } catch {
+        return {};
+      }
+    }
+  );
   const [showResults, setShowResults] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`lesson-${lesson.id}-answers`, JSON.stringify(answers));
+    } catch {}
+  }, [answers, lesson.id]);
 
   const handleDragStart = (itemId: string) => {
     setDraggedItem(itemId);
@@ -92,10 +107,12 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
     try {
       await apiService.completarLeccion(lesson.id, correctAnswers, totalQuestions);
       // Automatically return to dashboard after successful completion
+      localStorage.removeItem(`lesson-${lesson.id}-answers`);
       onBack();
     } catch (error: any) {
       console.error('Error completing lesson:', error);
       if (error.message && error.message.includes('Ya has completado esta lección')) {
+        localStorage.removeItem(`lesson-${lesson.id}-answers`);
         alert('Ya has completado esta lección, regresa al inicio');
         onBack();
       } else {

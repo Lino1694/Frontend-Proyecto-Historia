@@ -73,7 +73,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
             default:
                 return {
                     bg: 'bg-brand-cream',
-                    headerBg: 'bg-brand-offwhite',
+                    headerBg: 'bg-brand-cream',
                     headerText: 'text-slate-800',
                     cardBg: 'bg-white',
                     cardText: 'text-slate-700',

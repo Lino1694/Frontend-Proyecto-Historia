@@ -94,13 +94,13 @@ const AssignmentModal: React.FC<{
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setTipoAsignacion('estudiantes')}
-                                className={`flex-1 py-2 px-3 rounded-lg font-semibold text-sm ${tipoAsignacion === 'estudiantes' ? 'bg-brand-orange text-white' : 'bg-brand-cream text-slate-700'}`}
+                                className={`flex-1 py-2 px-3 rounded-lg font-semibold text-sm ${tipoAsignacion === 'estudiantes' ? 'bg-brand-green text-white' : 'bg-brand-cream text-slate-700'}`}
                             >
                                 Estudiantes
                             </button>
                             <button
                                 onClick={() => setTipoAsignacion('grupo')}
-                                className={`flex-1 py-2 px-3 rounded-lg font-semibold text-sm ${tipoAsignacion === 'grupo' ? 'bg-brand-orange text-white' : 'bg-brand-cream text-slate-700'}`}
+                                className={`flex-1 py-2 px-3 rounded-lg font-semibold text-sm ${tipoAsignacion === 'grupo' ? 'bg-brand-green text-white' : 'bg-brand-cream text-slate-700'}`}
                             >
                                 Grupo
                             </button>
@@ -123,7 +123,7 @@ const AssignmentModal: React.FC<{
                                                     setSelectedStudents(selectedStudents.filter(id => id !== student.id));
                                                 }
                                             }}
-                                            className="w-4 h-4 text-brand-orange"
+                                            className="w-4 h-4 text-brand-green"
                                         />
                                         <span className="text-sm text-slate-700">{student.nombre}</span>
                                     </label>
@@ -165,7 +165,7 @@ const AssignmentModal: React.FC<{
                     <button
                         onClick={handleAssign}
                         disabled={tipoAsignacion === 'estudiantes' && selectedStudents.length === 0}
-                        className="flex-1 py-2 px-4 rounded-lg bg-brand-orange text-white font-semibold hover:bg-brand-red-orange disabled:opacity-50"
+                        className="flex-1 py-2 px-4 rounded-lg bg-brand-green text-white font-semibold hover:bg-brand-dark-green disabled:opacity-50"
                     >
                         Asignar
                     </button>
@@ -257,7 +257,7 @@ const ContentManagementPage: React.FC<ContentManagementPageProps> = ({ onBack, o
                     <Card>
                         <button
                             onClick={onCreateNew}
-                            className="w-full flex items-center justify-center gap-2 py-3 bg-brand-orange/20 text-brand-orange font-bold rounded-lg hover:bg-brand-orange/30 transition-colors">
+                            className="w-full flex items-center justify-center gap-2 py-3 bg-brand-green/20 text-brand-green font-bold rounded-lg hover:bg-brand-green/30 transition-colors">
                             <PlusCircleIcon className="h-6 w-6"/>
                             <span>Crear Nuevo Reto</span>
                         </button>
@@ -292,7 +292,7 @@ const ContentManagementPage: React.FC<ContentManagementPageProps> = ({ onBack, o
                                         >
                                             <UsersIcon className="h-4 w-4" />
                                         </button>
-                                        <button onClick={() => onEditLesson(lesson)} className="p-2 text-slate-600 hover:text-brand-orange">
+                                        <button onClick={() => onEditLesson(lesson)} className="p-2 text-slate-600 hover:text-brand-green">
                                             <PencilIcon className="h-4 w-4" />
                                         </button>
                                     </div>
@@ -336,3 +336,4 @@ const ContentManagementPage: React.FC<ContentManagementPageProps> = ({ onBack, o
 };
 
 export default ContentManagementPage;
+

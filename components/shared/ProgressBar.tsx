@@ -14,3 +14,4 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ progress, color = 'bg-
         </div>
     );
 };
+

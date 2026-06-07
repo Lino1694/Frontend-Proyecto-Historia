@@ -7,13 +7,13 @@ import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import apiService from '../../services/api';
 
 interface MultimediaFile {
-  id: string;
-  file: File;
-  tipo: 'video' | 'audio' | 'imagen';
-  url: string; // data URL for preview
-  titulo: string;
-  descripcion: string;
-}
+   id: string;
+   file: File;
+   tipo: 'video' | 'audio' | 'imagen' | 'enlace';
+   url: string;
+   titulo: string;
+   descripcion: string;
+ }
 
 interface Lesson {
   id: string;
@@ -135,6 +135,31 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
       ...prev,
       multimedia: prev.multimedia.filter(m => m.id !== id)
     }));
+  };
+
+  const [enlaceInput, setEnlaceInput] = useState({ url: '', titulo: '' });
+
+  const handleAddEnlace = () => {
+    if (!enlaceInput.url.trim()) {
+      alert('Ingresa una URL válida.');
+      return;
+    }
+    if (!enlaceInput.url.startsWith('http://') && !enlaceInput.url.startsWith('https://')) {
+      alert('La URL debe comenzar con http:// o https://');
+      return;
+    }
+    setLesson(prev => ({
+      ...prev,
+      multimedia: [...prev.multimedia, {
+        id: `enlace_${Date.now()}`,
+        file: new File([], 'enlace') as any,
+        tipo: 'enlace',
+        url: enlaceInput.url,
+        titulo: enlaceInput.titulo || 'Enlace externo',
+        descripcion: ''
+      }]
+    }));
+    setEnlaceInput({ url: '', titulo: '' });
   };
 
   const handleAddNewQuestion = () => {
@@ -299,36 +324,64 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                 accept="video/*,audio/*,image/*"
                 multiple
                 onChange={(e) => e.target.files && handleMultimediaFiles(e.target.files)}
-                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-orange file:text-white hover:file:bg-brand-red-orange"
+                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
               />
               <p className="text-xs text-slate-500 mt-1">Puedes subir videos, audios e imágenes para enriquecer la lección (máx. 10MB por archivo)</p>
 
-              {lesson.multimedia.length > 0 && (
-                <div className="mt-4 space-y-3">
-                  <h4 className="text-sm font-semibold text-slate-700">Archivos seleccionados:</h4>
-                  {lesson.multimedia.map((media) => (
-                    <div key={media.id} className="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          media.tipo === 'video' ? 'bg-red-100 text-red-800' :
-                          media.tipo === 'audio' ? 'bg-blue-100 text-blue-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
-                          {media.tipo}
-                        </span>
-                        <span className="text-sm text-slate-700">{media.titulo}</span>
+{lesson.multimedia.length > 0 && (
+                  <div className="mt-4 space-y-3">
+                    <h4 className="text-sm font-semibold text-slate-700">Archivos seleccionados:</h4>
+                    {lesson.multimedia.map((media) => (
+                      <div key={media.id} className="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${
+                            media.tipo === 'video' ? 'bg-red-100 text-red-800' :
+                            media.tipo === 'audio' ? 'bg-blue-100 text-blue-800' :
+                            media.tipo === 'enlace' ? 'bg-purple-100 text-purple-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {media.tipo}
+                          </span>
+                          <span className="text-sm text-slate-700">{media.titulo}</span>
+                        </div>
+                        <button
+                          onClick={() => removeMultimedia(media.id)}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </button>
                       </div>
-                      <button
-                        onClick={() => removeMultimedia(media.id)}
-                        className="text-red-500 hover:text-red-700 p-1"
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-600 mb-2">Agregar enlace externo</label>
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={enlaceInput.url}
+                    onChange={e => setEnlaceInput(prev => ({ ...prev, url: e.target.value }))}
+                    placeholder="https://ejemplo.com/video.mp4"
+                    className="flex-1 px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={enlaceInput.titulo}
+                    onChange={e => setEnlaceInput(prev => ({ ...prev, titulo: e.target.value }))}
+                    placeholder="Título del recurso"
+                    className="flex-1 px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                  />
+                  <button
+                    onClick={handleAddEnlace}
+                    className="px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-dark-green"
+                  >
+                    Agregar
+                  </button>
                 </div>
-              )}
-            </div>
+                <p className="text-xs text-slate-500 mt-1">Puedes agregar enlaces a videos, imágenes o recursos externos (YouTube, Vimeo, etc.)</p>
+              </div>
             <div>
               <label className="block text-sm font-bold text-slate-600 mb-2">Imagen de la Lección</label>
               <input
@@ -345,7 +398,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                     reader.readAsDataURL(file);
                   }
                 }}
-                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-orange file:text-white hover:file:bg-brand-red-orange"
+                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
               />
               {lesson.imagen_url && (
                 <div className="mt-3 flex items-center space-x-3">
@@ -386,7 +439,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => handleEditQuestion(q)} className="p-2 text-slate-600 hover:text-brand-orange">
+                  <button onClick={() => handleEditQuestion(q)} className="p-2 text-slate-600 hover:text-brand-green">
                     <PencilIcon className="h-4 w-4" />
                   </button>
                   <button onClick={() => handleDeleteQuestion(q.id)} className="p-2 text-slate-600 hover:text-red-500">
@@ -395,7 +448,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                 </div>
               </div>
             ))}
-            <button onClick={handleAddNewQuestion} className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-400 text-slate-600 font-semibold rounded-lg hover:bg-brand-yellow-orange hover:border-brand-orange transition-colors">
+            <button onClick={handleAddNewQuestion} className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-400 text-slate-600 font-semibold rounded-lg hover:bg-brand-yellow-orange hover:border-brand-green transition-colors">
               <PlusCircleIcon className="h-5 w-5" />
               <span>Agregar Pregunta</span>
             </button>
@@ -406,7 +459,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
           <button
             onClick={handleSaveLesson}
             disabled={isSaving}
-            className="w-full bg-brand-red-orange text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-orange transform hover:-translate-y-1 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-brand-dark-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-green transform hover:-translate-y-1 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving ? 'Guardando...' : (lessonToEdit ? 'Guardar Cambios' : 'Crear Lección')}
           </button>
@@ -543,7 +596,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
               <button onClick={() => setIsModalOpen(false)} className="flex-1 bg-slate-200 text-slate-700 font-bold py-3 rounded-lg">
                 Cancelar
               </button>
-              <button onClick={() => isEditingQuestion && handleSaveQuestion(isEditingQuestion)} className="flex-1 bg-brand-red-orange text-white font-bold py-3 rounded-lg">
+              <button onClick={() => isEditingQuestion && handleSaveQuestion(isEditingQuestion)} className="flex-1 bg-brand-dark-green text-white font-bold py-3 rounded-lg">
                 Guardar
               </button>
             </div>

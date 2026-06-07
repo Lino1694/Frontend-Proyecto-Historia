@@ -27,13 +27,41 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
 
   const [preguntas, setPreguntas] = useState<Pregunta[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`reto-${retoId}-currentQuestion`);
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
+  const [answers, setAnswers] = useState<Record<number, any>>(
+    () => {
+      try {
+        const saved = localStorage.getItem(`reto-${retoId}-answers`);
+        return saved ? JSON.parse(saved) : {};
+      } catch {
+        return {};
+      }
+    }
+  );
   const [activityCompleted, setActivityCompleted] = useState(false);
   const [retoResult, setRetoResult] = useState<{ correctas: number; total: number; xp_ganado: number } | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState<{ correcta: boolean; respuesta_correcta?: string } | null>(null);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`reto-${retoId}-answers`, JSON.stringify(answers));
+    } catch {}
+  }, [answers, retoId]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`reto-${retoId}-currentQuestion`, String(currentQuestionIndex));
+    } catch {}
+  }, [currentQuestionIndex, retoId]);
 
   const handleDragStart = (itemId: string) => {
     setDraggedItem(itemId);
@@ -132,6 +160,8 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
       const res = await apiService.enviarRespuestasReto(retoId, respuestas);
       setRetoResult({ correctas: res.correctas, total: res.total, xp_ganado: res.xp_ganado });
       setActivityCompleted(true);
+      localStorage.removeItem(`reto-${retoId}-answers`);
+      localStorage.removeItem(`reto-${retoId}-currentQuestion`);
     } catch (error) {
       console.error('Error completing reto:', error);
       alert('Error al completar el reto.');
@@ -160,7 +190,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
               <span className="text-2xl">{perfilXP.nivel.icono}</span>
               <div>
                 <p className="text-xs text-slate-500">Nivel {perfilXP.nivel.actual}</p>
-                <p className="font-bold text-brand-orange">{perfilXP.xp.total} XP</p>
+                <p className="font-bold text-brand-green">{perfilXP.xp.total} XP</p>
               </div>
             </div>
           )}
@@ -243,9 +273,9 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
                   })}
                 </div>
 
-                <div className="bg-brand-yellow-orange/20 rounded-lg p-4 border-l-4 border-brand-orange">
+                <div className="bg-brand-yellow-orange/20 rounded-lg p-4 border-l-4 border-brand-green">
                   <h3 className="text-lg font-bold text-slate-700 mb-3 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-brand-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m2 2h.01M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
                     </svg>
                     Recomendaciones de Mejora
@@ -254,15 +284,15 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
                     {retoResult && retoResult.correctas < retoResult.total ? (
                       <>
                         <li className="flex items-start gap-2">
-                          <span className="text-brand-orange font-bold">•</span>
+                          <span className="text-brand-green font-bold">•</span>
                           <span>Revisa los temas de historia donde tuviste errores y consulta fuentes adicionales.</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-brand-orange font-bold">•</span>
+                          <span className="text-brand-green font-bold">•</span>
                           <span>Practica con más preguntas de opción múltiple para mejorar tu comprensión.</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-brand-orange font-bold">•</span>
+                          <span className="text-brand-green font-bold">•</span>
                           <span>Considera unirte a estudiantes destacados para intercambiar conocimientos.</span>
                         </li>
                         {preguntas.filter((p) => {
@@ -296,7 +326,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
             <div className="text-center">
               <button
                 onClick={onBack}
-                className="bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-red-orange transition-colors"
+                className="bg-brand-green text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-dark-green transition-colors"
               >
                 Volver
               </button>
@@ -338,7 +368,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
             <span className="text-2xl">{perfilXP.nivel.icono}</span>
             <div>
               <p className="text-xs text-slate-500">Nivel {perfilXP.nivel.actual}</p>
-              <p className="font-bold text-brand-orange">{perfilXP.xp.total} XP</p>
+              <p className="font-bold text-brand-green">{perfilXP.xp.total} XP</p>
             </div>
           </div>
         )}
@@ -352,7 +382,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
               <div
-                className="bg-brand-orange h-2 rounded-full transition-all duration-300"
+                className="bg-brand-green h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentQuestionIndex + 1) / preguntas.length) * 100}%` }}
               ></div>
             </div>
@@ -427,7 +457,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
                 value={answers[currentQuestion.id] || ''}
                 onChange={(e) => handleAnswerChange(e.target.value)}
                 placeholder="Escribe tu respuesta aquí"
-                className="w-full p-4 border-2 border-slate-200 rounded-lg focus:border-brand-orange focus:outline-none text-slate-700"
+                className="w-full p-4 border-2 border-slate-200 rounded-lg focus:border-brand-green focus:outline-none text-slate-700"
               />
             </div>
           ) : currentQuestion.opciones && currentQuestion.opciones.length > 0 ? (
@@ -438,7 +468,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
                   onClick={() => handleAnswerChange(index.toString())}
                   className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
                     answers[currentQuestion.id] === index.toString()
-                      ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
+                      ? 'border-brand-green bg-brand-green/10 text-brand-green'
                       : 'border-slate-200 hover:border-slate-300 text-slate-700'
                   }`}
                 >
@@ -472,7 +502,7 @@ const RetoActivityView: React.FC<RetoActivityViewProps> = ({ retoId, onBack }) =
                   ? !answers[currentQuestion.id] || Object.keys(answers[currentQuestion.id] || {}).length === 0
                   : !answers[currentQuestion.id] || (typeof answers[currentQuestion.id] === 'string' && !answers[currentQuestion.id].trim()) || showFeedback
               }
-              className="bg-brand-orange text-white font-bold py-2 px-6 rounded-lg hover:bg-brand-red-orange disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="bg-brand-green text-white font-bold py-2 px-6 rounded-lg hover:bg-brand-dark-green disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {(currentQuestion.tipo === 'drag_drop' || currentQuestion.tipo_pregunta === 'drag_drop')
                 ? (isLastQuestion ? 'Finalizar Reto' : 'Siguiente')

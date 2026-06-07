@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useXP } from '../../hooks/useXP';
 import XPNotification from '../shared/XPNotification';
@@ -12,11 +12,24 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
   const { user } = useAuth();
   const { perfilXP, otorgarXP, ultimoXPGanado, mostrarNotificacion, cerrarNotificacion } = useXP(user?.id || null);
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    try {
+      const saved = localStorage.getItem('activity-currentQuestion');
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
   const [totalScore, setTotalScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [activityCompleted, setActivityCompleted] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('activity-currentQuestion', String(currentQuestionIndex));
+    } catch {}
+  }, [currentQuestionIndex]);
 
   // Preguntas del cuestionario del Virreinato
   const questions = [
@@ -133,6 +146,9 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
 
     setActivityCompleted(true);
 
+    // Clear saved progress
+    localStorage.removeItem('activity-currentQuestion');
+
     // Dispatch event to mark mission as completed
     window.dispatchEvent(new CustomEvent('missionCompleted', { detail: { missionId: 3 } }));
   };
@@ -150,7 +166,7 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
               <span className="text-2xl">{perfilXP.nivel.icono}</span>
               <div>
                 <p className="text-xs text-slate-500">Nivel {perfilXP.nivel.actual}</p>
-                <p className="font-bold text-brand-orange">{perfilXP.xp.total} XP</p>
+                <p className="font-bold text-brand-green">{perfilXP.xp.total} XP</p>
               </div>
             </div>
           )}
@@ -162,7 +178,7 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
             <p className="text-lg text-slate-600 mb-4">Has ganado {totalScore} XP</p>
             <button
               onClick={onBack}
-              className="bg-brand-orange text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-red-orange transition-colors"
+              className="bg-brand-green text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-dark-green transition-colors"
             >
               Volver al Inicio
             </button>
@@ -195,7 +211,7 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
             <span className="text-2xl">{perfilXP.nivel.icono}</span>
             <div>
               <p className="text-xs text-slate-500">Nivel {perfilXP.nivel.actual}</p>
-              <p className="font-bold text-brand-orange">{perfilXP.xp.total} XP</p>
+              <p className="font-bold text-brand-green">{perfilXP.xp.total} XP</p>
             </div>
           </div>
         )}
@@ -206,11 +222,11 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
           <div className="mb-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm text-slate-500">Pregunta {currentQuestionIndex + 1} de {questions.length}</span>
-              <span className="text-sm font-bold text-brand-orange">{currentQuestion.points} XP</span>
+              <span className="text-sm font-bold text-brand-green">{currentQuestion.points} XP</span>
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
               <div
-                className="bg-brand-orange h-2 rounded-full transition-all duration-300"
+                className="bg-brand-green h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
               ></div>
             </div>
@@ -230,7 +246,7 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
                       ? selectedAnswer === currentQuestion.correctAnswer
                         ? 'border-green-500 bg-green-50 text-green-800'
                         : 'border-red-500 bg-red-50 text-red-800'
-                      : 'border-brand-orange bg-brand-orange/10 text-brand-orange'
+                      : 'border-brand-green bg-brand-green/10 text-brand-green'
                     : showResult && option.id === currentQuestion.correctAnswer
                     ? 'border-green-500 bg-green-50 text-green-800'
                     : 'border-slate-200 hover:border-slate-300 text-slate-700'
@@ -266,12 +282,12 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
 
           <div className="mt-6 flex justify-between items-center">
             <div className="text-sm text-slate-500">
-              Puntaje actual: <span className="font-bold text-brand-orange">{totalScore} XP</span>
+              Puntaje actual: <span className="font-bold text-brand-green">{totalScore} XP</span>
             </div>
             <button
               onClick={handleSubmitAnswer}
               disabled={!selectedAnswer || showResult}
-              className="bg-brand-orange text-white font-bold py-2 px-6 rounded-lg hover:bg-brand-red-orange disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="bg-brand-green text-white font-bold py-2 px-6 rounded-lg hover:bg-brand-dark-green disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLastQuestion ? 'Finalizar' : 'Siguiente'}
             </button>
