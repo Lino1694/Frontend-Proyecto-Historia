@@ -37,12 +37,13 @@ const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, n
     const [students, setStudents] = useState<StudentProgress[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+useEffect(() => {
         const fetchStudentsProgress = async () => {
             try {
                 const data = await apiService.obtenerProgresoEstudiantes();
                 // Map API response to StudentProgress format
                 const mappedStudents: StudentProgress[] = data.map(student => ({
+                    id: student.id,
                     name: student.nombre,
                     avatarUrl: student.avatar_url || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=256&auto=format&fit=crop',
                     progress: Math.round(student.progreso_general)
@@ -52,9 +53,9 @@ const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, n
                 console.error('Error fetching students progress:', error);
                 // Fallback to mock data if API fails
                 setStudents([
-                    { name: 'Diego Pérez', avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=256&auto=format&fit=crop', progress: 72 },
-                    { name: 'Maria López', avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&auto=format&fit=crop', progress: 89 },
-                    { name: 'Jorge Rios', avatarUrl: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=256&auto=format&fit=crop', progress: 54 },
+                    { id: 1, name: 'Diego Pérez', avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=256&auto=format&fit=crop', progress: 72 },
+                    { id: 2, name: 'Maria López', avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&auto=format&fit=crop', progress: 89 },
+                    { id: 3, name: 'Jorge Rios', avatarUrl: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=256&auto=format&fit=crop', progress: 54 },
                 ]);
             } finally {
                 setLoading(false);
@@ -102,9 +103,9 @@ const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, n
                             <span className="ml-2 text-slate-600">Cargando estudiantes...</span>
                         </div>
                     ) : (
-                        <ul className="space-y-4">
+<ul className="space-y-4">
                             {students.map(student => (
-                                <li key={student.name}>
+                                <li key={student.id}>
                                     <div className="flex items-center justify-between mb-1">
                                         <div className="flex items-center">
                                             <img src={student.avatarUrl} alt={student.name} className="w-8 h-8 rounded-full mr-3 bg-brand-cream object-cover"/>

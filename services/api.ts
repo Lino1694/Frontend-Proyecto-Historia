@@ -196,6 +196,7 @@ class ApiService {
     titulo: string;
     descripcion: string;
     contenido: string;
+    tema?: string;
     imagen_url?: string;
   }>> {
     return this.request('/lecciones', {
@@ -256,12 +257,30 @@ class ApiService {
   }
 
 // Actualizar racha diaria
-   async actualizarRacha(usuario_id: number): Promise<{ message: string; racha_actual: number; xp_ganado: number }> {
-     return this.request('/xp/racha', {
-       method: 'POST',
-       body: JSON.stringify({ usuario_id }),
-     });
-   }
+    async actualizarRacha(usuario_id: number): Promise<{ message: string; racha_actual: number; xp_ganado: number }> {
+      return this.request('/xp/racha', {
+        method: 'POST',
+        body: JSON.stringify({ usuario_id }),
+      });
+    }
+
+    // Obtener progreso de línea de tiempo basado en retos y lecciones completadas
+    async obtenerProgresoTimeline(usuario_id: number): Promise<{
+      usuario: { id: number; nombre: string };
+      progreso_general: number;
+      progreso_por_periodo: {
+        'caral-ciudad': number;
+        'pre-inca': number;
+        'cultura-inca': number;
+        virreinato: number;
+        conquista: number;
+        independencia: number;
+      };
+    }> {
+      return this.request(`/xp/timeline/${usuario_id}`, {
+        method: 'GET',
+      });
+    }
 
    // Obtener todos los niveles
    async obtenerNiveles(): Promise<Array<{

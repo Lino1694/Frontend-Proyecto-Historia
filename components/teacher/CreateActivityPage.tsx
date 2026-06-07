@@ -17,6 +17,7 @@ const emptyActivity: Activity = {
     xp: 100,
     maxAttempts: 1,
     questions: [],
+    category: 'General',
 };
 
 // --- SUB-COMPONENT: QUESTION EDITOR MODAL ---
@@ -75,12 +76,12 @@ const QuestionEditorModal: React.FC<{
 
     const renderEditorFields = () => {
         switch (editedQuestion.type) {
-            case 'multiple_choice':
+case 'multiple_choice':
                 const mcQuestion = editedQuestion as MultipleChoiceQuestion;
                 return (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-2">Opciones</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Opciones</label>
                             {mcQuestion.options.map((option, index) => (
                                 <div key={option.id} className="flex items-center gap-2 mb-2">
                                     <input
@@ -90,17 +91,17 @@ const QuestionEditorModal: React.FC<{
                                         onChange={() => setEditedQuestion({ ...mcQuestion, correctOptionId: option.id })}
                                         className="mr-2"
                                     />
-                                    <input
-                                        type="text"
-                                        value={option.text}
-                                        onChange={e => {
-                                            const newOptions = [...mcQuestion.options];
-                                            newOptions[index] = { ...newOptions[index], text: e.target.value };
-                                            setEditedQuestion({ ...mcQuestion, options: newOptions });
-                                        }}
-                                        placeholder={`Opción ${index + 1}`}
-                                        className="flex-1 px-3 py-2 rounded-lg bg-brand-cream"
-                                    />
+<input
+                                         type="text"
+                                         value={option.text}
+                                         onChange={e => {
+                                             const newOptions = [...mcQuestion.options];
+                                             newOptions[index] = { ...newOptions[index], text: e.target.value };
+                                             setEditedQuestion({ ...mcQuestion, options: newOptions });
+                                         }}
+                                         placeholder={`Opción ${index + 1}`}
+                                         className="flex-1 px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                                     />
                                     <button
                                         onClick={() => {
                                             const newOptions = mcQuestion.options.filter((_, i) => i !== index);
@@ -128,16 +129,16 @@ const QuestionEditorModal: React.FC<{
                         )}
                     </div>
                 );
-            case 'fill_blank':
+case 'fill_blank':
                 const fbQuestion = editedQuestion as FillBlankQuestion;
                 return (
                     <div>
-                        <label className="block text-sm font-bold text-slate-600 mb-2">Respuesta Correcta</label>
+                        <label className="block text-sm font-bold text-slate-700 mb-2">Respuesta Correcta</label>
                         <input
                             type="text"
                             value={fbQuestion.correctAnswer}
                             onChange={e => setEditedQuestion({ ...fbQuestion, correctAnswer: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-brand-cream"
+                            className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                             placeholder="Ingresa la respuesta correcta"
                         />
                     </div>
@@ -147,20 +148,20 @@ const QuestionEditorModal: React.FC<{
                 return (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-2">Elementos Arrastrables</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Elementos Arrastrables</label>
                             {ddQuestion.draggableItems.map((item, index) => (
                                 <div key={item.id} className="flex items-center gap-2 mb-2">
-                                    <input
-                                        type="text"
-                                        value={item.text}
-                                        onChange={e => {
-                                            const newItems = [...ddQuestion.draggableItems];
-                                            newItems[index] = { ...newItems[index], text: e.target.value };
-                                            setEditedQuestion({ ...ddQuestion, draggableItems: newItems } as DragDropQuestion);
-                                        }}
-                                        placeholder={`Elemento ${index + 1}`}
-                                        className="flex-1 px-3 py-2 rounded-lg bg-brand-cream"
-                                    />
+<input
+                                         type="text"
+                                         value={item.text}
+                                         onChange={e => {
+                                             const newItems = [...ddQuestion.draggableItems];
+                                             newItems[index] = { ...newItems[index], text: e.target.value };
+                                             setEditedQuestion({ ...ddQuestion, draggableItems: newItems } as DragDropQuestion);
+                                         }}
+                                         placeholder={`Elemento ${index + 1}`}
+                                         className="flex-1 px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                                     />
                                     <button
                                         onClick={() => {
                                             const newItems = ddQuestion.draggableItems.filter((_, i) => i !== index);
@@ -183,30 +184,30 @@ const QuestionEditorModal: React.FC<{
                                 Agregar Elemento
                             </button>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-2">Zonas de Destino</label>
-                            {ddQuestion.dropZones.map((zone, index) => (
+<div>
+                        <label className="block text-sm font-bold text-slate-700 mb-2">Zonas de Destino</label>
+                        {ddQuestion.dropZones.map((zone, index) => (
                                 <div key={zone.id} className="flex items-center gap-2 mb-2">
-                                    <input
-                                        type="text"
-                                        value={zone.label}
-                                        onChange={e => {
-                                            const newZones = [...ddQuestion.dropZones];
-                                            newZones[index] = { ...newZones[index], label: e.target.value };
-                                            setEditedQuestion({ ...ddQuestion, dropZones: newZones } as DragDropQuestion);
-                                        }}
-                                        placeholder={`Zona ${index + 1}`}
-                                        className="flex-1 px-3 py-2 rounded-lg bg-brand-cream"
-                                    />
-                                    <select
-                                        value={zone.elemento_correcto_id}
-                                        onChange={e => {
-                                            const newZones = [...ddQuestion.dropZones];
-                                            newZones[index] = { ...newZones[index], elemento_correcto_id: e.target.value };
-                                            setEditedQuestion({ ...ddQuestion, dropZones: newZones } as DragDropQuestion);
-                                        }}
-                                        className="px-3 py-2 rounded-lg bg-brand-cream"
-                                    >
+<input
+                                         type="text"
+                                         value={zone.label}
+                                         onChange={e => {
+                                             const newZones = [...ddQuestion.dropZones];
+                                             newZones[index] = { ...newZones[index], label: e.target.value };
+                                             setEditedQuestion({ ...ddQuestion, dropZones: newZones } as DragDropQuestion);
+                                         }}
+                                         placeholder={`Zona ${index + 1}`}
+                                         className="flex-1 px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                                     />
+                                     <select
+                                         value={zone.elemento_correcto_id}
+                                         onChange={e => {
+                                             const newZones = [...ddQuestion.dropZones];
+                                             newZones[index] = { ...newZones[index], elemento_correcto_id: e.target.value };
+                                             setEditedQuestion({ ...ddQuestion, dropZones: newZones } as DragDropQuestion);
+                                         }}
+                                         className="px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                                     >
                                         <option value="">Seleccionar elemento</option>
                                         {ddQuestion.draggableItems.map(item => (
                                             <option key={item.id} value={item.id}>{item.text}</option>
@@ -239,9 +240,9 @@ const QuestionEditorModal: React.FC<{
                         {ddQuestion.dropZones.some(z => !z.elemento_correcto_id) && <p className="text-sm text-red-500">Asigna elementos correctos a todas las zonas.</p>}
                     </div>
                 );
-            // Add other question type editors here...
+// Add other question type editors here...
             default:
-                return <p className="text-sm text-slate-500 text-center p-4 bg-brand-cream rounded-lg">Editor para este tipo de pregunta no implementado aún.</p>;
+                return <p className="text-sm text-slate-500 text-center p-4 bg-white rounded-lg border border-slate-200">Editor para este tipo de pregunta no implementado aún.</p>
         }
     }
 
@@ -250,45 +251,45 @@ const QuestionEditorModal: React.FC<{
             <div className="bg-brand-offwhite rounded-2xl p-6 shadow-xl w-full max-w-sm animate-scale-in flex flex-col" style={{maxHeight: '90vh'}}>
                 <h2 className="text-xl font-bold text-slate-800 mb-4">{question?.id ? 'Editar' : 'Nueva'} Pregunta</h2>
                 <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-4">
-                     <div>
-                        <label className="block text-sm font-bold text-slate-600 mb-2">Tipo de Pregunta</label>
-                        <select
-                            value={editedQuestion.type}
-                            onChange={e => {
-                                const newType = e.target.value as QuestionType;
-                                if (newType === 'multiple_choice') {
-                                    setEditedQuestion({
-                                        id: editedQuestion.id,
-                                        type: 'multiple_choice',
-                                        questionText: editedQuestion.questionText,
-                                        points: editedQuestion.points,
-                                        options: [],
-                                        correctOptionId: '',
-                                    } as MultipleChoiceQuestion);
-                                } else if (newType === 'fill_blank') {
-                                    setEditedQuestion({
-                                        id: editedQuestion.id,
-                                        type: 'fill_blank',
-                                        questionText: editedQuestion.questionText,
-                                        points: editedQuestion.points,
-                                        correctAnswer: '',
-                                    } as FillBlankQuestion);
-                                } else if (newType === 'drag_drop') {
-                                    setEditedQuestion({
-                                        id: editedQuestion.id,
-                                        type: 'drag_drop',
-                                        questionText: editedQuestion.questionText,
-                                        points: editedQuestion.points,
-                                        draggableItems: [],
-                                        dropZones: [],
-                                    } as DragDropQuestion);
-                                } else {
-                                    // For other types, keep as is or handle
-                                    setEditedQuestion({ ...editedQuestion, type: newType } as Question);
-                                }
-                            }}
-                            className="w-full px-3 py-2 rounded-lg bg-brand-cream appearance-none"
-                        >
+<div>
+                         <label className="block text-sm font-bold text-slate-700 mb-2">Tipo de Pregunta</label>
+                         <select
+                             value={editedQuestion.type}
+                             onChange={e => {
+                                 const newType = e.target.value as QuestionType;
+                                 if (newType === 'multiple_choice') {
+                                     setEditedQuestion({
+                                         id: editedQuestion.id,
+                                         type: 'multiple_choice',
+                                         questionText: editedQuestion.questionText,
+                                         points: editedQuestion.points,
+                                         options: [],
+                                         correctOptionId: '',
+                                     } as MultipleChoiceQuestion);
+                                 } else if (newType === 'fill_blank') {
+                                     setEditedQuestion({
+                                         id: editedQuestion.id,
+                                         type: 'fill_blank',
+                                         questionText: editedQuestion.questionText,
+                                         points: editedQuestion.points,
+                                         correctAnswer: '',
+                                     } as FillBlankQuestion);
+                                 } else if (newType === 'drag_drop') {
+                                     setEditedQuestion({
+                                         id: editedQuestion.id,
+                                         type: 'drag_drop',
+                                         questionText: editedQuestion.questionText,
+                                         points: editedQuestion.points,
+                                         draggableItems: [],
+                                         dropZones: [],
+                                     } as DragDropQuestion);
+                                 } else {
+                                     // For other types, keep as is or handle
+                                     setEditedQuestion({ ...editedQuestion, type: newType } as Question);
+                                 }
+                             }}
+                             className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none appearance-none"
+                         >
                             <option value="multiple_choice">Opción Múltiple</option>
                             <option value="fill_blank">Completar Espacio</option>
                             <option value="drag_drop">Arrastrar y Soltar</option>
@@ -296,24 +297,24 @@ const QuestionEditorModal: React.FC<{
                             <option value="ordering">Ordenar Secuencia</option>
                         </select>
                     </div>
-                    <div>
-                        <label className="block text-sm font-bold text-slate-600 mb-2">Texto de la Pregunta</label>
-                        <textarea
-                            rows={3}
-                            value={editedQuestion.questionText}
-                            onChange={e => setEditedQuestion({ ...editedQuestion, questionText: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-brand-cream"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-slate-600 mb-2">Puntos (XP)</label>
-                        <input
-                            type="number"
-                            value={editedQuestion.points}
-                            onChange={e => setEditedQuestion({ ...editedQuestion, points: parseInt(e.target.value) || 0 })}
-                            className="w-full px-3 py-2 rounded-lg bg-brand-cream"
-                        />
-                    </div>
+<div>
+                         <label className="block text-sm font-bold text-slate-700 mb-2">Texto de la Pregunta</label>
+                         <textarea
+                             rows={3}
+                             value={editedQuestion.questionText}
+                             onChange={e => setEditedQuestion({ ...editedQuestion, questionText: e.target.value })}
+                             className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                         />
+                     </div>
+                     <div>
+                         <label className="block text-sm font-bold text-slate-700 mb-2">Puntos (XP)</label>
+                         <input
+                             type="number"
+                             value={editedQuestion.points}
+                             onChange={e => setEditedQuestion({ ...editedQuestion, points: parseInt(e.target.value) || 0 })}
+                             className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                         />
+                     </div>
                     {renderEditorFields()}
                 </div>
                 <div className="mt-6 flex gap-3">
@@ -429,7 +430,7 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
             return;
         }
 
-        setIsSaving(true);
+setIsSaving(true);
         try {
             const tipo = activity.type === 'Cuestionario' ? 'individual' : 'competition';
             const preguntas = mapQuestionsToApi(activity.questions);
@@ -437,6 +438,7 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
                 titulo: activity.title,
                 descripcion: activity.description || '',
                 tipo,
+                categoria: activity.category || 'General',
                 xp_recompensa: activity.xp,
                 fecha_fin: activity.dueDate,
                 max_intentos: activity.maxAttempts,
@@ -466,43 +468,55 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
                 <Card>
                     <h2 className="text-lg font-bold text-slate-700 mb-3">Información General</h2>
                     <form className="space-y-4">
-                         <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-2">Título del Reto</label>
-                            <input type="text" value={activity.title} onChange={e => handleUpdateField('title', e.target.value)} placeholder="Ej: La Conquista del Tahuantinsuyo" className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"/>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-2">Tipo de Actividad</label>
-                            <select value={activity.type} onChange={e => handleUpdateField('type', e.target.value)} className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none appearance-none">
-                                <option>Cuestionario</option>
-                                <option>Competencia en tiempo real</option>
-                            </select>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                             <div>
-                                <label className="block text-sm font-bold text-slate-600 mb-2">Fecha de Entrega</label>
-                                <input type="date" value={activity.dueDate} onChange={e => handleUpdateField('dueDate', e.target.value)} className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"/>
-                             </div>
+<div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Título del Reto</label>
+                <input type="text" value={activity.title} onChange={e => handleUpdateField('title', e.target.value)} placeholder="Ej: La Conquista del Tahuantinsuyo" className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"/>
+            </div>
+            <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Tipo de Actividad</label>
+                <select value={activity.type} onChange={e => handleUpdateField('type', e.target.value)} className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none appearance-none">
+                    <option>Cuestionario</option>
+                    <option>Competencia en tiempo real</option>
+                </select>
+            </div>
+            <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Categoría</label>
+                <select value={activity.category || 'General'} onChange={e => handleUpdateField('category', e.target.value)} className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none appearance-none">
+                    <option value="General">General</option>
+                    <option value="Caral - La primera Ciudad">Caral - La primera Ciudad</option>
+                    <option value="Cultura Pre-inca">Cultura Pre-inca</option>
+                    <option value="Cultura Inca">Cultura Inca</option>
+                    <option value="Virreinato">Virreinato</option>
+                    <option value="Conquista">Conquista</option>
+                    <option value="Independencia">Independencia</option>
+                </select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
                               <div>
-                                <label className="block text-sm font-bold text-slate-600 mb-2">Puntos (XP)</label>
-                                <input type="number" value={activity.xp} onChange={e => handleUpdateField('xp', parseInt(e.target.value))} placeholder="Ej: 100" className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"/>
-                             </div>
-                         </div>
-                         <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-2">Máximo de Intentos</label>
-                            <input type="number" value={activity.maxAttempts} onChange={e => handleUpdateField('maxAttempts', parseInt(e.target.value) || 1)} min="1" placeholder="Ej: 1" className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"/>
-                         </div>
+                                 <label className="block text-sm font-bold text-slate-700 mb-2">Fecha de Entrega</label>
+                                 <input type="date" value={activity.dueDate} onChange={e => handleUpdateField('dueDate', e.target.value)} className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"/>
+                              </div>
+                               <div>
+                                 <label className="block text-sm font-bold text-slate-700 mb-2">Puntos (XP)</label>
+                                 <input type="number" value={activity.xp} onChange={e => handleUpdateField('xp', parseInt(e.target.value))} placeholder="Ej: 100" className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"/>
+                              </div>
+                          </div>
+                          <div>
+                             <label className="block text-sm font-bold text-slate-700 mb-2">Máximo de Intentos</label>
+                             <input type="number" value={activity.maxAttempts} onChange={e => handleUpdateField('maxAttempts', parseInt(e.target.value) || 1)} min="1" placeholder="Ej: 1" className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"/>
+                          </div>
                     </form>
                 </Card>
 
-                <Card>
+<Card>
                     <div className="flex justify-between items-center mb-3">
                         <h2 className="text-lg font-bold text-slate-700">Constructor de Preguntas</h2>
-                        <span className="text-sm font-semibold bg-brand-cream text-slate-600 px-3 py-1 rounded-full">{activity.questions.length} preguntas</span>
+                        <span className="text-sm font-semibold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">{activity.questions.length} preguntas</span>
                     </div>
 
                     <div className="space-y-3">
                         {activity.questions.map((q, index) => (
-                            <div key={q.id} className="bg-brand-cream p-3 rounded-lg flex justify-between items-center">
+                            <div key={q.id} className="bg-slate-50 p-3 rounded-lg flex justify-between items-center">
                                 <div>
                                     <p className="font-bold text-sm text-slate-800">P{index + 1}: {q.questionText.substring(0, 30)}...</p>
                                     <p className="text-xs text-slate-500 uppercase font-semibold">{q.type.replace('_', ' ')}</p>

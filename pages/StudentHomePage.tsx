@@ -70,10 +70,10 @@ const StudentHomePage: React.FC = () => {
             <div className="progress-bar-container">
               <div 
                 className="progress-bar-fill" 
-                style={{ width: `${progress[classItem.title] || 0}%` }}
+                style={{ width: `${progress[classItem.id] || 0}%` }}
               />
             </div>
-            <span className="progress-text">{progress[classItem.title] || 0}%</span>
+            <span className="progress-text">{progress[classItem.id] || 0}%</span>
             
             <Link to={`/clase/${classItem.id}`} className="class-link">
               Ir a la clase

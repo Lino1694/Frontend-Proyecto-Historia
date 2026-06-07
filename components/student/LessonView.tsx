@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { useAuth } from '../../contexts/AuthContext';
 import { useXP } from '../../hooks/useXP';
+import { useClassProgress } from '../../contexts/ClassProgressContext';
 import XPNotification from '../shared/XPNotification';
 import apiService from '../../services/api';
 
@@ -11,6 +12,7 @@ interface LessonViewProps {
         titulo: string;
         descripcion: string;
         contenido: string;
+        tema?: string;
         imagen_url?: string;
         multimedia?: Array<{
             id: string;
@@ -22,7 +24,7 @@ interface LessonViewProps {
         preguntas?: Array<{
             pregunta: string;
             opciones: string[];
-            respuesta_correcta: number;
+            respuesta_correcta: number | string;
             tipo?: string;
             elementos_arrastrables?: Array<{ id: string; texto: string }>;
             zonas_destino?: Array<{ id: string; etiqueta: string; elemento_correcto_id: string }>;
@@ -40,6 +42,7 @@ interface LessonViewProps {
 const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
   const { user } = useAuth();
   const { perfilXP, ultimoXPGanado, mostrarNotificacion, cerrarNotificacion } = useXP(user?.id || null);
+  const { addProgress } = useClassProgress();
 
   const [answers, setAnswers] = useState<Record<number, any>>(
     () => {
@@ -81,18 +84,31 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
     e.preventDefault();
   };
 
+  const getCorrectIndex = (pregunta: any): number => {
+    if (typeof pregunta.respuesta_correcta === 'number') {
+      return pregunta.respuesta_correcta;
+    }
+    const idx = pregunta.opciones.findIndex((opt: string) => 
+      opt.toLowerCase().trim() === String(pregunta.respuesta_correcta).toLowerCase().trim()
+    );
+    return idx >= 0 ? idx : 0;
+  };
+
   const calculateScore = () => {
     if (!lesson.preguntas) return 0;
     let correct = 0;
     lesson.preguntas.forEach((pregunta, index) => {
       if (pregunta.opciones.length > 1) {
-        // Multiple choice
-        if (answers[index] === pregunta.respuesta_correcta.toString()) {
+        const correctIndex = getCorrectIndex(pregunta);
+        if (answers[index] === correctIndex.toString()) {
           correct++;
         }
       } else {
-        // Fill in the blank
-        if (answers[index]?.toLowerCase().trim() === pregunta.opciones[0].toLowerCase().trim()) {
+        const userAnswer = (answers[index] || '').toLowerCase().trim();
+        const correctAnswer = pregunta.respuesta_correcta 
+          ? String(pregunta.respuesta_correcta).toLowerCase().trim()
+          : (pregunta.opciones[0] || '').toLowerCase().trim();
+        if (userAnswer === correctAnswer) {
           correct++;
         }
       }
@@ -106,7 +122,10 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
 
     try {
       await apiService.completarLeccion(lesson.id, correctAnswers, totalQuestions);
-      // Automatically return to dashboard after successful completion
+      // Update class progress by 20% for the lesson's topic
+      if (lesson.tema) {
+        addProgress(lesson.tema, 20);
+      }
       localStorage.removeItem(`lesson-${lesson.id}-answers`);
       onBack();
     } catch (error: any) {
@@ -122,12 +141,12 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
   };
   return (
     <div className="min-h-screen bg-brand-cream">
-      <header className="p-4 bg-brand-offwhite shadow-sm flex items-center sticky top-0 z-10">
-        <button onClick={onBack} className="flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base mr-4">
+      <header className="p-4 bg-brand-cream shadow-sm flex items-center sticky top-0 z-10">
+        <button onClick={onBack} className="flex items-center gap-1.5 font-semibold text-white hover:text-white/70 transition-colors text-base mr-4">
           <ArrowLeftIcon className="h-4 w-4" />
           <span>Volver</span>
         </button>
-        <h1 className="text-xl font-bold text-center text-slate-800 flex-1">{lesson.titulo}</h1>
+        <h1 className="text-xl font-bold text-center text-white flex-1">{lesson.titulo}</h1>
       </header>
 
       <div className="p-4 max-w-4xl mx-auto">
@@ -278,7 +297,7 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                     )}
                   </div>
                 ))}
-</div>
+              </div>
             </div>
           )}
 
@@ -295,7 +314,8 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                       <div className="space-y-2">
                         {pregunta.opciones.map((opcion, i) => {
                           const isSelected = answers[index] === i.toString();
-                          const isCorrect = i === pregunta.respuesta_correcta;
+                          const correctIdx = getCorrectIndex(pregunta);
+                          const isCorrect = i === correctIdx;
                           return (
                             <button
                               key={i}
@@ -353,14 +373,14 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                                   onDrop={() => handleDrop(index, zone.id)}
                                   onDragOver={handleDragOver}
                                   className={`border-2 border-dashed p-4 rounded-lg min-h-[60px] flex items-center justify-center transition-colors ${
-                                    placedItem
-                                      ? showResults
-                                        ? isCorrect
-                                          ? 'border-green-500 bg-green-50'
-                                          : 'border-red-500 bg-red-50'
-                                        : 'border-blue-500 bg-blue-50'
-                                      : 'border-slate-300 hover:border-slate-400'
-                                  }`}
+                                        placedItem
+                                          ? showResults
+                                            ? isCorrect
+                                              ? 'border-green-500 bg-green-50'
+                                              : 'border-red-500 bg-red-50'
+                                            : 'border-blue-500 bg-blue-50'
+                                          : 'border-slate-300 hover:border-slate-400'
+                                    }`}
                                 >
                                   {placedItem ? (
                                     <div className="flex items-center gap-2">
@@ -391,7 +411,7 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                           className="w-full p-3 border border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none disabled:bg-slate-100"
                         />
                         {showResults && (
-                          <div className={`p-3 rounded-lg ${answers[index]?.toLowerCase().trim() === pregunta.opciones[0].toLowerCase().trim() ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+                          <div className={`p-3 rounded-lg ${answers[index]?.toLowerCase().trim() === (pregunta.respuesta_correcta?.toString().toLowerCase().trim() || pregunta.opciones[0]?.toLowerCase().trim()) ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
                             Respuesta correcta: {pregunta.opciones[0]}
                           </div>
                         )}
@@ -405,7 +425,7 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                   <button
                     onClick={() => setShowResults(true)}
                     disabled={Object.keys(answers).length < lesson.preguntas.length}
-                    className="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="bg-brand-green text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-dark-green disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Verificar Respuestas
                   </button>
@@ -423,7 +443,7 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
                   </button>
                   <button
                     onClick={handleCompleteLesson}
-                    className="bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
+                    className="bg-brand-green text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-dark-green transition-colors"
                   >
                     Completar Lección
                   </button>
@@ -446,9 +466,6 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onBack }) => {
       )}
     </div>
   );
-
-
-  return null; // This should never be reached, but TypeScript needs it
 };
 
 export default LessonView;

@@ -15,70 +15,105 @@ interface StudentProfilePageProps {
     userName: string;
 }
 
-const HistoricalTimeline: React.FC<{ progress: number; avatarUrl: string }> = ({ progress, avatarUrl }) => {
-       const periods = [
-        { name: 'Caral', color: 'bg-green-500', width: '20%' },
-        { name: 'Inca', color: 'bg-yellow-500', width: '20%' },
-        { name: 'Conquista', color: 'bg-red-500', width: '20%' },
-        { name: 'Virreinato', color: 'bg-purple-500', width: '20%' },
-        { name: 'Independencia', color: 'bg-blue-500', width: '20%' },
-    ];
-
-    const markerPosition = `${Math.max(2, Math.min(98, progress))}%`;
-
-    return (
-        <div className="mt-4">
-            <p className="text-xs font-bold text-slate-600 mb-2">Línea de Tiempo del Curso</p>
-            <div className="relative pt-3">
-                <div
-                    className="absolute z-10 transition-all duration-500"
-                    style={{ left: `calc(${markerPosition} - 14px)`, top: '-4px' }}
-                    title={`Progreso: ${progress}%`}
-                >
-                   {!avatarUrl || !avatarUrl.startsWith('http') ? (
-                       <div className="w-7 h-7 rounded-full border-2 border-white shadow-lg flex items-center justify-center bg-brand-yellow-orange text-xs">
-                           {avatarUrl}
-                       </div>
-                   ) : (
-                       <img src={avatarUrl} alt="avatar" className="w-7 h-7 rounded-full border-2 border-white shadow-lg object-cover" />
-                   )}
-                </div>
-                <div className="flex h-2.5 rounded-full overflow-hidden bg-brand-cream shadow-inner">
-                    {periods.map(p => (
-                        <div key={p.name} className={`${p.color}`} style={{ width: p.width }} />
-                    ))}
-                </div>
-                <div className="flex justify-between mt-1 text-[10px] font-semibold text-slate-500 px-1">
-                    {periods.map(p => <span key={p.name}>{p.name}</span>)}
-                </div>
-            </div>
-        </div>
-    );
-};
+interface TimelineProgress {
+    'caral-ciudad': number;
+    'pre-inca': number;
+    'cultura-inca': number;
+    virreinato: number;
+    conquista: number;
+    independencia: number;
+}
 
 const isEmojiAvatar = (avatar: string) => {
         return !avatar || !avatar.startsWith('http');
     };
+
+    const HistoricalTimeline: React.FC<{ progress: number; avatarUrl: string; periodProgress?: TimelineProgress }> = ({ 
+        progress, 
+        avatarUrl, 
+        periodProgress 
+    }) => {
+        const periods = [
+            { name: 'Caral', color: 'bg-green-500', key: 'caral-ciudad' },
+            { name: 'Inca', color: 'bg-yellow-500', key: 'cultura-inca' },
+            { name: 'Conquista', color: 'bg-red-500', key: 'conquista' },
+            { name: 'Virreinato', color: 'bg-purple-500', key: 'virreinato' },
+            { name: 'Independencia', color: 'bg-blue-500', key: 'independencia' },
+        ];
+
+        const markerPosition = `${Math.max(2, Math.min(98, progress))}%`;
+
+        return (
+            <div className="mt-4">
+                <p className="text-xs font-bold text-slate-600 mb-2">Línea de Tiempo del Curso</p>
+                <div className="relative pt-3">
+                    <div
+                        className="absolute z-10 transition-all duration-500"
+                        style={{ left: `calc(${markerPosition} - 14px)`, top: '-4px' }}
+                        title={`Progreso: ${progress}%`}
+                    >
+                       {!avatarUrl || !avatarUrl.startsWith('http') ? (
+                           <div className="w-7 h-7 rounded-full border-2 border-white shadow-lg flex items-center justify-center bg-brand-yellow-orange text-xs">
+                               {avatarUrl}
+                           </div>
+                       ) : (
+                           <img src={avatarUrl} alt="avatar" className="w-7 h-7 rounded-full border-2 border-white shadow-lg object-cover" />
+                       )}
+                    </div>
+                    <div className="flex h-2.5 rounded-full overflow-hidden bg-brand-cream shadow-inner">
+                        {periods.map(p => (
+                            <div key={p.name} className={`${p.color}`} style={{ width: '20%' }} />
+                        ))}
+                    </div>
+                    <div className="flex justify-between mt-1 text-[10px] font-semibold text-slate-500 px-1">
+                        {periods.map(p => (
+                            <span key={p.name} className="relative">
+                                {p.name}
+                                {periodProgress && (
+                                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[8px] text-brand-green font-bold">
+                                        {periodProgress[p.key as keyof TimelineProgress] ?? 0}%
+                                    </span>
+                                )}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    };
     
     const StudentProfilePage: React.FC<StudentProfilePageProps> = ({ userName }) => {
-    const [showDataEditor, setShowDataEditor] = useState(false);
-    const [showAvatarEditor, setShowAvatarEditor] = useState(false);
-    const [editedName, setEditedName] = useState(userName);
-    const [userAvatar, setUserAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
-    const [selectedAvatar, setSelectedAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
-    const [selectedTitle, setSelectedTitle] = useState('explorador');
-    const [isSaving, setIsSaving] = useState(false);
-    const { theme, setTheme, themeClasses } = useTheme();
-    const { progress } = useClassProgress();
-    const { user, updateUser } = useAuth();
-    const { perfilXP } = useXP(user?.id || null);
+        const [showDataEditor, setShowDataEditor] = useState(false);
+        const [showAvatarEditor, setShowAvatarEditor] = useState(false);
+        const [editedName, setEditedName] = useState(userName);
+        const [userAvatar, setUserAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
+        const [selectedAvatar, setSelectedAvatar] = useState('https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop');
+        const [selectedTitle, setSelectedTitle] = useState('explorador');
+        const [isSaving, setIsSaving] = useState(false);
+        const [timelineProgress, setTimelineProgress] = useState<TimelineProgress | null>(null);
+        const { theme, setTheme, themeClasses } = useTheme();
+        const { progress } = useClassProgress();
+        const { user, updateUser } = useAuth();
+        const { perfilXP } = useXP(user?.id || null);
 
-    useEffect(() => {
+useEffect(() => {
         if (user?.avatar_url) {
             setUserAvatar(user.avatar_url);
             setSelectedAvatar(user.avatar_url);
         }
     }, [user?.avatar_url]);
+
+    useEffect(() => {
+        if (user?.id) {
+            apiService.obtenerProgresoTimeline(user.id)
+                .then(data => {
+                    setTimelineProgress(data.progreso_por_periodo);
+                })
+                .catch(err => {
+                    console.error('Error loading timeline progress:', err);
+                });
+        }
+    }, [user?.id]);
 
     const titles = [
         'explorador', 'maestro', 'inca', 'inti', 'almirante', 'capitan', 'soldado', 'historiador'
@@ -93,7 +128,7 @@ const isEmojiAvatar = (avatar: string) => {
         'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&auto=format&fit=crop'
     ];
 
-    const classes = [
+const classes = [
         { id: 'caral-ciudad', label: 'Caral - La Primera Ciudad' },
         { id: 'pre-inca', label: 'Culturas Pre-Incaicas' },
         { id: 'cultura-inca', label: 'La Cultura Inca' },
@@ -102,7 +137,18 @@ const isEmojiAvatar = (avatar: string) => {
         { id: 'batalla-angamos', label: 'La Batalla de Angamos' },
     ];
 
-    const generalProgress = Math.min(100, Math.round((perfilXP?.xp?.total || 0) * 0.2));
+    // Calcula progreso general basado en la línea de tiempo (retos y lecciones completadas)
+    // Si no hay datos de timeline, usa el cálculo basado en XP como fallback
+    const generalProgress = timelineProgress
+        ? Math.round((
+            (timelineProgress['caral-ciudad'] || 0) + 
+            (timelineProgress['pre-inca'] || 0) + 
+            (timelineProgress['cultura-inca'] || 0) + 
+            (timelineProgress.virreinato || 0) + 
+            (timelineProgress.conquista || 0) + 
+            (timelineProgress.independencia || 0)
+          ) / 6)
+        : Math.min(100, Math.round((perfilXP?.xp?.total || 0) * 0.2));
 
 
 
@@ -188,7 +234,7 @@ const isEmojiAvatar = (avatar: string) => {
                 <Card className={`${themeClasses.cardBg} ${themeClasses.border}`}>
                     <h3 className={`text-lg font-bold mb-3 ${themeClasses.cardText}`}>Progreso General</h3>
                     <div className="space-y-4">
-                        <HistoricalTimeline progress={generalProgress} avatarUrl={userAvatar} />
+                        <HistoricalTimeline progress={generalProgress} avatarUrl={userAvatar} periodProgress={timelineProgress} />
 
                         <div>
                             <h4 className={`text-sm font-semibold ${themeClasses.cardText} mb-2`}>Progreso por clase</h4>

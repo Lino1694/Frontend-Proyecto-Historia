@@ -53,7 +53,7 @@ const ProgressTimeline: React.FC<ProgressTimelineProps> = ({ items, onItemClick 
                                     {/* Progress bar */}
                                     <div className={`w-full ${themeClasses.border} rounded-full h-2`}>
                                         <div
-                                            className="bg-brand-light-orange h-2 rounded-full transition-all duration-500"
+                                            className="bg-brand-green h-2 rounded-full transition-all duration-500"
                                             style={{ width: `${item.progress}%` }}
                                         ></div>
                                     </div>

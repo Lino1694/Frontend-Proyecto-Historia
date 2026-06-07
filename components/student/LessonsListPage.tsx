@@ -10,6 +10,7 @@ interface Lesson {
     titulo: string;
     descripcion: string;
     contenido: string;
+    tema?: string;
     imagen_url?: string;
     preguntas?: any[];
     multimedia?: any[];
@@ -47,10 +48,13 @@ const LessonsListPage: React.FC<LessonsListPageProps> = ({ temaId, temaTitle, on
         onLessonSelect(lesson);
     };
 
-    const filteredLessons = lessons.filter(lesson =>
-        lesson.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lesson.descripcion?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredLessons = lessons.filter(lesson => {
+        // Filter by tema (topic) - show only lessons matching the current tema
+        const matchesTema = !temaId || !lesson.tema || lesson.tema === temaId;
+        const matchesSearch = lesson.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            lesson.descripcion?.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesTema && matchesSearch;
+    });
 
     return (
         <div className={`${themeClasses.bg} min-h-screen`}>
@@ -62,20 +66,21 @@ const LessonsListPage: React.FC<LessonsListPageProps> = ({ temaId, temaTitle, on
             </header>
 
             <div className="p-4">
+                <div className="mb-6">
+                    <h2 className={`text-lg font-bold ${themeClasses.cardText} mb-2`}>Tu Progreso</h2>
+                    <ProgressBar progress={progress[temaId] ?? 0} />
+                    <p className={`text-sm ${themeClasses.secondaryText} mt-1`}>{progress[temaId] ?? 0}% completado</p>
+                </div>
+
+                {/* Search bar */}
                 <div className="mb-4">
                     <input
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Buscar lecciones..."
-                        className="w-full px-4 py-2 rounded-lg bg-white border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                        className="w-full px-4 py-2 rounded-lg bg-white border-2 border-transparent focus:border-brand-green focus:outline-none"
                     />
-                </div>
-
-                <div className="mb-6">
-                    <h2 className={`text-lg font-bold ${themeClasses.cardText} mb-2`}>Tu Progreso</h2>
-                    <ProgressBar progress={progress[temaId] ?? 0} />
-                    <p className={`text-sm ${themeClasses.secondaryText} mt-1`}>{progress[temaId] ?? 0}% completado</p>
                 </div>
 
                 {loading ? (

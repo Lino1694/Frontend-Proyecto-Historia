@@ -15,6 +15,7 @@ export interface Lesson {
 }
 
 export interface StudentProgress {
+    id: number;
     name: string;
     avatarUrl: string;
     progress: number;
@@ -86,4 +87,5 @@ export interface Activity {
     xp: number;
     maxAttempts: number;
     questions: Question[];
+    category?: string;
 }

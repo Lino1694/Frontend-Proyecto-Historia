@@ -293,97 +293,96 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
         <h1 className="text-xl font-bold text-center text-slate-800 flex-1">{lessonToEdit ? 'Editar Lección' : 'Crear Nueva Lección'}</h1>
       </header>
 
-      <div className="p-4 space-y-6">
+<div className="p-4 space-y-6">
         <Card>
           <h2 className="text-lg font-bold text-slate-700 mb-3">Información General</h2>
           <form className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Título de la Lección</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Título de la Lección</label>
               <input
                 type="text"
                 value={lesson.titulo}
                 onChange={e => handleUpdateField('titulo', e.target.value)}
                 placeholder="Ej: La Conquista del Tahuantinsuyo"
-                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Descripción</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Descripción</label>
               <textarea
                 rows={3}
                 value={lesson.descripcion}
                 onChange={e => handleUpdateField('descripcion', e.target.value)}
                 placeholder="Breve descripción de la lección"
-                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Subir contenido multimedia</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Subir contenido multimedia</label>
               <input
                 type="file"
                 accept="video/*,audio/*,image/*"
                 multiple
                 onChange={(e) => e.target.files && handleMultimediaFiles(e.target.files)}
-                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
+                className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
               />
               <p className="text-xs text-slate-500 mt-1">Puedes subir videos, audios e imágenes para enriquecer la lección (máx. 10MB por archivo)</p>
-
-{lesson.multimedia.length > 0 && (
-                  <div className="mt-4 space-y-3">
-                    <h4 className="text-sm font-semibold text-slate-700">Archivos seleccionados:</h4>
-                    {lesson.multimedia.map((media) => (
-                      <div key={media.id} className="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            media.tipo === 'video' ? 'bg-red-100 text-red-800' :
-                            media.tipo === 'audio' ? 'bg-blue-100 text-blue-800' :
-                            media.tipo === 'enlace' ? 'bg-purple-100 text-purple-800' :
-                            'bg-green-100 text-green-800'
-                          }`}>
-                            {media.tipo}
-                          </span>
-                          <span className="text-sm text-slate-700">{media.titulo}</span>
-                        </div>
-                        <button
-                          onClick={() => removeMultimedia(media.id)}
-                          className="text-red-500 hover:text-red-700 p-1"
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                        </button>
+              {lesson.multimedia.length > 0 && (
+                <div className="mt-4 space-y-3">
+                  <h4 className="text-sm font-semibold text-slate-700">Archivos seleccionados:</h4>
+                  {lesson.multimedia.map((media) => (
+                    <div key={media.id} className="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          media.tipo === 'video' ? 'bg-red-100 text-red-800' :
+                          media.tipo === 'audio' ? 'bg-blue-100 text-blue-800' :
+                          media.tipo === 'enlace' ? 'bg-purple-100 text-purple-800' :
+                          'bg-green-100 text-green-800'
+                        }`}>
+                          {media.tipo}
+                        </span>
+                        <span className="text-sm text-slate-700">{media.titulo}</span>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-slate-600 mb-2">Agregar enlace externo</label>
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    value={enlaceInput.url}
-                    onChange={e => setEnlaceInput(prev => ({ ...prev, url: e.target.value }))}
-                    placeholder="https://ejemplo.com/video.mp4"
-                    className="flex-1 px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
-                  />
-                  <input
-                    type="text"
-                    value={enlaceInput.titulo}
-                    onChange={e => setEnlaceInput(prev => ({ ...prev, titulo: e.target.value }))}
-                    placeholder="Título del recurso"
-                    className="flex-1 px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
-                  />
-                  <button
-                    onClick={handleAddEnlace}
-                    className="px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-dark-green"
-                  >
-                    Agregar
-                  </button>
+                      <button
+                        onClick={() => removeMultimedia(media.id)}
+                        className="text-red-500 hover:text-red-700 p-1"
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-xs text-slate-500 mt-1">Puedes agregar enlaces a videos, imágenes o recursos externos (YouTube, Vimeo, etc.)</p>
-              </div>
+              )}
+            </div>
+
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Imagen de la Lección</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Agregar enlace externo</label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={enlaceInput.url}
+                  onChange={e => setEnlaceInput(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder="https://ejemplo.com/video.mp4"
+                  className="flex-1 px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                />
+                <input
+                  type="text"
+                  value={enlaceInput.titulo}
+                  onChange={e => setEnlaceInput(prev => ({ ...prev, titulo: e.target.value }))}
+                  placeholder="Título del recurso"
+                  className="flex-1 px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
+                />
+                <button
+                  onClick={handleAddEnlace}
+                  className="px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-dark-green"
+                >
+                  Agregar
+                </button>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">Puedes agregar enlaces a videos, imágenes o recursos externos (YouTube, Vimeo, etc.)</p>
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Imagen de la Lección</label>
               <input
                 type="file"
                 accept="image/*"
@@ -398,7 +397,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                     reader.readAsDataURL(file);
                   }
                 }}
-                className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
+                className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
               />
               {lesson.imagen_url && (
                 <div className="mt-3 flex items-center space-x-3">
@@ -417,19 +416,19 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
             value={lesson.contenido}
             onChange={e => handleUpdateField('contenido', e.target.value)}
             placeholder="Escribe el contenido completo de la lección aquí..."
-            className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+            className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
           />
         </Card>
 
         <Card>
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-lg font-bold text-slate-700">Preguntas de Evaluación (Opcional)</h2>
-            <span className="text-sm font-semibold bg-brand-cream text-slate-600 px-3 py-1 rounded-full">{lesson.preguntas.length} preguntas</span>
+            <span className="text-sm font-semibold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">{lesson.preguntas.length} preguntas</span>
           </div>
 
           <div className="space-y-3">
             {lesson.preguntas.map((q, index) => (
-              <div key={q.id} className="bg-brand-cream p-3 rounded-lg flex justify-between items-center">
+              <div key={q.id} className="bg-slate-50 p-3 rounded-lg flex justify-between items-center">
                 <div>
                   <p className="font-bold text-sm text-slate-800">P{index + 1}: {q.questionText.substring(0, 30)}...</p>
                   <p className="text-xs text-slate-500 uppercase font-semibold">
@@ -472,7 +471,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
             <h2 className="text-xl font-bold text-slate-800 mb-4">{isEditingQuestion?.id ? 'Editar' : 'Nueva'} Pregunta</h2>
             <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-4">
               <div>
-                <label className="block text-sm font-bold text-slate-600 mb-2">Tipo de Pregunta</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Tipo de Pregunta</label>
                 <select
                   value={isEditingQuestion?.type || 'multiple_choice'}
                   onChange={e => {
@@ -498,7 +497,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                       setIsEditingQuestion(prev => prev ? { ...prev, type: newType } : null);
                     }
                   }}
-                  className="w-full px-3 py-2 rounded-lg bg-brand-cream appearance-none"
+                  className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none appearance-none"
                 >
                   <option value="multiple_choice">Opción Múltiple</option>
                   <option value="fill_blank">Completar Espacio</option>
@@ -508,27 +507,27 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-600 mb-2">Texto de la Pregunta</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Texto de la Pregunta</label>
                 <textarea
                   rows={3}
                   value={isEditingQuestion?.questionText || ''}
                   onChange={e => setIsEditingQuestion(prev => prev ? { ...prev, questionText: e.target.value } : null)}
-                  className="w-full px-3 py-2 rounded-lg bg-brand-cream"
+                  className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-600 mb-2">Puntos (XP)</label>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Puntos (XP)</label>
                 <input
                   type="number"
                   value={isEditingQuestion?.points || 10}
                   onChange={e => setIsEditingQuestion(prev => prev ? { ...prev, points: parseInt(e.target.value) || 0 } : null)}
-                  className="w-full px-3 py-2 rounded-lg bg-brand-cream"
+                  className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                 />
               </div>
               {isEditingQuestion?.type === 'multiple_choice' && (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-bold text-slate-600 mb-2">Opciones</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Opciones</label>
                     {(isEditingQuestion.options || []).map((option, index) => (
                       <div key={option.id} className="flex items-center gap-2 mb-2">
                         <input
@@ -547,7 +546,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                             setIsEditingQuestion(prev => prev ? { ...prev, options: newOptions } : null);
                           }}
                           placeholder={`Opción ${index + 1}`}
-                          className="flex-1 px-3 py-2 rounded-lg bg-brand-cream"
+                          className="flex-1 px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                         />
                         <button
                           onClick={() => {
@@ -578,18 +577,18 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
               )}
               {isEditingQuestion?.type === 'fill_blank' && (
                 <div>
-                  <label className="block text-sm font-bold text-slate-600 mb-2">Respuesta Correcta</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Respuesta Correcta</label>
                   <input
                     type="text"
                     value={isEditingQuestion.correctAnswer || ''}
                     onChange={e => setIsEditingQuestion(prev => prev ? { ...prev, correctAnswer: e.target.value } : null)}
-                    className="w-full px-3 py-2 rounded-lg bg-brand-cream"
+                    className="w-full px-3 py-2 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                     placeholder="Ingresa la respuesta correcta"
                   />
                 </div>
               )}
               {isEditingQuestion?.type && !['multiple_choice', 'fill_blank'].includes(isEditingQuestion.type) && (
-                <p className="text-sm text-slate-500 text-center p-4 bg-brand-cream rounded-lg">Editor para este tipo de pregunta no implementado aún.</p>
+                <p className="text-sm text-slate-500 text-center p-4 bg-white rounded-lg border border-slate-200">Editor para este tipo de pregunta no implementado aún.</p>
               )}
             </div>
             <div className="mt-6 flex gap-3">

@@ -133,35 +133,35 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Nombre Completo</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Nombre Completo</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.nombre}
                   onChange={(e) => handleInputChange('nombre', e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                  className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                 />
               ) : (
-                <p className="px-4 py-3 bg-brand-cream rounded-lg text-slate-800">{user.nombre}</p>
+                <p className="px-4 py-3 bg-white rounded-lg text-slate-800">{user.nombre}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Correo Electrónico</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Correo Electrónico</label>
               {isEditing ? (
                 <input
                   type="email"
                   value={formData.correo}
                   onChange={(e) => handleInputChange('correo', e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                  className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                 />
               ) : (
-                <p className="px-4 py-3 bg-brand-cream rounded-lg text-slate-800">{user.correo}</p>
+                <p className="px-4 py-3 bg-white rounded-lg text-slate-800">{user.correo}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Avatar</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Avatar</label>
               {isEditing ? (
                 <div className="space-y-3">
                   <input
@@ -178,7 +178,7 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
                         reader.readAsDataURL(file);
                       }
                     }}
-                    className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
+                    className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-green file:text-white hover:file:bg-brand-dark-green"
                   />
                   {formData.avatar_url && (
                     <div className="flex items-center space-x-3">
@@ -188,7 +188,7 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center space-x-3 px-4 py-3 bg-brand-cream rounded-lg">
+                <div className="flex items-center space-x-3 px-4 py-3 bg-white rounded-lg">
                   {user.avatar_url ? (
                     <img src={user.avatar_url} alt="Avatar" className="w-12 h-12 rounded-full object-cover" />
                   ) : (
@@ -202,13 +202,13 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Rol</label>
-              <p className="px-4 py-3 bg-brand-cream rounded-lg text-slate-800">{user.role === 'teacher' ? 'Docente' : 'Estudiante'}</p>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Rol</label>
+              <p className="px-4 py-3 bg-white rounded-lg text-slate-800">{user.role === 'teacher' ? 'Docente' : 'Estudiante'}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-slate-600 mb-2">Fecha de Registro</label>
-              <p className="px-4 py-3 bg-brand-cream rounded-lg text-slate-800">
+              <label className="block text-sm font-bold text-slate-700 mb-2">Fecha de Registro</label>
+              <p className="px-4 py-3 bg-white rounded-lg text-slate-800">
                 {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'No disponible'}
               </p>
             </div>
@@ -219,32 +219,32 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
                   <h3 className="text-lg font-bold text-slate-800 mb-3">Cambiar Contraseña</h3>
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-bold text-slate-600 mb-2">Contraseña Actual</label>
+                      <label className="block text-sm font-bold text-slate-700 mb-2">Contraseña Actual</label>
                       <input
                         type="password"
                         value={passwordData.currentPassword}
                         onChange={(e) => handlePasswordChange('currentPassword', e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                        className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                         placeholder="Ingresa tu contraseña actual"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-slate-600 mb-2">Nueva Contraseña</label>
+                      <label className="block text-sm font-bold text-slate-700 mb-2">Nueva Contraseña</label>
                       <input
                         type="password"
                         value={passwordData.newPassword}
                         onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                        className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                         placeholder="Ingresa la nueva contraseña"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-slate-600 mb-2">Confirmar Nueva Contraseña</label>
+                      <label className="block text-sm font-bold text-slate-700 mb-2">Confirmar Nueva Contraseña</label>
                       <input
                         type="password"
                         value={passwordData.confirmPassword}
                         onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg bg-brand-cream border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                        className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none"
                         placeholder="Confirma la nueva contraseña"
                       />
                     </div>
