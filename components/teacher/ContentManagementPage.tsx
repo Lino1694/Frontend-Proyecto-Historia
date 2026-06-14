@@ -303,24 +303,6 @@ const ContentManagementPage: React.FC<ContentManagementPageProps> = ({ onBack, o
                         <p className="text-center text-slate-600">No hay lecciones creadas aún.</p>
                     )}
                 </Card>
-
-                <Card>
-                    <h2 className="text-lg font-bold text-slate-700 mb-3">Retos Existentes</h2>
-                    <div className="space-y-3">
-                        {mockActivities.map(activity => (
-                             <div key={activity.id} className="bg-brand-cream p-3 rounded-lg flex justify-between items-center">
-                                <div>
-                                    <h3 className="font-bold text-slate-800">{activity.title}</h3>
-                                    <p className="text-xs text-slate-600">{activity.type} • {activity.xp} XP</p>
-                                </div>
-                                <button onClick={() => onEdit(activity)} className="flex items-center gap-2 font-semibold py-1.5 px-3 rounded-lg bg-brand-yellow-orange text-slate-800 hover:bg-brand-light-orange transition-colors text-sm">
-                                    <PencilIcon className="h-4 w-4"/>
-                                    <span>Editar</span>
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </Card>
             </div>
 
             {assignmentModal.show && assignmentModal.lesson && (
