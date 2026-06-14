@@ -157,7 +157,7 @@ const StudentHomePage: React.FC<StudentHomePageProps> = ({ userName, onLogout })
 
     return (
         <div className={themeClasses.bg}>
-            <header className={`${themeClasses.headerBg} backdrop-blur-lg p-4 flex justify-between items-center shadow-sm sticky top-0 z-10`}>
+            <header className={`${themeClasses.headerBg} p-4 flex justify-between items-center shadow-sm sticky top-0 z-10`}>
                 <div>
                     <h1 className={`text-xl font-bold ${themeClasses.headerText}`}>¡Hola, {userName}!</h1>
                     <p className={`${themeClasses.secondaryText} text-sm`}>¡Sigue con tu aventura!</p>

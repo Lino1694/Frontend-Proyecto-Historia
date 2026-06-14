@@ -102,7 +102,7 @@ const TeacherProfilePage: React.FC<TeacherProfilePageProps> = ({ onBack }) => {
 
   return (
     <div className="flex flex-col h-full bg-brand-cream animate-scale-in">
-      <header className="p-4 bg-brand-offwhite shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
+      <header className="p-4 bg-white shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
         <button onClick={onBack} className="lg:hidden absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base">
           <ArrowLeftIcon className="h-4 w-4" />
           <span>Volver</span>

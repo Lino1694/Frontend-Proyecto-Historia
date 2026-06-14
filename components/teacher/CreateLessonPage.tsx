@@ -285,7 +285,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
 
   return (
     <div className="flex-1 overflow-y-auto bg-brand-cream animate-scale-in">
-      <header className="p-4 bg-brand-offwhite shadow-sm flex items-center sticky top-0 z-10">
+      <header className="p-4 bg-white shadow-sm flex items-center sticky top-0 z-10">
         <button onClick={onBack} className="flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base mr-4">
           <ArrowLeftIcon className="h-4 w-4" />
           <span>Volver</span>
@@ -467,7 +467,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
 
       {isModalOpen && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4 z-30 backdrop-blur-sm">
-          <div className="bg-brand-offwhite rounded-2xl p-6 shadow-xl w-full max-w-sm animate-scale-in flex flex-col">
+          <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-sm animate-scale-in flex flex-col">
             <h2 className="text-xl font-bold text-slate-800 mb-4">{isEditingQuestion?.id ? 'Editar' : 'Nueva'} Pregunta</h2>
             <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-4">
               <div>

@@ -10,7 +10,7 @@ const mockRanking = [
 const GamificationCenter: React.FC<{onBack: () => void}> = ({ onBack }) => {
     return (
         <div className="flex-1 overflow-y-auto bg-brand-cream">
-            <header className="p-4 bg-brand-offwhite shadow-sm flex items-center sticky top-0 z-10">
+            <header className="p-4 bg-white shadow-sm flex items-center sticky top-0 z-10">
                 <button onClick={onBack} className="font-bold text-2xl text-slate-600">&lt;</button>
                 <h1 className="text-xl font-bold text-center text-slate-800 flex-1">Centro de Gamificación</h1>
             </header>

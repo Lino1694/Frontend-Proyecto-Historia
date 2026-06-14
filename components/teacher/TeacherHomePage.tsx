@@ -67,7 +67,7 @@ useEffect(() => {
 
     return (
         <div className="flex-1 overflow-y-auto bg-brand-cream">
-            <header className="bg-brand-offwhite/80 backdrop-blur-lg p-4 flex justify-between items-center shadow-sm sticky top-0 z-10">
+            <header className="bg-white p-4 flex justify-between items-center shadow-sm sticky top-0 z-10">
                 <div>
                     <h1 className="text-xl font-bold text-slate-800">¡Hola, {userName}!</h1>
                     <p className="text-slate-600 text-sm">Panel del docente - 5to "A"</p>

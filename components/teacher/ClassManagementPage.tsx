@@ -201,7 +201,7 @@ const ClassManagementPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
 
     return (
         <div className="flex flex-col h-full bg-brand-cream animate-scale-in">
-            <header className="p-4 bg-brand-offwhite shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
+            <header className="p-4 bg-white shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
                  <button onClick={onBack} className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base">
                     <ArrowLeftIcon className="h-4 w-4" />
                     <span>Volver</span>
@@ -233,13 +233,13 @@ const ClassManagementPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
 
                 <div className="relative mb-2">
                     <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Buscar estudiante..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-brand-offwhite border-2 border-transparent focus:border-brand-light-orange focus:outline-none transition-colors"
-                    />
+<input
+                         type="text"
+                         placeholder="Buscar estudiante..."
+                         value={searchTerm}
+                         onChange={(e) => setSearchTerm(e.target.value)}
+                         className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white border-2 border-transparent focus:border-brand-light-orange focus:outline-none transition-colors"
+                     />
                 </div>
                 <div className="flex rounded-lg bg-brand-cream/70 p-1 text-sm font-semibold">
                     <button onClick={() => setFilterStatus('all')} className={`flex-1 p-1.5 rounded-md transition-colors ${filterStatus === 'all' ? 'bg-brand-yellow text-slate-800 shadow' : 'text-slate-600'}`}>Todos</button>

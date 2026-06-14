@@ -363,22 +363,24 @@ class ApiService {
         });
     }
 
-  // Obtener retos activos
-  async obtenerRetosActivos(): Promise<Array<{
-    id: number;
-    titulo: string;
-    descripcion: string;
-    tipo: 'individual' | 'competition';
-    xp_recompensa: number;
-    participantes: number;
-    estado: 'active' | 'completed';
-    fecha_fin: string;
-    creador_id: number;
-  }>> {
-    return this.request('/retos/activos', {
-      method: 'GET',
-    });
-  }
+// Obtener retos activos
+   async obtenerRetosActivos(): Promise<Array<{
+     id: number;
+     titulo: string;
+     descripcion: string;
+     tipo: 'individual' | 'competition';
+     xp_recompensa: number;
+     participantes: number;
+     estado: 'active' | 'completed';
+     fecha_fin: string;
+     creador_id: number;
+     categoria?: string;
+     max_intentos?: number;
+   }>> {
+     return this.request('/retos/activos', {
+       method: 'GET',
+     });
+   }
 
   // Obtener retos organizados por categorías
   async obtenerRetosPorCategoria(): Promise<{
@@ -453,16 +455,65 @@ class ApiService {
     });
   }
 
-  // Enviar respuestas de un reto
-  async enviarRespuestasReto(reto_id: number, respuestas: Array<{
-    pregunta_id: number;
-    respuesta: string;
-  }>): Promise<{ message: string; correctas: number; total: number; xp_ganado: number }> {
-    return this.request(`/retos/${reto_id}/responder`, {
-      method: 'POST',
-      body: JSON.stringify({ respuestas }),
-    });
-  }
+// Enviar respuestas de un reto
+   async enviarRespuestasReto(reto_id: number, respuestas: Array<{
+     pregunta_id: number;
+     respuesta: string;
+   }>): Promise<{ message: string; correctas: number; total: number; xp_ganado: number }> {
+     return this.request(`/retos/${reto_id}/responder`, {
+       method: 'POST',
+       body: JSON.stringify({ respuestas }),
+     });
+   }
+
+// Eliminar un reto
+    async eliminarReto(reto_id: number): Promise<{ message: string }> {
+      return this.request(`/retos/${reto_id}`, {
+        method: 'DELETE',
+      });
+    }
+
+    // Obtener un reto específico con preguntas (para edición)
+    async obtenerReto(reto_id: number): Promise<{
+      id: number;
+      titulo: string;
+      descripcion: string;
+      tipo: 'individual' | 'competition';
+      categoria: string;
+      xp_recompensa: number;
+      fecha_fin: string;
+      max_intentos: number;
+      preguntas: Array<{
+        pregunta: string;
+        opciones: string[];
+        respuesta_correcta: number;
+      }>;
+    }> {
+      return this.request(`/retos/${reto_id}`, {
+        method: 'GET',
+      });
+    }
+
+    // Actualizar un reto
+   async actualizarReto(reto_id: number, data: {
+     titulo?: string;
+     descripcion?: string;
+     tipo?: 'individual' | 'competition';
+     categoria?: string;
+     xp_recompensa?: number;
+     fecha_fin?: string;
+     max_intentos?: number;
+     preguntas?: Array<{
+       pregunta: string;
+       opciones: string[];
+       respuesta_correcta: number | string;
+     }>;
+   }): Promise<{ message: string }> {
+     return this.request(`/retos/${reto_id}`, {
+       method: 'PUT',
+       body: JSON.stringify(data),
+     });
+   }
 
   // ==================== LECCIONES ====================
 

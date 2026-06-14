@@ -126,7 +126,7 @@ interface RewardsCenterProps {
  
      return (
          <div className="flex-1 overflow-y-auto bg-brand-cream">
-             <header className="p-4 bg-brand-offwhite shadow-sm flex items-center sticky top-0 z-10">
+             <header className="p-4 bg-white shadow-sm flex items-center sticky top-0 z-10">
                  <button onClick={onBack} className="font-bold text-2xl text-slate-600">&lt;</button>
                  <h1 className="text-xl font-bold text-center text-slate-800 flex-1">Insignias y Puntos Extras</h1>
              </header>
@@ -181,7 +181,7 @@ interface RewardsCenterProps {
  
              {selectedStudent && (
                  <div className="absolute inset-0 bg-black/50 flex items-end justify-center z-20 backdrop-blur-sm" onClick={() => setSelectedStudent(null)}>
-                     <div className="bg-brand-offwhite rounded-t-2xl p-6 shadow-xl w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+                     <div className="bg-white rounded-t-2xl p-6 shadow-xl w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
                          <div className="flex justify-between items-center mb-4">
                              <h2 className="text-lg font-bold text-slate-800">Premiar a {selectedStudent.nombre}</h2>
                              <button onClick={() => setSelectedStudent(null)} className="font-bold text-2xl text-slate-500">&times;</button>
@@ -253,8 +253,8 @@ interface RewardsCenterProps {
              )}
 
              {showCriterios && selectedInsignia && (
-                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-30 backdrop-blur-sm" onClick={() => setShowCriterios(false)}>
-                     <div className="bg-brand-offwhite rounded-2xl p-6 shadow-xl w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+<div className="absolute inset-0 bg-black/50 flex items-center justify-center z-30 backdrop-blur-sm" onClick={() => setShowCriterios(false)}>
+                      <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
                          <h2 className="text-lg font-bold text-slate-800 mb-4">Configurar Criterio: {selectedInsignia.nombre}</h2>
                          <div className="space-y-4">
                              <div>

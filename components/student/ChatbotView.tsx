@@ -106,7 +106,7 @@ const ChatbotView: React.FC<ChatbotViewProps> = ({ topicId, onBack }) => {
 
     return (
         <div className="flex flex-col h-full bg-brand-cream animate-scale-in">
-            <header className="p-4 bg-brand-offwhite shadow-sm flex items-center justify-between sticky top-0 z-10">
+            <header className="p-4 bg-white shadow-sm flex items-center justify-between sticky top-0 z-10">
                 <button onClick={onBack} className="flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base">
                     <ArrowLeftIcon className="h-4 w-4" />
                     <span>Clases</span>
@@ -124,7 +124,7 @@ const ChatbotView: React.FC<ChatbotViewProps> = ({ topicId, onBack }) => {
                         {msg.sender === 'bot' && (
                             <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center flex-shrink-0">{topic.character.avatar}</div>
                         )}
-                        <div className={`max-w-[80%] p-3 rounded-2xl ${msg.sender === 'user' ? 'bg-brand-green text-white rounded-br-none' : 'bg-brand-offwhite text-slate-800 rounded-bl-none shadow-sm'}`}>
+                        <div className={`max-w-[80%] p-3 rounded-2xl ${msg.sender === 'user' ? 'bg-brand-green text-white rounded-br-none' : 'bg-slate-100 text-slate-800 rounded-bl-none'}`}>
                             <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
                         </div>
                     </div>
@@ -132,7 +132,7 @@ const ChatbotView: React.FC<ChatbotViewProps> = ({ topicId, onBack }) => {
                 {isLoading && (
                      <div className="flex items-end gap-2 justify-start">
                         <div className="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center flex-shrink-0">{topic.character.avatar}</div>
-                        <div className="max-w-[80%] p-3 rounded-2xl bg-brand-offwhite text-slate-800 rounded-bl-none shadow-sm">
+                        <div className="max-w-[80%] p-3 rounded-2xl bg-slate-100 text-slate-800 rounded-bl-none">
                             <div className="flex gap-1.5 items-center">
                                 <span className="h-2 w-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                                 <span className="h-2 w-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
@@ -144,7 +144,7 @@ const ChatbotView: React.FC<ChatbotViewProps> = ({ topicId, onBack }) => {
                 <div ref={messagesEndRef} />
             </main>
 
-            <footer className="p-2 bg-brand-offwhite/90 backdrop-blur-lg border-t border-brand-cream">
+            <footer className="p-2 bg-white border-t border-slate-200">
                 <form onSubmit={handleSend} className="flex items-center gap-2">
                     <input
                         type="text"

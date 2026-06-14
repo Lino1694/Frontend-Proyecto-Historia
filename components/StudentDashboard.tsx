@@ -49,7 +49,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userName, onLogout,
 
     return (
         <div className={`flex flex-col h-full ${themeClasses.bg} lg:flex-row`}>
-            <nav className={`lg:flex lg:flex-col lg:w-64 lg:${themeClasses.headerBg}/90 lg:backdrop-blur-lg lg:shadow-lg lg:relative lg:h-full absolute bottom-0 left-0 right-0 ${themeClasses.headerBg}/90 backdrop-blur-lg shadow-[0_-4px_10px_-5px_rgba(0,0,0,0.1)] lg:shadow-none`}>
+            <nav className={`lg:flex lg:flex-col lg:w-64 lg:${themeClasses.headerBg} lg:shadow-lg lg:relative lg:h-full absolute bottom-0 left-0 right-0 ${themeClasses.headerBg} shadow-[0_-4px_10px_-5px_rgba(0,0,0,0.1)] lg:shadow-none`}>
                 <div className="flex justify-around items-center h-16 lg:flex-col lg:justify-start lg:items-start lg:p-4 lg:space-y-4 lg:h-full">
                     <NavItem tab="home" label="Inicio" Icon={HomeIcon} />
                     <NavItem tab="achievements" label="Logros" Icon={TrophyIcon} />

@@ -156,7 +156,7 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
   if (activityCompleted) {
     return (
       <div className="min-h-screen bg-brand-cream">
-        <header className="p-4 bg-brand-offwhite shadow-sm flex justify-between items-center">
+        <header className="p-4 bg-white shadow-sm flex justify-between items-center">
           <button onClick={onBack} className="flex items-center text-slate-600 hover:text-slate-800">
             <ArrowLeftIcon className="h-5 w-5 mr-2" />
             Volver
@@ -201,7 +201,7 @@ const ActivityView: React.FC<ActivityViewProps> = ({ onBack }) => {
 
   return (
     <div className="min-h-screen bg-brand-cream">
-      <header className="p-4 bg-brand-offwhite shadow-sm flex justify-between items-center">
+      <header className="p-4 bg-white shadow-sm flex justify-between items-center">
         <button onClick={onBack} className="flex items-center text-slate-600 hover:text-slate-800">
           <ArrowLeftIcon className="h-5 w-5 mr-2" />
           Volver

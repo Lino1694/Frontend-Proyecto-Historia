@@ -27,6 +27,18 @@ interface TeacherDashboardProps {
 
 type TeacherView = 'home' | 'create_activity' | 'rewards_center' | 'reports' | 'class_management' | 'content_management' | 'challenges' | 'profile' | 'create_lesson' | 'dynamic_generation';
 
+interface Challenge {
+    id: number;
+    title: string;
+    description: string;
+    type: 'individual' | 'competition';
+    xpReward: number;
+    participants: number;
+    status: 'active' | 'completed';
+    endDate: string;
+    categoria?: string;
+    maxIntentos?: number;
+}
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
     const { user } = useAuth();
@@ -34,23 +46,43 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
     const [activityToEdit, setActivityToEdit] = useState<Activity | null>(null);
     const [lessonToEdit, setLessonToEdit] = useState<any | null>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [challengeReturnView, setChallengeReturnView] = useState<TeacherView>('home');
     
     const navigateTo = (newView: TeacherView) => setView(newView);
 
     const handleCreateNew = () => {
         setActivityToEdit(null);
+        setChallengeReturnView('home');
         navigateTo('create_activity');
     };
 
     const handleEdit = (activity: Activity) => {
         setActivityToEdit(activity);
+        setChallengeReturnView('home');
         navigateTo('create_activity');
     }
+
+    const handleEditChallenge = (challenge: Challenge) => {
+        const activity: Activity = {
+            id: `reto_${challenge.id}`,
+            title: challenge.title,
+            description: challenge.description || '',
+            type: 'Cuestionario',
+            dueDate: challenge.endDate,
+            xp: challenge.xpReward,
+            maxAttempts: challenge.maxIntentos || 1,
+            questions: [],
+            category: challenge.categoria || 'General'
+        };
+        setActivityToEdit(activity);
+        setChallengeReturnView('challenges');
+        navigateTo('create_activity');
+    };
 
     const renderContent = () => {
         switch (view) {
             case 'create_activity':
-                return <CreateActivityPage onBack={() => navigateTo('home')} activityToEdit={activityToEdit} />;
+                return <CreateActivityPage onBack={() => navigateTo(challengeReturnView)} activityToEdit={activityToEdit} />;
             case 'rewards_center':
                 return <RewardsCenter onBack={() => navigateTo('home')} />;
             case 'reports':
@@ -60,7 +92,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
             case 'content_management':
                 return <ContentManagementPage onBack={() => navigateTo('home')} onCreateNew={handleCreateNew} onEdit={handleEdit} onCreateLesson={() => { setLessonToEdit(null); navigateTo('create_lesson'); }} onEditLesson={(lesson) => { setLessonToEdit(lesson); navigateTo('create_lesson'); }} />;
             case 'challenges':
-                return <ChallengesCenter onBack={() => navigateTo('home')} />;
+                return <ChallengesCenter onBack={() => navigateTo('home')} onEditChallenge={handleEditChallenge} />;
             case 'profile':
                 return <TeacherProfilePage onBack={() => navigateTo('home')} />;
             case 'create_lesson':

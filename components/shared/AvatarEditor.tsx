@@ -36,7 +36,7 @@ const AvatarEditor: React.FC<AvatarEditorProps> = ({ onClose, onSave }) => {
     
     return (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4 z-30 backdrop-blur-sm">
-            <div className="bg-brand-offwhite rounded-2xl p-6 shadow-xl w-full max-w-sm animate-scale-in flex flex-col" style={{maxHeight: '90vh'}}>
+            <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-sm animate-scale-in flex flex-col" style={{maxHeight: '90vh'}}>
                 <div className="text-center mb-4">
                      <div className="relative inline-block">
                         <div className="w-32 h-32 rounded-full bg-brand-yellow-orange flex items-center justify-center text-6xl shadow-inner">

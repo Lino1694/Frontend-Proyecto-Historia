@@ -248,7 +248,7 @@ case 'fill_blank':
 
     return (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4 z-30 backdrop-blur-sm">
-            <div className="bg-brand-offwhite rounded-2xl p-6 shadow-xl w-full max-w-sm animate-scale-in flex flex-col" style={{maxHeight: '90vh'}}>
+            <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-sm animate-scale-in flex flex-col" style={{maxHeight: '90vh'}}>
                 <h2 className="text-xl font-bold text-slate-800 mb-4">{question?.id ? 'Editar' : 'Nueva'} Pregunta</h2>
                 <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-4">
 <div>
@@ -338,9 +338,46 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
     const [isEditingQuestion, setIsEditingQuestion] = useState<Question | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setActivity(activityToEdit || { ...emptyActivity, id: `act_${Date.now()}`});
+        if (activityToEdit && activityToEdit.id.startsWith('reto_')) {
+            const retoId = parseInt(activityToEdit.id.replace('reto_', ''));
+            setLoading(true);
+            apiService.obtenerReto(retoId)
+                .then(data => {
+                    const questions: Question[] = (data.preguntas || []).map((p: any, idx: number) => ({
+                        id: `q_${p.pregunta || idx}_${Date.now()}`,
+                        type: 'multiple_choice',
+                        questionText: p.pregunta,
+                        points: 10,
+                        options: p.opciones.map((opt: string, optIdx: number) => ({
+                            id: `opt_${optIdx}`,
+                            text: opt
+                        })),
+                        correctOptionId: `opt_${p.respuesta_correcta}`
+                    }));
+                    
+                    setActivity({
+                        id: `reto_${data.id}`,
+                        title: data.titulo,
+                        description: data.descripcion || '',
+                        type: data.tipo === 'individual' ? 'Cuestionario' : 'Competencia en tiempo real',
+                        dueDate: data.fecha_fin,
+                        xp: data.xp_recompensa,
+                        maxAttempts: data.max_intentos || 1,
+                        questions: questions,
+                        category: data.categoria || 'General'
+                    });
+                })
+                .catch(err => {
+                    console.error('Error cargando reto:', err);
+                    alert('Error al cargar el reto para edición');
+                })
+                .finally(() => setLoading(false));
+        } else {
+            setActivity(activityToEdit || { ...emptyActivity, id: `act_${Date.now()}`});
+        }
     }, [activityToEdit]);
 
     const handleUpdateField = (field: keyof Activity, value: any) => {
@@ -416,7 +453,7 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
         }).filter(Boolean);
     };
 
-    const handleSaveActivity = async () => {
+const handleSaveActivity = async () => {
         if (activity.questions.length === 0) {
             alert('Agrega al menos una pregunta al reto.');
             return;
@@ -430,25 +467,41 @@ const CreateActivityPage: React.FC<CreateActivityPageProps> = ({ onBack, activit
             return;
         }
 
-setIsSaving(true);
+        setIsSaving(true);
         try {
             const tipo = activity.type === 'Cuestionario' ? 'individual' : 'competition';
             const preguntas = mapQuestionsToApi(activity.questions);
-            await apiService.crearReto({
-                titulo: activity.title,
-                descripcion: activity.description || '',
-                tipo,
-                categoria: activity.category || 'General',
-                xp_recompensa: activity.xp,
-                fecha_fin: activity.dueDate,
-                max_intentos: activity.maxAttempts,
-                preguntas
-            });
-            alert('Reto creado exitosamente.');
+            
+            if (activityToEdit && activityToEdit.id.startsWith('reto_')) {
+                const retoId = parseInt(activityToEdit.id.replace('reto_', ''));
+                await apiService.actualizarReto(retoId, {
+                    titulo: activity.title,
+                    descripcion: activity.description || '',
+                    tipo,
+                    categoria: activity.category || 'General',
+                    xp_recompensa: activity.xp,
+                    fecha_fin: activity.dueDate,
+                    max_intentos: activity.maxAttempts,
+                    preguntas
+                });
+                alert('Reto actualizado exitosamente.');
+            } else {
+                await apiService.crearReto({
+                    titulo: activity.title,
+                    descripcion: activity.description || '',
+                    tipo,
+                    categoria: activity.category || 'General',
+                    xp_recompensa: activity.xp,
+                    fecha_fin: activity.dueDate,
+                    max_intentos: activity.maxAttempts,
+                    preguntas
+                });
+                alert('Reto creado exitosamente.');
+            }
             onBack();
         } catch (error) {
-            console.error('Error creando reto:', error);
-            alert('Error al crear el reto. Inténtalo de nuevo.');
+            console.error('Error guardando reto:', error);
+            alert('Error al guardar el reto. Inténtalo de nuevo.');
         } finally {
             setIsSaving(false);
         }
@@ -456,14 +509,19 @@ setIsSaving(true);
 
     return (
         <div className="flex-1 overflow-y-auto bg-brand-cream animate-scale-in">
-            <header className="p-4 bg-brand-offwhite shadow-sm flex items-center sticky top-0 z-10">
+            <header className="p-4 bg-white shadow-sm flex items-center sticky top-0 z-10">
                 <button onClick={onBack} className="lg:hidden flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base mr-4">
                     <ArrowLeftIcon className="h-4 w-4" />
                     <span>Volver</span>
                 </button>
-                <h1 className="text-xl font-bold text-center text-slate-800 flex-1">{activityToEdit ? 'Editar Reto' : 'Crear Nuevo Reto'}</h1>
+                <h1 className="text-xl font-bold text-center text-slate-800 flex-1">{loading ? 'Cargando...' : (activityToEdit ? 'Editar Reto' : 'Crear Nuevo Reto')}</h1>
             </header>
 
+            {loading ? (
+                <div className="p-4 flex items-center justify-center">
+                    <p className="text-slate-600">Cargando datos del reto...</p>
+                </div>
+            ) : (<>
             <div className="p-4 space-y-6">
                 <Card>
                     <h2 className="text-lg font-bold text-slate-700 mb-3">Información General</h2>
@@ -527,23 +585,24 @@ setIsSaving(true);
                                 </div>
                             </div>
                         ))}
-                         <button onClick={handleAddNewQuestion} className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-400 text-slate-600 font-semibold rounded-lg hover:bg-brand-yellow-orange hover:border-brand-green transition-colors">
+                        <button onClick={handleAddNewQuestion} className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-400 text-slate-600 font-semibold rounded-lg hover:bg-brand-yellow-orange hover:border-brand-green transition-colors">
                             <PlusCircleIcon className="h-5 w-5" />
                             <span>Agregar Pregunta</span>
                         </button>
                     </div>
                 </Card>
 
-                 <div className="p-4">
+                <div className="p-4">
                     <button
                         onClick={handleSaveActivity}
                         disabled={isSaving}
                         className="w-full bg-brand-dark-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-green transform hover:-translate-y-1 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                       {isSaving ? 'Guardando...' : (activityToEdit ? 'Guardar Cambios' : 'Asignar Reto a la Clase')}
+                        {isSaving ? 'Guardando...' : (activityToEdit ? 'Guardar Cambios' : 'Asignar Reto a la Clase')}
                     </button>
                 </div>
             </div>
+            </>)}
             {isModalOpen && <QuestionEditorModal question={isEditingQuestion} onSave={handleSaveQuestion} onClose={() => setIsModalOpen(false)} />}
         </div>
     );

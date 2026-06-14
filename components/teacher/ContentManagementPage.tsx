@@ -136,23 +136,23 @@ const AssignmentModal: React.FC<{
 
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-2">Título Personalizado (opcional)</label>
-                        <input
-                            type="text"
-                            value={tituloPersonalizado}
-                            onChange={(e) => setTituloPersonalizado(e.target.value)}
-                            placeholder="Ej: Lección para análisis histórico"
-                            className="w-full px-3 py-2 rounded-lg bg-brand-offwhite border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
-                        />
+<input
+                             type="text"
+                             value={tituloPersonalizado}
+                             onChange={(e) => setTituloPersonalizado(e.target.value)}
+                             placeholder="Ej: Lección para análisis histórico"
+                             className="w-full px-3 py-2 rounded-lg bg-white border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                         />
                     </div>
 
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-2">Fecha de Vencimiento (opcional)</label>
-                        <input
-                            type="date"
-                            value={fechaVencimiento}
-                            onChange={(e) => setFechaVencimiento(e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-brand-offwhite border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
-                        />
+<input
+                             type="date"
+                             value={fechaVencimiento}
+                             onChange={(e) => setFechaVencimiento(e.target.value)}
+                             className="w-full px-3 py-2 rounded-lg bg-white border-2 border-transparent focus:border-brand-light-orange focus:outline-none"
+                         />
                     </div>
                 </div>
                 <div className="p-4 border-t border-brand-cream flex gap-2">
@@ -238,7 +238,7 @@ const ContentManagementPage: React.FC<ContentManagementPageProps> = ({ onBack, o
 
     return (
         <div className="flex flex-col h-full bg-brand-cream animate-scale-in">
-            <header className="p-4 bg-brand-offwhite shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
+            <header className="p-4 bg-white shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
                  <button onClick={onBack} className="lg:hidden absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base">
                     <ArrowLeftIcon className="h-4 w-4" />
                     <span>Volver</span>

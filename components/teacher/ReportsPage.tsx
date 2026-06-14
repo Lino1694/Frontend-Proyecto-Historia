@@ -200,7 +200,7 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
 
     return (
         <div className="flex-1 overflow-y-auto bg-brand-cream animate-scale-in">
-            <header className="p-4 bg-brand-offwhite shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
+            <header className="p-4 bg-white shadow-sm flex items-center justify-center sticky top-0 z-10 relative">
                 <button onClick={onBack} className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 font-semibold text-slate-600 hover:text-slate-800 transition-colors text-base">
                     <ArrowLeftIcon className="h-4 w-4" />
                     <span>Volver</span>
@@ -386,7 +386,7 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                                  </>
                              )}
                          </div>
-                         <div className="p-4 bg-brand-offwhite/80 backdrop-blur-lg border-t border-brand-yellow-orange">
+                         <div className="p-4 bg-white border-t border-brand-yellow-orange">
                              <button
                                  onClick={() => { setSelectedReport(null); setDetailedReport(null); }}
                                  className="w-full bg-brand-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-dark-green transition-colors flex items-center justify-center gap-2"
