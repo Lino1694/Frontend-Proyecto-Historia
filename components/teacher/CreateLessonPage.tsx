@@ -374,6 +374,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                 />
                 <button
                   onClick={handleAddEnlace}
+                  type="button"
                   className="px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-brand-dark-green"
                 >
                   Agregar
@@ -458,6 +459,7 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
           <button
             onClick={handleSaveLesson}
             disabled={isSaving}
+            type="button"
             className="w-full bg-brand-dark-green text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-green transform hover:-translate-y-1 transition-all duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving ? 'Guardando...' : (lessonToEdit ? 'Guardar Cambios' : 'Crear Lección')}
@@ -559,11 +561,12 @@ const CreateLessonPage: React.FC<CreateLessonPageProps> = ({ onBack, lessonToEdi
                         </button>
                       </div>
                     ))}
-                    <button
+<button
                       onClick={() => {
                         const newOption = { id: `opt_${Date.now()}`, text: '' };
                         setIsEditingQuestion(prev => prev ? { ...prev, options: [...(prev.options || []), newOption] } : null);
                       }}
+                      type="button"
                       className="w-full flex items-center justify-center gap-2 py-2 border border-dashed border-slate-400 text-slate-600 rounded-lg hover:bg-slate-100"
                     >
                       <PlusCircleIcon className="h-4 w-4" />
