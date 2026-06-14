@@ -50,7 +50,8 @@ const LessonsListPage: React.FC<LessonsListPageProps> = ({ temaId, temaTitle, on
 
     const filteredLessons = lessons.filter(lesson => {
         // Filter by tema (topic) - show only lessons matching the current tema
-        const matchesTema = !temaId || !lesson.tema || lesson.tema === temaId;
+        // Custom lessons (no tema) should NOT appear in topic-specific views
+        const matchesTema = lesson.tema && lesson.tema === temaId;
         const matchesSearch = lesson.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             lesson.descripcion?.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesTema && matchesSearch;
