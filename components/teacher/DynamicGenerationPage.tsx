@@ -371,7 +371,7 @@ const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack })
                     type="text"
                     value={customTopic}
                     onChange={(e) => setCustomTopic(e.target.value)}
-                    placeholder="Ej: La agricultura en el Imperio Inca"
+                    placeholder="Ej: La organización del Virreinato del Perú"
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-transparent"
                   />
                 </div>
