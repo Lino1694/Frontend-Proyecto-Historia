@@ -9,35 +9,32 @@ interface Message {
 }
 
 const caralInfo = {
-  general: "Caral es la ciudad más antigua de América, ubicada en el valle de Supe, Perú. Fue construida hace aproximadamente 5,000 años (alrededor del 2600 a.C.) por la civilización Caral, siendo contemporánea a las primeras ciudades de Mesopotamia y Egipto. Es Patrimonio Mundial de la UNESCO desde 2009.",
-  descubrimiento: "Fue descubierta en 1948 por el arqueólogo peruano Julio C. Tello, pero su importancia como la ciudad más antigua de América fue reconocida recién en las excavaciones de los años 1990 dirigidas por Ruth Shady. Las excavaciones continúan revelando más secretos de esta fascinante civilización.",
-  arquitectura: "Caral cuenta con seis pirámides monumentales, plazas circulares, templos y residencias. La Pirámide Mayor mide 18 metros de altura y 150 metros de diámetro. Todas las construcciones usan piedra y adobe, con técnicas avanzadas de ingeniería que incluyen ventilación y drenaje.",
-  sociedad: "La sociedad caral era pacífica y organizada jerárquicamente. No tenían armas ni fortificaciones, lo que sugiere una sociedad igualitaria. Practicaban el trueque y el comercio a larga distancia. Tenían una élite religiosa que dirigía los rituales y la construcción.",
-  economia: "La economía se basaba en la agricultura (algodón, calabaza, frijoles, maíz), pesca y recolección. Desarrollaron sistemas de irrigación avanzados y domesticaron plantas. Comerciaban con otras culturas a lo largo de la costa peruana.",
-  religion: "La religión era central en Caral, con templos dedicados a deidades relacionadas con la fertilidad y la agricultura. Encontraron instrumentos musicales como flautas de hueso y trompetas, sugiriendo que la música formaba parte de los rituales. No hay evidencia de sacrificios humanos.",
-  legado: "Caral demuestra que las civilizaciones americanas se desarrollaron de manera independiente y sofisticada. Su legado incluye el desarrollo de la agricultura, la arquitectura monumental y sistemas sociales complejos que influyeron en culturas posteriores como los incas."
+  general: "El Virreinato del Perú fue creado en 1542 con Lima como capital. Durante casi 300 años, el Perú fue gobernado desde la monarquía española con un sistema administrativo complejo.",
+  descubrimiento: "La organización del Virreinato incluyó la creación de intendencias en 1717, la separación del Virreinato del de Nueva Granada y sistemas de recaudación de impuestos más eficientes.",
+  arquitectura: "Las construcciones incluyen la Catedral de Lima, el Real Felipe, el Convento de San Francisco y edificios coloniales en el centro histórico. La arquitectura mezcla estilo español con técnicas locales.",
+  sociedad: "La sociedad estaba dividida entre españoles peninsulares, criollos, mestizos, indígenas y afroperuanos. Los primeros tenían privilegios políticos y económicos sobre los demás.",
+  economia: "La economia se basaba en la minería (especialmente plata de Potosí), el comercio entre España y Lima, y sistemas de encomiendas y mita para el trabajo forzado.",
+  religion: "La evangelización fue llevada por ordenes religiosas como franciscanos, dominicos y jesuitas. Se construyeron numerosos templos, conventos y la Catedral de Lima.",
+  legado: "El Virreinato dejó un legado cultural, arquitectónico y social que forjó la identidad peruana. Sus instituciones educativas, como la Universidad de San Marcos, siguen vigentes."
 };
 
 const CaralCity: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([{
-    text: "¡Hola! Soy un habitante de Caral, la ciudad más antigua de América. ¿Qué te gustaría saber sobre nuestra gran civilización? Puedes preguntarme sobre:\n- Historia general\n- Descubrimiento arqueológico\n- Arquitectura y monumentos\n- Sociedad y organización\n- Economía\n- Religión y rituales\n- Legado cultural",
+   const [messages, setMessages] = useState<Message[]>([{
+    text: "¡Hola! Soy un habitante del Virreinato. ¿Qué te gustaría saber sobre este período? Puedes preguntarme sobre:\n- Historia general\n- Organización administrativa\n- Arquitectura y monumentos\n- Sociedad y organización\n- Economía\n- Religión y evangelización\n- Legado cultural",
     isBot: true
   }]);
-  const [input, setInput] = useState('');
+   const [input, setInput] = useState('');
 
-  const { progress, addProgress } = useClassProgress(); // usar progress y addProgress
+   const { progress, addProgress } = useClassProgress();
 
-  // estado para notificación
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [notifMsg, setNotifMsg] = useState('');
+   const [notifOpen, setNotifOpen] = useState(false);
+   const [notifMsg, setNotifMsg] = useState('');
 
-  const handleSend = () => {
+   const handleSend = () => {
     if (!input.trim()) return;
 
-    // agregar mensaje del usuario usando updater funcional
     setMessages(prev => [...prev, { text: input, isBot: false }]);
 
-    // Simple response logic
     let response = '';
     const lowerInput = input.toLowerCase();
     let matched = false;
@@ -45,33 +42,32 @@ const CaralCity: React.FC = () => {
     if (lowerInput.includes('historia') || lowerInput.includes('general')) {
       response = caralInfo.general;
       matched = true;
-    } else if (lowerInput.includes('descubrimiento') || lowerInput.includes('arqueolog')) {
+    } else if (lowerInput.includes('organiza') || lowerInput.includes('administrativa')) {
       response = caralInfo.descubrimiento;
       matched = true;
-    } else if (lowerInput.includes('arquitectura') || lowerInput.includes('monumento') || lowerInput.includes('piramide')) {
+    } else if (lowerInput.includes('arquitectura') || lowerInput.includes('monumento') || lowerInput.includes('construccion')) {
       response = caralInfo.arquitectura;
       matched = true;
-    } else if (lowerInput.includes('sociedad') || lowerInput.includes('organiza')) {
+    } else if (lowerInput.includes('sociedad') || lowerInput.includes('organiza') || lowerInput.includes('social')) {
       response = caralInfo.sociedad;
       matched = true;
-    } else if (lowerInput.includes('econom') || lowerInput.includes('agricultura')) {
+    } else if (lowerInput.includes('econom') || lowerInput.includes('mineria') || lowerInput.includes('mina')) {
       response = caralInfo.economia;
       matched = true;
-    } else if (lowerInput.includes('religi') || lowerInput.includes('ritual') || lowerInput.includes('musica')) {
+    } else if (lowerInput.includes('religi') || lowerInput.includes('evangeliz') || lowerInput.includes('iglesia')) {
       response = caralInfo.religion;
       matched = true;
     } else if (lowerInput.includes('legado') || lowerInput.includes('influencia')) {
       response = caralInfo.legado;
       matched = true;
     } else {
-      response = "No entendí tu pregunta. ¿Podrías reformularla? Puedes preguntar sobre historia general, descubrimiento, arquitectura, sociedad, economía, religión o legado de Caral.";
+      response = "No entendí tu pregunta. ¿Podrías reformularla? Puedes preguntar sobre historia general, organización administrativa, arquitectura, sociedad, economía, religión o legado del Virreinato.";
     }
 
-    // Si hubo un match válido, sumar progreso y mostrar notificación
     if (matched) {
-      const progressAdded = addProgress('caral-ciudad', 10); // incrementa 10% por consulta acertada
+      const progressAdded = addProgress('organizacion-virreinato', 10);
       if (progressAdded) {
-        setNotifMsg('+10% Progreso en Caral');
+        setNotifMsg('+10% Progreso en Organización del Virreinato');
         setNotifOpen(true);
       }
     }
@@ -87,15 +83,14 @@ const CaralCity: React.FC = () => {
     <Box sx={{ maxWidth: { xs: 600, lg: 800 }, margin: '0 auto', p: 2 }}>
       <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
         <Typography variant="h5" gutterBottom>
-          Caral - La Primera Ciudad
+          Organización del Virreinato
         </Typography>
 
-        {/* Barra de progreso en tiempo real */}
         <Box sx={{ mb: 2 }}>
           <Typography variant="body2" sx={{ mb: 1 }}>Progreso de la clase</Typography>
-          <ProgressBar progress={progress['caral-ciudad'] ?? 0} />
+          <ProgressBar progress={progress['organizacion-virreinato'] ?? 0} />
           <Typography variant="caption" sx={{ display: 'block', textAlign: 'right', mt: 0.5 }}>
-            {progress['caral-ciudad'] ?? 0}%
+            {progress['organizacion-virreinato'] ?? 0}%
           </Typography>
         </Box>
 

@@ -6,12 +6,11 @@ const StudentProfilePage: React.FC = () => {
   const { progress } = useClassProgress();
   
   const classes = [
-    'Caral - La Primera Ciudad',
-    'Culturas Pre-Incaicas',
-    'La Cultura Inca',
-    'Período Virreinal',
-    'Período de Independencia',
-    'Batalla de Angamos',
+    'Organización del Virreinato',
+    'Reformas Borbónicas',
+    'Rebeliones',
+    'Independencia',
+    'Consolidación',
   ];
 
   const generalProgress = Math.round(

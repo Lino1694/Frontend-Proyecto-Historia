@@ -4,52 +4,44 @@ import '../styles/StudentHomePage.css';
 
 const mockClasses = [
     {
-        id: 'caral-ciudad',
-        title: 'Caral - La Primera Ciudad',
-        description: 'Es el origen de la civilización en el Perú y América, perteneciente al periodo precerámico.',
+        id: 'organizacion-virreinato',
+        title: 'Organización del Virreinato',
+        description: 'Es el periodo en que el Perú fue organizado como virreinato desde 1542, con Lima como capital y el sistema de intendencias.',
         icon: '🏛️',
         color: 'bg-stone-300',
-        year: '3000 - 1800 a.C.'
+        year: '1542 - 1700'
     },
     {
-        id: 'pre-inca',
-        title: 'Culturas Pre-Incaicas',
-        description: 'Este es un periodo muy amplio que abarca todas las civilizaciones que surgieron después de Caral y antes del apogeo inca.',
-        icon: '🏺',
-        color: 'bg-yellow-200',
-        year: '1500 a.C. - 1400 d.C.'
-    },
-    {
-        id: 'cultura-inca',
-        title: 'La Cultura Inca',
-        description: 'Representa el último y más grande imperio que se desarrolló en el Perú antes de la llegada de los españoles.',
-        icon: '🏛️',
-        color: 'bg-amber-300',
-        year: '1400 - 1532 d.C.'
-    },
-    {
-        id: 'virreinato',
-        title: 'El Virreinato del Perú',
-        description: 'Se inicia con la conquista española del Imperio Inca y se consolida como la entidad política que gobernó la región durante casi 300 años.',
+        id: 'reformas-borbonicas',
+        title: 'Reformas Borbónicas',
+        description: 'Período de cambios administrativos y fiscales impuestos por los reyes Borbones que generaron malestar popular.',
         icon: '📜',
-        color: 'bg-blue-200',
-        year: '1542 - 1824'
+        color: 'bg-yellow-200',
+        year: '1700 - 1808'
+    },
+    {
+        id: 'rebeliones',
+        title: 'Rebeliones',
+        description: 'Movilizaciones indígenas y criollas contra el colonialismo, destacando la de Túpac Amaru II y Micaela Bastidas.',
+        icon: '⚔️',
+        color: 'bg-red-200',
+        year: '1780 - 1814'
     },
     {
         id: 'independencia',
-        title: 'La Independencia',
-        description: 'Este proceso culmina con la declaración de la independencia del Perú, marcando el fin del Virreinato.',
+        title: 'Independencia',
+        description: 'Campaña libertadora de San Martín que proclamó la independencia del Perú el 28 de julio de 1821.',
         icon: '🕊️',
-        color: 'bg-red-200',
-        year: 'Proclamada en 1821'
+        color: 'bg-blue-200',
+        year: '1821 - 1824'
     },
     {
-        id: 'batalla-angamos',
-        title: 'La Batalla de Angamos',
-        description: 'Un evento clave dentro de la Guerra del Pacífico (1879-1884), que ocurrió varias décadas después de consolidada la independencia.',
+        id: 'consolidacion',
+        title: 'Consolidación',
+        description: 'Batallas que pusieron fin al dominio español y la formación del nuevo Estado peruano.',
         icon: '⚓',
-        color: 'bg-blue-300',
-        year: '8 de octubre de 1879'
+        color: 'bg-purple-200',
+        year: '1824 - 1825'
     },
 ];
 

@@ -14,7 +14,7 @@ const allInsignias = [
     { name: 'Cartógrafo', icon: '📜', requiredLevel: 6, description: 'Domina todos los contenidos históricos' },
     { name: 'Cronista', icon: '✒️', requiredLevel: 8, description: 'Comparte 5 entradas en tu diario' },
     { name: 'Guardián', icon: '🛡️', requiredLevel: 10, description: 'Mantén una racha de 7 días consecutivos' },
-    { name: 'Viajero', icon: '🧭', requiredLevel: 12, description: 'Completa el reto final de la Batalla de Angamos' },
+    { name: 'Viajero', icon: '🧭', requiredLevel: 12, description: 'Completa el reto final de la Consolidación' },
 ];
 
 const mockRanking = [
@@ -44,12 +44,11 @@ const StudentAchievementsPage: React.FC = () => {
 
     // Calculate completed lessons (100% progress)
     const classes = [
-        { id: 'caral-ciudad' },
-        { id: 'pre-inca' },
-        { id: 'cultura-inca' },
-        { id: 'virreinato' },
+        { id: 'organizacion-virreinato' },
+        { id: 'reformas-borbonicas' },
+        { id: 'rebeliones' },
         { id: 'independencia' },
-        { id: 'batalla-angamos' },
+        { id: 'consolidacion' },
     ];
     const completedLessons = classes.filter(c => progress[c.id] >= 100).length;
     const totalLessons = classes.length;

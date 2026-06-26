@@ -16,12 +16,11 @@ interface StudentProfilePageProps {
 }
 
 interface TimelineProgress {
-    'caral-ciudad': number;
-    'pre-inca': number;
-    'cultura-inca': number;
-    virreinato: number;
-    conquista: number;
-    independencia: number;
+    'organizacion-virreinato': number;
+    'reformas-borbonicas': number;
+    'rebeliones': number;
+    'independencia': number;
+    'consolidacion': number;
 }
 
 const isEmojiAvatar = (avatar: string) => {
@@ -34,11 +33,11 @@ const isEmojiAvatar = (avatar: string) => {
         periodProgress 
     }) => {
         const periods = [
-            { name: 'Caral', color: 'bg-green-500', key: 'caral-ciudad' },
-            { name: 'Inca', color: 'bg-yellow-500', key: 'cultura-inca' },
-            { name: 'Conquista', color: 'bg-red-500', key: 'conquista' },
-            { name: 'Virreinato', color: 'bg-purple-500', key: 'virreinato' },
-            { name: 'Independencia', color: 'bg-blue-500', key: 'independencia' },
+            { name: 'Organización Virreinato', color: 'bg-stone-300', key: 'organizacion-virreinato' },
+            { name: 'Reformas', color: 'bg-yellow-200', key: 'reformas-borbonicas' },
+            { name: 'Rebeliones', color: 'bg-red-200', key: 'rebeliones' },
+            { name: 'Independencia', color: 'bg-blue-200', key: 'independencia' },
+            { name: 'Consolidación', color: 'bg-purple-200', key: 'consolidacion' },
         ];
 
         const markerPosition = `${Math.max(2, Math.min(98, progress))}%`;
@@ -129,25 +128,23 @@ useEffect(() => {
     ];
 
 const classes = [
-        { id: 'caral-ciudad', label: 'Caral - La Primera Ciudad' },
-        { id: 'pre-inca', label: 'Culturas Pre-Incaicas' },
-        { id: 'cultura-inca', label: 'La Cultura Inca' },
-        { id: 'virreinato', label: 'El Virreinato del Perú' },
-        { id: 'independencia', label: 'La Independencia' },
-        { id: 'batalla-angamos', label: 'La Batalla de Angamos' },
-    ];
-
+            { id: 'organizacion-virreinato', label: 'Organización del Virreinato' },
+            { id: 'reformas-borbonicas', label: 'Reformas Borbónicas' },
+            { id: 'rebeliones', label: 'Rebeliones' },
+            { id: 'independencia', label: 'Independencia' },
+            { id: 'consolidacion', label: 'Consolidación' },
+        ];
+    
     // Calcula progreso general basado en la línea de tiempo (retos y lecciones completadas)
     // Si no hay datos de timeline, usa el cálculo basado en XP como fallback
     const generalProgress = timelineProgress
         ? Math.round((
-            (timelineProgress['caral-ciudad'] || 0) + 
-            (timelineProgress['pre-inca'] || 0) + 
-            (timelineProgress['cultura-inca'] || 0) + 
-            (timelineProgress.virreinato || 0) + 
-            (timelineProgress.conquista || 0) + 
-            (timelineProgress.independencia || 0)
-          ) / 6)
+            (timelineProgress['organizacion-virreinato'] || 0) + 
+            (timelineProgress['reformas-borbonicas'] || 0) + 
+            (timelineProgress['rebeliones'] || 0) + 
+            (timelineProgress.independencia || 0) + 
+            (timelineProgress.consolidacion || 0)
+          ) / 5)
         : Math.min(100, Math.round((perfilXP?.xp?.total || 0) * 0.2));
 
 

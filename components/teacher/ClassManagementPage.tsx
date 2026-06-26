@@ -119,11 +119,11 @@ type FilterStatus = 'all' | 'needs_support' | 'outstanding';
 
 const HistoricalTimeline: React.FC<{ progress: number; avatarUrl: string }> = ({ progress, avatarUrl }) => {
     const periods = [
-        { name: 'Caral', color: 'bg-green-500', width: '20%' },
-        { name: 'Inca', color: 'bg-yellow-500', width: '20%' },
-        { name: 'Conquista', color: 'bg-red-500', width: '20%' },
-        { name: 'Virreinato', color: 'bg-purple-500', width: '20%' },
-        { name: 'Independencia', color: 'bg-blue-500', width: '20%' },
+        { name: 'Organización Virreinato', color: 'bg-stone-300', width: '20%' },
+        { name: 'Reformas', color: 'bg-yellow-200', width: '20%' },
+        { name: 'Rebeliones', color: 'bg-red-200', width: '20%' },
+        { name: 'Independencia', color: 'bg-blue-200', width: '20%' },
+        { name: 'Consolidación', color: 'bg-purple-200', width: '20%' },
     ];
 
     const markerPosition = `${Math.max(2, Math.min(98, progress))}%`;
