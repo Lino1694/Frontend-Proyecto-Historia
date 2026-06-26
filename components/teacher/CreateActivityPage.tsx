@@ -539,15 +539,14 @@ const handleSaveActivity = async () => {
             </div>
             <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2">Categoría</label>
-                <select value={activity.category || 'General'} onChange={e => handleUpdateField('category', e.target.value)} className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none appearance-none">
-                    <option value="General">General</option>
-                    <option value="Caral - La primera Ciudad">Caral - La primera Ciudad</option>
-                    <option value="Cultura Pre-inca">Cultura Pre-inca</option>
-                    <option value="Cultura Inca">Cultura Inca</option>
-                    <option value="Virreinato">Virreinato</option>
-                    <option value="Conquista">Conquista</option>
-                    <option value="Independencia">Independencia</option>
-                </select>
+<select value={activity.category || 'General'} onChange={e => handleUpdateField('category', e.target.value)} className="w-full px-4 py-3 rounded-lg bg-white border-2 border-slate-300 focus:border-brand-light-orange focus:outline-none appearance-none">
+                     <option value="General">General</option>
+                     <option value="Organización del Virreinato">Organización del Virreinato</option>
+                     <option value="Reformas Borbónicas">Reformas Borbónicas</option>
+                     <option value="Rebeliones">Rebeliones</option>
+                     <option value="Independencia">Independencia</option>
+                     <option value="Consolidación">Consolidación</option>
+                 </select>
             </div>
             <div className="grid grid-cols-2 gap-4">
                               <div>

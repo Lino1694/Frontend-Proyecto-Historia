@@ -66,7 +66,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
         if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
         if (selectedTema) {
             const found = Object.entries(retosPorCategoria?.["Avanzando en la Historia"] || {}).find(
-                ([tema]) => tema.toLowerCase().includes(selectedTema.toLowerCase())
+                ([tema]) => tema.toLowerCase() === selectedTema.toLowerCase()
             );
             return found ? retosPorCategoria!["Avanzando en la Historia"][found[0]]?.some((reto: Reto) => reto.id === r.id) : false;
         }
@@ -238,7 +238,7 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                         >
                             Todos
                         </button>
-                        {['Caral', 'Inca', 'Virreinato', 'Independencia', 'Angamos'].map(tema => (
+                        {['Organización del Virreinato', 'Reformas Borbónicas', 'Rebeliones', 'Independencia', 'Consolidación'].map(tema => (
                             <button
                                 key={tema}
                                 onClick={() => setSelectedTema(tema)}
@@ -300,29 +300,29 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                             </Card>
                         ))}
 
-                        {/* Mostrar retos organizados por categorías en orden cronológico */}
+{/* Mostrar retos organizados por categorías en orden cronológico */}
                         {retosPorCategoria && (
                             <>
                                 {/* Sección Avanzando en la Historia */}
                                 <Card className={themeClasses.cardBg}>
                                     <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>🏛️ Avanzando en la Historia</h3>
                                     {/* Orden cronológico de las categorías históricas */}
-{[
-                                         'Caral - La primera Ciudad',
-                                         'Cultura Inca',
-                                         'La Conquista de Perú',
-                                         'El Virreinato en el Perú',
-                                         'Independencia del Perú',
-                                         'La Batalla de Angamos'
-                                     ].map((subcategoria) => {
+                                    {[
+                                        'Organización del Virreinato',
+                                        'Reformas Borbónicas',
+                                        'Rebeliones',
+                                        'Independencia',
+                                        'Consolidación'
+                                    ].map((subcategoria) => {
+                                        if (selectedTema && subcategoria !== selectedTema) return null;
                                         const retos = retosPorCategoria["Avanzando en la Historia"][subcategoria];
                                         if (!retos) return null;
 
                                         const retosActivos = retos.filter(r => {
-    if (r.estado !== 'active') return false;
-    if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
-    return true;
-});
+                                            if (r.estado !== 'active') return false;
+                                            if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
+                                            return true;
+                                        });
                                         if (retosActivos.length === 0) return null;
 
                                         return (
@@ -343,20 +343,20 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                                                     )}
                                                                     <h5 className={`text-lg font-bold mt-2 ${themeClasses.cardText}`}>{reto.titulo}</h5>
                                                                     <p className={`${themeClasses.secondaryText} text-sm`}>{reto.descripcion}</p>
-                                                                     <p className={`${themeClasses.secondaryText} text-sm`}>
-                                                                         Participantes: {reto.participantes} |
-                                                                         Intentos: {attemptsLeft[reto.id] ?? 2} |
-                                                                         Gana hasta <span className="font-bold text-brand-light-orange">{reto.xp_recompensa} XP</span>
-                                                                     </p>
+                                                                    <p className={`${themeClasses.secondaryText} text-sm`}>
+                                                                        Participantes: {reto.participantes} |
+                                                                        Intentos: {attemptsLeft[reto.id] ?? 2} |
+                                                                        Gana hasta <span className="font-bold text-brand-light-orange">{reto.xp_recompensa} XP</span>
+                                                                    </p>
                                                                 </div>
                                                                 <div className="flex flex-col items-end gap-2">
-                                                                     <button
-                                                                         onClick={() => handleUnirseReto(reto.id)}
-                                                                         disabled={(attemptsLeft[reto.id] ?? 2) <= 0}
-                                                                         className="bg-brand-green text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark-green transition-transform transform hover:scale-105 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                                                                     >
-                                                                         {(attemptsLeft[reto.id] ?? 2) <= 0 ? 'Sin intentos' : 'Comenzar'}
-                                                                     </button>
+                                                                    <button
+                                                                        onClick={() => handleUnirseReto(reto.id)}
+                                                                        disabled={(attemptsLeft[reto.id] ?? 2) <= 0}
+                                                                        className="bg-brand-green text-white font-bold py-2 px-4 rounded-lg hover:bg-brand-dark-green transition-transform transform hover:scale-105 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                    >
+                                                                        {(attemptsLeft[reto.id] ?? 2) <= 0 ? 'Sin intentos' : 'Comenzar'}
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </Card>
@@ -368,30 +368,30 @@ const StudentChallengesPage: React.FC<StudentChallengesPageProps> = ({ navigateT
                                 </Card>
 
                                 {/* Sección Otros retos */}
-{(retosPorCategoria?.["Otros"] || []).filter(r => {
-    if (r.estado !== 'active') return false;
-    if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
-    return true;
-}).length > 0 && (
-    <Card className={themeClasses.cardBg}>
-        <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>Otros Retos</h3>
-        <div className="space-y-3">
-            {(retosPorCategoria?.["Otros"] || []).filter(r => {
-                if (r.estado !== 'active') return false;
-                if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
-                return true;
-            }).map((reto) => (
+                                {(retosPorCategoria?.["Otros"] || []).filter(r => {
+                                    if (r.estado !== 'active') return false;
+                                    if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
+                                    return true;
+                                }).length > 0 && (
+                                    <Card className={themeClasses.cardBg}>
+                                        <h3 className={`text-lg font-bold ${themeClasses.cardText} mb-4`}>Otros Retos</h3>
+                                        <div className="space-y-3">
+                                            {(retosPorCategoria?.["Otros"] || []).filter(r => {
+                                                if (r.estado !== 'active') return false;
+                                                if (selectedDificultad && r.dificultad && r.dificultad !== selectedDificultad) return false;
+                                                return true;
+                                            }).map((reto) => (
                                                 <Card key={`reto-${reto.id}`} className={`hover:shadow-lg transition-shadow ${themeClasses.cardBg}`}>
                                                     <div className="flex justify-between items-start">
                                                         <div>
-<span className={`text-xs font-bold px-2 py-1 rounded-full mr-2 ${reto.tipo === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
-                                                                        {reto.tipo === 'individual' ? 'Individual' : 'Competencia'}
-                                                                    </span>
-                                                                    {reto.dificultad && (
-                                                                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${reto.dificultad === 'Fácil' ? 'bg-green-100 text-green-800' : reto.dificultad === 'Intermedio' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
-                                                                            {reto.dificultad}
-                                                                        </span>
-                                                                    )}
+                                                            <span className={`text-xs font-bold px-2 py-1 rounded-full mr-2 ${reto.tipo === 'individual' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
+                                                                {reto.tipo === 'individual' ? 'Individual' : 'Competencia'}
+                                                            </span>
+                                                            {reto.dificultad && (
+                                                                <span className={`text-xs font-bold px-2 py-1 rounded-full ${reto.dificultad === 'Fácil' ? 'bg-green-100 text-green-800' : reto.dificultad === 'Intermedio' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                                                                    {reto.dificultad}
+                                                                </span>
+                                                            )}
                                                             <h5 className={`text-lg font-bold mt-2 ${themeClasses.cardText}`}>{reto.titulo}</h5>
                                                             <p className={`${themeClasses.secondaryText} text-sm`}>{reto.descripcion}</p>
                                                             <p className={`${themeClasses.secondaryText} text-sm`}>

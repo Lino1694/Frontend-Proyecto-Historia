@@ -8,39 +8,39 @@ interface ChatbotSelectionProps {
 
 const characters = [
   {
-    id: 'inka',
-    name: 'Apu Huallpa',
-    avatar: '🦙',
-    description: 'Un guardián de quipus del Imperio Inca. Conoce sobre el Tahuantinsuyo, sus templos y caminos.',
-    period: '1200-1572 d.C.'
-  },
-  {
-    id: 'viceroyalty',
-    name: 'Don Francisco de Toledo',
-    avatar: '🏰',
-    description: 'Virrey del Perú durante la época colonial española. Gobernó con justicia y orden.',
-    period: '1532-1821 d.C.'
-  },
-  {
-    id: 'caral',
-    name: 'Sacerdote de Caral',
+    id: 'auge_virreinal',
+    name: 'Don Manuel de Amat',
     avatar: '🏛️',
-    description: 'Habitante de la antigua civilización Caral. Construyeron pirámides y vivieron en paz.',
-    period: '3000-1800 a.C.'
+    description: 'Virrey del Perú durante las Reformas Borbónicas. Conoce sobre la sociedad colonial y los cambios del siglo XVIII.',
+    period: '1761-1776 d.C.'
   },
   {
-    id: 'conquistador',
-    name: 'Don Francisco de Ávila',
+    id: 'rebeliones_indigenas',
+    name: 'Micaela Bastidas',
     avatar: '⚔️',
-    description: 'Conquistador español presente en la llegada al Perú. Conoce la historia de la conquista.',
-    period: '1532-1614 d.C.'
+    description: 'Líder femenina de la gran rebelión contra los abusos españoles. Luchó por la libertad y justicia indígena.',
+    period: '1780-1783 d.C.'
   },
   {
-    id: 'independencia',
-    name: 'Don José de la Mar',
+    id: 'conspiraciones_criollas',
+    name: 'Hipólito Unanue',
+    avatar: '📚',
+    description: 'Médico y sabio de las ideas de libertad. Conoce sobre conspiraciones y precursores de la independencia.',
+    period: '1808-1814 d.C.'
+  },
+  {
+    id: 'campana_sur',
+    name: 'Don José de San Martín',
     avatar: '🕊️',
-    description: 'Líder de la independencia del Perú. Fue presidente y militar por la libertad.',
-    period: '1776-1830 d.C.'
+    description: 'Líder de la Expedición Libertadora del Sur. Proclamó la independencia del Perú en 1821.',
+    period: '1820-1822 d.C.'
+  },
+  {
+    id: 'consolidacion_norte',
+    name: 'Antonio José de Sucre',
+    avatar: '🎖️',
+    description: 'Gran Mariscal que selló la independencia con la Batalla de Ayacucho. Puso fin al dominio español.',
+    period: '1823-1824 d.C.'
   }
 ];
 

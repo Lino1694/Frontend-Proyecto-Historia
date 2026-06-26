@@ -13,12 +13,11 @@ interface DynamicGenerationPageProps {
 }
 
 const characters = [
-  { id: 'inka', name: 'Apu Huallpa (Imperio Inca)', avatar: '🦙' },
-  { id: 'caral', name: 'Sacerdote de Caral', avatar: '🏛️' },
-  { id: 'viceroyalty', name: 'Don Francisco de Toledo (Virreinato)', avatar: '🏰' },
-  { id: 'conquistador', name: 'Don Francisco de Ávila (Conquista)', avatar: '⚔️' },
-  { id: 'independencia', name: 'Don José de la Mar (Independencia)', avatar: '🕊️' },
-  { id: 'republica', name: 'Don Manuel Prado (República)', avatar: '📜' }
+  { id: 'auge_virreinal', name: 'Don Manuel de Amat (Auge Virreinal)', avatar: '🏛️' },
+  { id: 'rebeliones_indigenas', name: 'Micaela Bastidas (Rebeliones)', avatar: '⚔️' },
+  { id: 'conspiraciones_criollas', name: 'Hipólito Unanue (Conspiraciones)', avatar: '📚' },
+  { id: 'campana_sur', name: 'Don José de San Martín (Campaña del Sur)', avatar: '🕊️' },
+  { id: 'consolidacion_norte', name: 'Antonio José de Sucre (Consolidación)', avatar: '🎖️' }
 ];
 
 const DynamicGenerationPage: React.FC<DynamicGenerationPageProps> = ({ onBack }) => {

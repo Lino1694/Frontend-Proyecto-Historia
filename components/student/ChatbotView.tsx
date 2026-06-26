@@ -3,30 +3,30 @@ import { ArrowLeftIcon } from '../icons/ArrowLeftIcon';
 import { PaperAirplaneIcon } from '../icons/PaperAirplaneIcon';
 
 const topics: Record<string, { name: string; character: { name: string; avatar: string; }; introMessage: string }> = {
-    'inka': {
-        name: 'Imperio Inca',
-        character: { name: 'Apu Huallpa', avatar: '🦙' },
-        introMessage: '¡Saludos, joven explorador! Soy Apu Huallpa, guardián de los quipus. En mi tiempo, construimos caminos que unían el imperio y templos que tocaban el cielo. ¿Qué deseas saber sobre el Tahuantinsuyo?'
+    'auge_virreinal': {
+        name: 'Auge Virreinal',
+        character: { name: 'Don Manuel de Amat', avatar: '🏛️' },
+        introMessage: '¡Buen día, joven aprendiz! Soy Don Manuel de Amat, virrey del Perú durante las Reformas Borbónicas. Goberné este próspero virreinato bajo el mandato del Rey Carlos III. ¿Qué deseas saber sobre nuestra sociedad y las reformas?'
     },
-    'caral': {
-        name: 'Civilización Caral',
-        character: { name: 'Sacerdote de Caral', avatar: '🏛️' },
-        introMessage: '¡Bienvenido, joven aprendiz! Soy un sacerdote de Caral. Construimos pirámides que aún se yerguen y vivimos en paz junto al río. ¿Te gustaría conocer nuestras tradiciones y arquitectura?'
+    'rebeliones_indigenas': {
+        name: 'Rebeliones Indígenas',
+        character: { name: 'Micaela Bastidas', avatar: '⚔️' },
+        introMessage: '¡Saludos, joven guerrero! Soy Micaela Bastidas, líder y estratega de la gran rebelión contra los abusos españoles. Luchamos por la libertad y la justicia. ¿Te gustaría conocer cómo organizamos nuestra resistencia?'
     },
-    'viceroyalty': {
-        name: 'El Virreinato del Perú',
-        character: { name: 'Don Francisco de Toledo', avatar: '🏰' },
-        introMessage: '¡Buen día, joven súbdito! Soy Don Francisco de Toledo, Virrey del Perú. Goberné con justicia y orden, organizando esta gran colonia. ¿Qué deseas saber sobre mi tiempo como virrey?'
+    'conspiraciones_criollas': {
+        name: 'Conspiraciones Criollas',
+        character: { name: 'Hipólito Unanue', avatar: '📚' },
+        introMessage: '¡Bienvenido, joven pensador! Soy Hipólito Unanue, médico y sabio de las ideas de libertad. Debatimos en secretos sobre el futuro de nuestra tierra. ¿Qué deseas saber sobre nuestras conspiraciones?'
     },
-    'conquistador': {
-        name: 'La Conquista Española',
-        character: { name: 'Don Francisco de Ávila', avatar: '⚔️' },
-        introMessage: '¡Por la corona española! Soy Don Francisco de Ávila. Estuve presente en la llegada al Perú y vi el encuentro de dos mundos. ¿Quieres oír sobre las expediciones y batallas que forjaron esta nueva era?'
+    'campana_sur': {
+        name: 'Campaña del Sur',
+        character: { name: 'Don José de San Martín', avatar: '🕊️' },
+        introMessage: '¡Por la libertad, joven patriota! Soy Don José de San Martín, general de la Expedición Libertadora del Sur. Proclamé la independencia el 28 de julio de 1821. ¿Quieres oír sobre cómo liberamos al Perú?'
     },
-    'independencia': {
-        name: 'La Independencia',
-        character: { name: 'Don José de la Mar', avatar: '🕊️' },
-        introMessage: '¡Por la libertad, joven patriota! Soy Don José de la Mar. Luché por la independencia y vi nacer a nuestra nación libre. ¡Es un honor contarte sobre los valientes que nos dieron una patria soberana!'
+    'consolidacion_norte': {
+        name: 'Consolidación del Norte',
+        character: { name: 'Antonio José de Sucre', avatar: '🎖️' },
+        introMessage: '¡Viva la patria! Soy el Gran Mariscal Antonio José de Sucre, general venezolano que puso fin al dominio español. Vivimos gloriosas batallas en Junín y Ayacucho. ¿Te gustaría conocer sobre estas hazañas?'
     }
 };
 
