@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../shared/Card';
-import { StudentProgress, PendingActivity } from '../../types';
-import { PencilIcon } from '../icons/PencilIcon';
+import { StudentProgress } from '../../types';
 import { ChartBarIcon } from '../icons/ChartBarIcon';
 import { UsersIcon } from '../icons/UsersIcon';
 import { TrophyIcon } from '../icons/TrophyIcon';
-import { PlusCircleIcon } from '../icons/PlusCircleIcon';
 import { SparklesIcon } from '../icons/SparklesIcon';
 import { DocumentTextIcon } from '../icons/DocumentTextIcon';
+import { PlusCircleIcon } from '../icons/PlusCircleIcon';
+import { BookOpenIcon } from '../icons/BookOpenIcon';
 import { apiService } from '../../services/api';
 
+const ToolButton: React.FC<{Icon: React.ElementType, label: string, onClick: () => void, className?: string}> = ({ Icon, label, onClick, className = '' }) => (
+    <button onClick={onClick} className={`flex flex-col items-center justify-center p-3 bg-brand-green/20 rounded-lg hover:bg-brand-green/30 transition-colors space-y-1 ${className}`}>
+        <Icon className="h-6 w-6 text-brand-green" />
+        <span>{label}</span>
+    </button>
+);
+
+const QuickActionButton: React.FC<{icon: string, label: string, onClick: () => void}> = ({ icon, label, onClick }) => (
+    <button 
+        onClick={onClick}
+        className="flex items-center gap-3 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-slate-200"
+    >
+        <span className="text-2xl">{icon}</span>
+        <span className="font-semibold">{label}</span>
+    </button>
+);
 
 interface TeacherHomePageProps {
     userName: string;
@@ -19,29 +35,28 @@ interface TeacherHomePageProps {
     navigateToClassManagement: () => void;
     navigateToContentManagement: () => void;
     navigateToChallenges: () => void;
+    navigateToCreateChallenge: () => void;
+    navigateToCreateLesson: () => void;
 }
 
-const mockActivities: PendingActivity[] = [
-    { id: 1, title: 'Culturas Preincas', type: 'Cuestionario', submissions: 12, dueDate: 'Vence hoy', priority: true },
-    { id: 2, title: 'Mapa de Lima Colonial', type: 'Mapa', submissions: 8, dueDate: '2 días', priority: false },
-];
-
-const ToolButton: React.FC<{Icon: React.ElementType, label: string, onClick: () => void, className?: string}> = ({ Icon, label, onClick, className = '' }) => (
-    <button onClick={onClick} className={`flex flex-col items-center justify-center p-3 bg-brand-green/20 rounded-lg hover:bg-brand-green/30 transition-colors space-y-1 ${className}`}>
-        <Icon className="h-6 w-6 text-brand-green" />
-        <span>{label}</span>
-    </button>
-);
-
-const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ userName, onLogout, navigateToRewardsCenter, navigateToReports, navigateToClassManagement, navigateToContentManagement, navigateToChallenges }) => {
+const TeacherHomePage: React.FC<TeacherHomePageProps> = ({ 
+    userName, 
+    onLogout, 
+    navigateToRewardsCenter, 
+    navigateToReports, 
+    navigateToClassManagement, 
+    navigateToContentManagement, 
+    navigateToChallenges,
+    navigateToCreateChallenge,
+    navigateToCreateLesson
+}) => {
     const [students, setStudents] = useState<StudentProgress[]>([]);
     const [loading, setLoading] = useState(true);
 
-useEffect(() => {
+    useEffect(() => {
         const fetchStudentsProgress = async () => {
             try {
                 const data = await apiService.obtenerProgresoEstudiantes();
-                // Map API response to StudentProgress format
                 const mappedStudents: StudentProgress[] = data.map(student => ({
                     id: student.id,
                     name: student.nombre,
@@ -51,7 +66,6 @@ useEffect(() => {
                 setStudents(mappedStudents);
             } catch (error) {
                 console.error('Error fetching students progress:', error);
-                // Fallback to mock data if API fails
                 setStudents([
                     { id: 1, name: 'Diego Pérez', avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=256&auto=format&fit=crop', progress: 72 },
                     { id: 2, name: 'Maria López', avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&auto=format&fit=crop', progress: 89 },
@@ -78,32 +92,31 @@ useEffect(() => {
             </header>
 
             <main className="p-4 space-y-6">
-                 <Card>
-                    <h2 className="text-lg font-bold text-slate-700 mb-3 flex items-center"><PencilIcon className="h-5 w-5 mr-2" /> Actividades Pendientes</h2>
+                <Card>
+                    <h2 className="text-lg font-bold text-slate-700 mb-3 flex items-center"><PlusCircleIcon className="h-5 w-5 mr-2" /> Acceso rápido</h2>
                     <div className="space-y-3">
-                        {mockActivities.map(activity => (
-                            <div key={activity.id} className="bg-brand-cream/60 p-3 rounded-lg flex justify-between items-center">
-                                <div>
-                                    <h3 className="font-bold text-sm">{activity.type}: {activity.title}</h3>
-                                    <p className="text-xs text-slate-600">{activity.submissions} entregas • <span className={activity.priority ? 'text-red-500 font-semibold' : ''}>{activity.dueDate}</span></p>
-                                </div>
-                                <button className={`font-semibold py-1.5 px-3 rounded-lg transition-colors text-sm ${activity.priority ? 'bg-brand-dark-green text-white hover:bg-brand-green' : 'bg-brand-yellow-orange text-slate-800 hover:bg-brand-light-orange'}`}>
-                                    Revisar
-                                </button>
-                            </div>
-                        ))}
+                        <QuickActionButton 
+                            icon="🏆" 
+                            label="Crear nuevo reto" 
+                            onClick={navigateToCreateChallenge}
+                        />
+                        <QuickActionButton 
+                            icon="📚" 
+                            label="Crear nueva lección" 
+                            onClick={navigateToCreateLesson}
+                        />
                     </div>
                 </Card>
                 
                 <Card>
-                      <h2 className="text-lg font-bold text-slate-700 mb-3">Progreso de Estudiantes</h2>
+                    <h2 className="text-lg font-bold text-slate-700 mb-3">Progreso de Estudiantes</h2>
                     {loading ? (
                         <div className="flex items-center justify-center py-8">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green"></div>
                             <span className="ml-2 text-slate-600">Cargando estudiantes...</span>
                         </div>
                     ) : (
-<ul className="space-y-4">
+                        <ul className="space-y-4">
                             {students.map(student => (
                                 <li key={student.id}>
                                     <div className="flex items-center justify-between mb-1">
@@ -124,13 +137,13 @@ useEffect(() => {
 
                 <Card className="lg:hidden">
                     <h2 className="text-lg font-bold text-slate-700 mb-3">Herramientas</h2>
-                      <div className="grid grid-cols-3 lg:grid-cols-5 gap-3 text-center text-sm font-semibold text-slate-800">
-                          <ToolButton Icon={DocumentTextIcon} label="Contenido" onClick={navigateToContentManagement} />
-                          <ToolButton Icon={ChartBarIcon} label="Reportes" onClick={navigateToReports} />
-                          <ToolButton Icon={UsersIcon} label="Clase" onClick={navigateToClassManagement} />
-                          <ToolButton Icon={TrophyIcon} label="Retos" onClick={navigateToChallenges} />
-                          <ToolButton Icon={SparklesIcon} label="Insignias" onClick={navigateToRewardsCenter} />
-                      </div>
+                    <div className="grid grid-cols-3 lg:grid-cols-5 gap-3 text-center text-sm font-semibold text-slate-800">
+                        <ToolButton Icon={DocumentTextIcon} label="Contenido" onClick={navigateToContentManagement} />
+                        <ToolButton Icon={ChartBarIcon} label="Reportes" onClick={navigateToReports} />
+                        <ToolButton Icon={UsersIcon} label="Clase" onClick={navigateToClassManagement} />
+                        <ToolButton Icon={TrophyIcon} label="Retos" onClick={navigateToChallenges} />
+                        <ToolButton Icon={SparklesIcon} label="Insignias" onClick={navigateToRewardsCenter} />
+                    </div>
                 </Card>
             </main>
         </div>
@@ -138,4 +151,3 @@ useEffect(() => {
 };
 
 export default TeacherHomePage;
-

@@ -94,7 +94,7 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                 setReports([
                     {
                         id: 1,
-                        titulo: 'Culturas Preincas',
+                        titulo: 'Organización del Virreinato',
                         promedio_puntuacion: 82,
                         tasa_completitud: 92,
                         total_estudiantes: 4,
@@ -105,14 +105,14 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                             { nombre: 'Valeria Rojas', avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop', puntuacion: 0, estado: 'no_iniciado' },
                         ],
                         preguntas_dificiles: [
-                            { pregunta: 'Diferencia entre cerámica Moche y Nazca', tasa_error: 0.75 },
-                            { pregunta: 'Ubicación de la cultura Chavín', tasa_error: 0.60 },
-                            { pregunta: 'Función de los quipus', tasa_error: 0.55 }
+                            { pregunta: 'Año creación Virreinato del Perú', tasa_error: 0.75 },
+                            { pregunta: 'Fundador de Lima', tasa_error: 0.60 },
+                            { pregunta: 'Sistema de intendencias', tasa_error: 0.55 }
                         ],
                     },
                     {
                         id: 2,
-                        titulo: 'El Virreinato del Perú',
+                        titulo: 'Reformas Borbónicas',
                         promedio_puntuacion: 76,
                         tasa_completitud: 85,
                         total_estudiantes: 3,
@@ -122,8 +122,8 @@ const ReportsPage: React.FC<{onBack: () => void}> = ({ onBack }) => {
                             { nombre: 'Jorge Rios', avatar_url: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=256&auto=format&fit=crop', puntuacion: 60, estado: 'completado' },
                         ],
                         preguntas_dificiles: [
-                            { pregunta: 'Rol del Corregidor', tasa_error: 0.70 },
-                            { pregunta: 'La mita minera y sus consecuencias', tasa_error: 0.65 },
+                            { pregunta: 'Año llegada de los Borbones', tasa_error: 0.70 },
+                            { pregunta: 'Monopolio del comercio', tasa_error: 0.65 },
                         ],
                     },
                 ]);

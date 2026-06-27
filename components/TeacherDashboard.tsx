@@ -99,19 +99,21 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout }) => {
                 return <CreateLessonPage onBack={() => navigateTo('content_management')} lessonToEdit={lessonToEdit} />;
             case 'dynamic_generation':
                 return <DynamicGenerationPage onBack={() => navigateTo('home')} />;
-            case 'home':
-            default:
-                return (
-                    <TeacherHomePage
-                        userName={user?.nombre || 'Usuario'}
-                        onLogout={onLogout}
-                        navigateToRewardsCenter={() => navigateTo('rewards_center')}
-                        navigateToReports={() => navigateTo('reports')}
-                        navigateToClassManagement={() => navigateTo('class_management')}
-                        navigateToContentManagement={() => navigateTo('content_management')}
-                        navigateToChallenges={() => navigateTo('challenges')}
-                    />
-                );
+case 'home':
+                default:
+                    return (
+<TeacherHomePage
+                            userName={user?.nombre || 'Usuario'}
+                            onLogout={onLogout}
+                            navigateToRewardsCenter={() => navigateTo('rewards_center')}
+                            navigateToReports={() => navigateTo('reports')}
+                            navigateToClassManagement={() => navigateTo('class_management')}
+                            navigateToContentManagement={() => navigateTo('content_management')}
+                            navigateToChallenges={() => navigateTo('challenges')}
+                            navigateToCreateChallenge={handleCreateNew}
+                            navigateToCreateLesson={() => { setLessonToEdit(null); navigateTo('create_lesson'); }}
+                        />
+                    );
         }
     };
 

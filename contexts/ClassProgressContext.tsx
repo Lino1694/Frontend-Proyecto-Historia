@@ -14,12 +14,11 @@ const ClassProgressContext = createContext<ClassProgressContextType | undefined>
 const STORAGE_KEY = 'classProgress_v1';
 
 const INITIAL: ProgressMap = {
-  'caral-ciudad': 0,
-  'pre-inca': 0,
-  'cultura-inca': 0,
-  'virreinato': 0,
+  'organizacion-virreinato': 0,
+  'reformas-borbonicas': 0,
+  'rebeliones': 0,
   'independencia': 0,
-  'batalla-angamos': 0,
+  'consolidacion': 0,
 };
 
 export const ClassProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

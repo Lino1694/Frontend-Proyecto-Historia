@@ -117,7 +117,7 @@ const CaralCity: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Haz una pregunta sobre Caral..."
+            placeholder="Haz una pregunta sobre el Virreinato..."
           />
           <Button variant="contained" onClick={handleSend}>
             Enviar
